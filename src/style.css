@@ -1,0 +1,12 @@
+html {
+  background: #f5f7fa;
+}
+
+body {
+  min-height: 100vh;
+}
+
+.box {
+  max-width: 40rem;
+  margin: 0 auto;
+}
