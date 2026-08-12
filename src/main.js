@@ -26,6 +26,11 @@ document.body.addEventListener('htmx:validateUrl', (evt) => {
   }
 })
 
+const missingPath = document.getElementById('missing-path')
+if (missingPath) {
+  missingPath.textContent = location.pathname
+}
+
 document.querySelectorAll('.navbar-burger').forEach((burger) => {
   burger.addEventListener('click', () => {
     const menu = document.getElementById(burger.dataset.target)

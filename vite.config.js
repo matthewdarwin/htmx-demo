@@ -54,6 +54,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         index: resolve(import.meta.dirname, 'index.html'),
+        404: resolve(import.meta.dirname, '404.html'),
         feedback: resolve(import.meta.dirname, 'feedback/index.html'),
         faq: resolve(import.meta.dirname, 'faq/index.html'),
         location: resolve(import.meta.dirname, 'location/index.html'),
