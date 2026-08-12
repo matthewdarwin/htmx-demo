@@ -7,17 +7,42 @@ that site's `/api/*` endpoints rather than hard-coding it, and the goal has
 generally been to match the reference site's look, URLs, and behavior
 unless there's a good reason to diverge.
 
+## Project layout
+
+Page source lives under `pages/`, not the project root — `vite.config.js`
+sets `root: 'pages'` so that page URLs stay clean (`/feedback/`, not
+`/pages/feedback/`) without needing a manual post-build move step. Three
+things fall out of that and are already handled, but matter if you ever
+touch `vite.config.js`:
+
+- **`publicDir` and `build.outDir` are pinned back to the top-level
+  `public/` and `dist/`** (as absolute paths) — both default to
+  paths *relative to `root`*, so without this they'd silently look for
+  `pages/public/` and write to `pages/dist/` instead.
+- **`resolve.alias` maps `/src` to the real top-level `src/` directory.**
+  Every page's `<script type="module" src="/src/main.js">` is an
+  absolute path, and Vite resolves those relative to `root` — without the
+  alias, that script tag 404s on every single page once `root` isn't the
+  project root anymore. If you ever need another absolute reference to
+  something outside `pages/` (not already under `public/`), it'll need the
+  same alias treatment.
+- **Every HTML entry in `build.rollupOptions.input` must resolve to a path
+  inside `pages/`.** Rollup computes each page's output filename as the
+  input path relative to `root`; a page living outside `root` produces a
+  `../`-escaping relative path and the build fails outright (not a silent
+  wrong-URL bug — you'll see it immediately).
+
 ## Adding a new page
 
-1. Create `<name>/index.html` at the project root (directory + `index.html`,
-   not `<name>.html`) so it serves at the clean `/name/` URL. A few pages
-   under `history/` are flat files instead (`shows_by_name.html` etc.)
-   specifically to match the reference site's exact SEO paths — that's the
-   only reason to break the directory convention.
-2. **Register it in `vite.config.js`'s `rollupOptions.input`.** Vite won't
-   build a page that isn't listed there, even though `npm run dev` will
-   happily serve it from source. This is the single most common thing to
-   forget.
+1. Create `pages/<name>/index.html` (directory + `index.html`, not
+   `<name>.html`) so it serves at the clean `/name/` URL. A few pages
+   under `pages/history/` are flat files instead (`shows_by_name.html`
+   etc.) specifically to match the reference site's exact SEO paths —
+   that's the only reason to break the directory convention.
+2. **Register it in `vite.config.js`'s `rollupOptions.input`, pointing at
+   the `pages/...` path.** Vite won't build a page that isn't listed
+   there, even though `npm run dev` will happily serve it from source.
+   This is the single most common thing to forget.
 3. Start the file with `<!--#include header.html -->` right after `<body>`
    and `<!--#include footer.html -->` before the closing `</main>`/before
    the `<script>` tag. These are inlined at build/dev time by the
@@ -158,11 +183,13 @@ CI note: the workflow pins Node 22 (`actions/setup-node`) — cspell 10.x
 requires ≥22.18, and the default `ubuntu-latest` Node (20) fails the build
 step with a version error if this ever gets reverted.
 
-`404.html` at the repo root is GitHub Pages' own convention (auto-served,
-with a real `404` status, for any unmatched path — works on custom domains
-too) — no server config needed for that one. It mirrors the reference
-site's 404 page, filling in the missing path client-side via
-`location.pathname` since there's no server-side rendering available.
+`pages/404.html` (built to `dist/404.html`, at the *output* root — GitHub
+Pages requires it there, regardless of where the source lives) is GitHub
+Pages' own convention: auto-served, with a real `404` status, for any
+unmatched path, on custom domains too. No server config needed for that
+one. It mirrors the reference site's 404 page, filling in the missing path
+client-side via `location.pathname` since there's no server-side rendering
+available.
 
 ## Local testing notes
 

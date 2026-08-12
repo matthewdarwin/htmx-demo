@@ -43,7 +43,8 @@
     "testdemostatic",
     "testdemo",
     "EMFILE",
-    "inotify"
+    "inotify",
+    "nojekyll"
   ],
   "ignorePaths": ["node_modules/**", "dist/**", "package-lock.json"]
 }

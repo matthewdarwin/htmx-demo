@@ -41,6 +41,13 @@ function redirectProxy() {
 }
 
 export default defineConfig({
+  root: resolve(import.meta.dirname, 'pages'),
+  publicDir: resolve(import.meta.dirname, 'public'),
+  resolve: {
+    alias: {
+      '/src': resolve(import.meta.dirname, 'src'),
+    },
+  },
   plugins: [includePartials(), redirectProxy()],
   server: {
     port: 5173,
@@ -51,35 +58,40 @@ export default defineConfig({
     strictPort: true,
   },
   build: {
+    outDir: resolve(import.meta.dirname, 'dist'),
+    emptyOutDir: true,
     rollupOptions: {
       input: {
-        index: resolve(import.meta.dirname, 'index.html'),
-        404: resolve(import.meta.dirname, '404.html'),
-        feedback: resolve(import.meta.dirname, 'feedback/index.html'),
-        faq: resolve(import.meta.dirname, 'faq/index.html'),
-        location: resolve(import.meta.dirname, 'location/index.html'),
-        volunteer: resolve(import.meta.dirname, 'volunteer/index.html'),
-        tour: resolve(import.meta.dirname, 'tour/index.html'),
-        history: resolve(import.meta.dirname, 'history/index.html'),
+        index: resolve(import.meta.dirname, 'pages/index.html'),
+        404: resolve(import.meta.dirname, 'pages/404.html'),
+        feedback: resolve(import.meta.dirname, 'pages/feedback/index.html'),
+        faq: resolve(import.meta.dirname, 'pages/faq/index.html'),
+        location: resolve(import.meta.dirname, 'pages/location/index.html'),
+        volunteer: resolve(
+          import.meta.dirname,
+          'pages/volunteer/index.html',
+        ),
+        tour: resolve(import.meta.dirname, 'pages/tour/index.html'),
+        history: resolve(import.meta.dirname, 'pages/history/index.html'),
         'history-shows-by-name': resolve(
           import.meta.dirname,
-          'history/shows_by_name.html',
+          'pages/history/shows_by_name.html',
         ),
         'history-shows-by-date': resolve(
           import.meta.dirname,
-          'history/shows_by_date.html',
+          'pages/history/shows_by_date.html',
         ),
         'history-gallery': resolve(
           import.meta.dirname,
-          'history/gallery.html',
+          'pages/history/gallery.html',
         ),
-        member: resolve(import.meta.dirname, 'member/index.html'),
+        member: resolve(import.meta.dirname, 'pages/member/index.html'),
         giftcertificates: resolve(
           import.meta.dirname,
-          'giftcertificates/index.html',
+          'pages/giftcertificates/index.html',
         ),
-        shows: resolve(import.meta.dirname, 'shows/index.html'),
-        birthdays: resolve(import.meta.dirname, 'birthdays/index.html'),
+        shows: resolve(import.meta.dirname, 'pages/shows/index.html'),
+        birthdays: resolve(import.meta.dirname, 'pages/birthdays/index.html'),
       },
     },
   },
