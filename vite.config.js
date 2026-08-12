@@ -78,6 +78,8 @@ export default defineConfig({
           import.meta.dirname,
           'giftcertificates/index.html',
         ),
+        shows: resolve(import.meta.dirname, 'shows/index.html'),
+        birthdays: resolve(import.meta.dirname, 'birthdays/index.html'),
       },
     },
   },

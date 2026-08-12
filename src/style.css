@@ -195,12 +195,6 @@ a.navbar-item:hover,
   color: var(--brand-hover);
 }
 
-.footer .footer-link-disabled {
-  color: var(--color-lgrey);
-  text-decoration: none;
-  cursor: default;
-}
-
 /* Footer social icons */
 
 .footer-social {
