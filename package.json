@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "npm run spellcheck && vite build",
     "preview": "vite preview",
-    "spellcheck": "cspell \"**/*.html\" \"src/**/*.{js,css}\" \"vite.config.js\" \"README.md\" --no-progress"
+    "spellcheck": "cspell \"**/*.html\" \"src/**/*.{js,css}\" \"vite.config.js\" \"*.md\" --no-progress"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.3.1",

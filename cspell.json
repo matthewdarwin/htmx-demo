@@ -38,7 +38,12 @@
     "Nxgw",
     "Nbew",
     "giftcertificates",
-    "Grhm"
+    "Grhm",
+    "unthemed",
+    "testdemostatic",
+    "testdemo",
+    "EMFILE",
+    "inotify"
   ],
   "ignorePaths": ["node_modules/**", "dist/**", "package-lock.json"]
 }

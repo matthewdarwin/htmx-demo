@@ -1,0 +1,184 @@
+# AGENT.md
+
+Working notes for anyone (human or agent) picking up this repo. This is a
+Vite + htmx + Bulma static site that mirrors the structure and content of
+https://www.familycinema.ca — most pages pull their real content live from
+that site's `/api/*` endpoints rather than hard-coding it, and the goal has
+generally been to match the reference site's look, URLs, and behavior
+unless there's a good reason to diverge.
+
+## Adding a new page
+
+1. Create `<name>/index.html` at the project root (directory + `index.html`,
+   not `<name>.html`) so it serves at the clean `/name/` URL. A few pages
+   under `history/` are flat files instead (`shows_by_name.html` etc.)
+   specifically to match the reference site's exact SEO paths — that's the
+   only reason to break the directory convention.
+2. **Register it in `vite.config.js`'s `rollupOptions.input`.** Vite won't
+   build a page that isn't listed there, even though `npm run dev` will
+   happily serve it from source. This is the single most common thing to
+   forget.
+3. Start the file with `<!--#include header.html -->` right after `<body>`
+   and `<!--#include footer.html -->` before the closing `</main>`/before
+   the `<script>` tag. These are inlined at build/dev time by the
+   `includePartials` plugin in `vite.config.js`, which reads the matching
+   file from `public/`. It's a plain string replace on `<!--#include
+   name.html -->`, not real templating — keep marker names matching an
+   actual `public/*.html` file.
+4. Use `<section class="hero is-primary">` for the page hero, not
+   `is-link`. `is-primary` is themed to match the navbar's custom blue;
+   `is-link` uses Bulma's separate, unthemed default blue and visibly
+   clashes with the navbar sitting right above it.
+5. If linking to it from the nav, update `public/header.html` (and
+   `public/footer.html` if it belongs in the footer list) to point at the
+   local path instead of the external `familycinema.ca` URL. Both files are
+   shared across every page via the include mechanism — edit once.
+6. Run `npm run build` before considering it done — it runs `cspell` first
+   (see below) and will fail loudly on both typos and missing pages.
+
+## Content sourcing
+
+Several pages load their real content live from `https://www.familycinema.ca/api/*`
+instead of hard-coding it, using one of two patterns:
+
+- **HTML fragments** (tour, history, member, giftcertificates): plain htmx —
+  `hx-get="https://www.familycinema.ca/api/whatever.html" hx-trigger="load"
+  hx-swap="innerHTML"` on a container div with a `<progress>` placeholder
+  inside. No JS needed.
+- **JSON lists** (FAQ, volunteer): `loadAccordionList(elementId, apiUrl,
+  errorMessage)` in `src/main.js` — a small reusable helper that fetches
+  JSON and renders each `{title, name, detail}` item as a `<details
+  class="box">` accordion entry. Reuse this helper for any new JSON-backed
+  list rather than duplicating the fetch/render logic.
+
+Two things that trip this up:
+
+- **htmx blocks cross-origin requests by default** (`htmx.config.selfRequestsOnly`).
+  This is disabled in `main.js`, with an `htmx:validateUrl` listener that
+  re-adds an explicit allowlist (currently just `familycinema.ca`) instead of
+  opening every origin. If a new page needs to hit a different external
+  host via `hx-get`, add it to that allowlist rather than loosening it
+  further.
+- **htmx's default request headers force a CORS preflight.** Every `hx-get`
+  sends `HX-Request`, `HX-Trigger`, `HX-Trigger-Name`, `HX-Target`,
+  `HX-Current-URL`. If a new API endpoint returns CORS errors that a plain
+  `fetch()` wouldn't hit, the server is almost certainly missing those in
+  its `Access-Control-Allow-Headers` — that's a server-side fix, not
+  something to work around here.
+
+Links inside fetched content that point at `/redirect/host/path` are the
+site's click-tracking mechanism (nginx rewrites them to `https://host/path`
+in production/on the proxy domain — see "Deployment" below). They're left
+untouched when fragments are inserted; don't try to rewrite them client-side.
+
+## Styling (`src/style.css`)
+
+Bulma 1.0.4, with a light/dark theme layered on top via semantic custom
+properties: `--brand-surface` (navbar/hero background), `--brand-accent`
+(title/card-header/footer-link text color), `--page-background`,
+`--footer-background`. Light values live at `:root`; dark values are
+duplicated under both `@media (prefers-color-scheme: dark) {
+:root:not([data-theme="light"]) {...} }` and `[data-theme="dark"] {...}` —
+the former handles OS preference, the latter the manual toggle (see below).
+Use these tokens for anything theme-dependent rather than hardcoding a
+color, and give any new token both a light and dark value.
+
+**The single biggest CSS gotcha in this codebase:** Bulma 1.x components
+frequently re-declare their own default value for a custom property
+directly on their own selector — e.g. `.navbar { --bulma-navbar-background-color:
+var(--bulma-scheme-main); }`. That shadows anything set at `:root`, because
+inheritance only kicks in when an element has *no* matching rule for that
+property at all. If a `:root` override silently does nothing, this is why —
+override on the same selector Bulma uses (`.navbar { --bulma-navbar-background-color:
+... }`), not `:root`. This has bitten navbar colors, burger color, title
+color, card-header color, and footer background so far; assume any new
+Bulma color override needs the same treatment.
+
+The `--bulma-primary-h/s/l` override at `:root` *does* need `!important` —
+that one has no more-specific competing selector, only competing `:root`
+declarations inside Bulma's own dark-mode media query, which a CSS
+minifier can reorder relative to ours. Don't add `!important` elsewhere by
+default though — it beat a legitimate, more-specific contextual override
+once (`.hero.is-link .title`) and caused a real regression.
+
+**Dark/light toggle:** manual override via `document.documentElement`'s
+`data-theme` attribute, set by the button in `public/header.html` /
+handled in `src/main.js`, persisted to `localStorage`. There's a small
+synchronous inline `<script>` at the very top of `header.html` (before the
+`<nav>`) that applies the stored theme immediately, specifically to avoid a
+flash of the wrong theme before the deferred module script runs.
+
+## MapLibre / Mapbox (location page)
+
+- MapLibre GL JS's worker script has its own internal relative import to a
+  "shared" chunk. Vite can't see through a `?url` import to also bundle
+  that second file, so the worker 404s if you try the obvious approach.
+  Fix: both files are self-hosted verbatim under `public/maplibre/` (copied
+  from `node_modules/maplibre-gl/dist/`), referenced by a fixed path rather
+  than a Vite-processed import. If `maplibre-gl` gets upgraded, re-copy
+  both files from the new version's `dist/`.
+- The Mapbox access token is chosen at runtime in `main.js` based on
+  `location.hostname`: the production token (restricted by Mapbox's own URL
+  allowlist to `familycinema.ca` subdomains) everywhere except `localhost`,
+  where an unrestricted token is used instead so local dev/preview still
+  renders tiles. If a new deployment hostname needs the map to work, it
+  needs to be added to the production token's allowlist in the Mapbox
+  dashboard — that's an external, manual step, not something fixable here.
+- Dev and preview ports are pinned (`strictPort: true`, 5173/4173) in
+  `vite.config.js` specifically so they stay stable — the unrestricted
+  token's own allowlist is keyed to those exact origins.
+
+## Spellcheck gate
+
+`npm run build` runs `npm run spellcheck` (cspell) first and fails the
+build on typos. Legitimate but non-dictionary words — brand names, Bulma
+class names, base64 token substrings, etc. — go in `cspell.json`'s `words`
+list rather than being ignored some other way. Requires Node ≥22.18 (see
+CI note below).
+
+## Deployment
+
+Static build published to GitHub Pages via `.github/workflows/deploy.yml`
+(triggers on push to `main`), served at the custom domain
+`testdemostatic.familycinema.ca` (`public/CNAME`). The real public-facing
+domain is `testdemo.familycinema.ca`, which runs nginx that:
+
+- proxies ordinary page requests through to `testdemostatic.familycinema.ca`,
+- handles `/redirect/*` itself (the click-tracking mechanism mentioned
+  above — `/redirect/x.y.z/abc` → `302` to `https://x.y.z/abc`),
+- and handles `/api/*` itself.
+
+None of that nginx logic exists in the static build — locally, `/redirect/*`
+is instead handled by a small Vite plugin (`redirectProxy` in
+`vite.config.js`) that runs in `configureServer`/`configurePreviewServer`
+only, so `npm run dev`/`npm run preview` behave like the real deployment
+without needing nginx locally.
+
+CI note: the workflow pins Node 22 (`actions/setup-node`) — cspell 10.x
+requires ≥22.18, and the default `ubuntu-latest` Node (20) fails the build
+step with a version error if this ever gets reverted.
+
+`404.html` at the repo root is GitHub Pages' own convention (auto-served,
+with a real `404` status, for any unmatched path — works on custom domains
+too) — no server config needed for that one. It mirrors the reference
+site's 404 page, filling in the missing path client-side via
+`location.pathname` since there's no server-side rendering available.
+
+## Local testing notes
+
+- **zsh gotcha:** never use `path` as a shell loop variable name
+  (`for path in ...`) — it's a special array tied to `$PATH` in zsh, and
+  assigning to it clobbers the actual `PATH` for the rest of the session,
+  breaking every subsequent command. Use `p` or anything else.
+- `npm run dev` can fail with `EMFILE: too many open files` in
+  resource-constrained environments (inotify instance limits, not a bug in
+  this project) — `npm run build && npm run preview` is a more reliable way
+  to sanity-check a change end-to-end when that happens.
+- There's no visual test runner here; verification throughout has been
+  real headless-Chrome screenshots and DOM dumps (`google-chrome
+  --headless=new --dump-dom` / `--screenshot`), sometimes with a small
+  injected `<script>` in a scratch copy of the built HTML to read back
+  computed styles or trigger interactions. Worth reaching for over just
+  reading the CSS/HTML and assuming it's right — several bugs in this repo
+  (container width, burger icon spacing, dark-mode color overrides) were
+  only caught this way.
