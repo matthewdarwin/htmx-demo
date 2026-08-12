@@ -32,6 +32,19 @@ touch `vite.config.js`:
   `../`-escaping relative path and the build fails outright (not a silent
   wrong-URL bug — you'll see it immediately).
 
+**`pages/` vs `public/` is a "what does Vite do with this file" split, not
+just a location.** `pages/*.html` are full documents and Vite build
+entries — each gets the `<!--#include-->` treatment, its `<script
+src="/src/main.js">` bundled, etc. — meant to be navigated to directly.
+Anything meant to be served byte-for-byte with zero processing goes in
+`public/` instead, including HTML *fragments* loaded via htmx rather than
+navigated to: `public/feedback/thanks.html` (the feedback form's
+`hx-get` target) and `public/hello-world.html` (the homepage demo
+button's target) are not pages, just swap targets, so they don't belong
+under `pages/` even though `public/feedback/` sits right next to
+`pages/feedback/`. `public/header.html`/`public/footer.html` (the include
+partials themselves) are the same kind of thing.
+
 ## Adding a new page
 
 1. Create `pages/<name>/index.html` (directory + `index.html`, not
