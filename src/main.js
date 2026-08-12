@@ -1,8 +1,11 @@
 import 'bulma/css/bulma.min.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import 'maplibre-gl/dist/maplibre-gl.css'
+import 'swiper/css'
 import './style.css'
 import htmx from 'htmx.org'
+import Swiper from 'swiper'
+import { Autoplay } from 'swiper/modules'
 import { isMapboxURL, transformMapboxUrl } from './mapbox-request-transformer.js'
 
 // Self-hosted from public/maplibre/ rather than a bundler `?url` import: the
@@ -142,6 +145,24 @@ loadAccordionList(
   'https://www.familycinema.ca/api/volunteer.json',
   'Unable to load volunteer info right now. Please try again later.',
 )
+
+const promoWrapper = document.querySelector('.HomePromo')
+if (promoWrapper) {
+  // The fetched fragment is itself a full .swiper-container element, so
+  // hx-swap="outerHTML" replaces the placeholder with it outright rather
+  // than nesting it inside one. Querying fresh here (instead of caching a
+  // reference before the swap) finds the live element once it lands.
+  document.body.addEventListener('htmx:afterSwap', () => {
+    const promoContainer = promoWrapper.querySelector('.swiper-container')
+    if (!promoContainer) return
+    new Swiper(promoContainer, {
+      modules: [Autoplay],
+      direction: 'horizontal',
+      loop: true,
+      autoplay: { delay: 3000 },
+    })
+  })
+}
 
 const mapCanvas = document.getElementById('map_canvas')
 if (mapCanvas) {

@@ -3,40 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>htmx Demo</title>
+    <title>Ottawa Family Cinema</title>
   </head>
   <body>
     <!--#include header.html -->
 
     <section class="hero is-primary">
       <div class="hero-body">
-        <p class="title">Hello, htmx!</p>
-        <p class="subtitle">A tiny Vite demo styled with Bulma.</p>
+        <p class="title">Ottawa Family Cinema</p>
       </div>
     </section>
 
     <main class="section">
       <div class="container">
-        <div class="box">
-          <h1 class="title is-4">Hello world</h1>
-          <p class="content">
-            Click the button below to let htmx fetch a small HTML fragment.
-          </p>
-          <button
-            class="button is-primary"
-            hx-get="/hello-world.html"
-            hx-swap="innerHTML"
-            hx-target="#hello-message"
-            type="button"
-          >
-            Load message
-          </button>
+        <div class="HomePromo">
           <div
-            id="hello-message"
-            class="notification is-light mt-5"
-            aria-live="polite"
+            hx-get="https://www.familycinema.ca/api/show_promotion.html"
+            hx-trigger="load"
+            hx-swap="outerHTML"
           >
-            Your htmx response will appear here.
+            <progress class="progress is-small is-link" max="100">
+              Loading&hellip;
+            </progress>
           </div>
         </div>
       </div>

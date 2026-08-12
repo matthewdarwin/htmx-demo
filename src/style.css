@@ -176,6 +176,17 @@ a.navbar-item:hover,
   margin: 0 auto 1.5rem;
 }
 
+/* Home page promo carousel */
+
+.HomePromo .swiper-container {
+  max-width: 270px;
+  margin: 0 auto;
+}
+
+.HomePromo .swiper-slide {
+  text-align: center;
+}
+
 /* Header */
 
 @media print {
