@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gift Certificates | htmx Demo</title>
+  </head>
+  <body>
+    <!--#include header.html -->
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">Gift Certificates</p>
+      </div>
+    </section>
+
+    <main class="section">
+      <div class="container">
+        <div
+          hx-get="https://www.familycinema.ca/api/giftcertificates.html"
+          hx-trigger="load"
+          hx-swap="innerHTML"
+        >
+          <progress class="progress is-small is-link" max="100">
+            Loading&hellip;
+          </progress>
+        </div>
+      </div>
+    </main>
+
+    <!--#include footer.html -->
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

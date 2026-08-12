@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feedback | htmx Demo</title>
+  </head>
+  <body>
+    <!--#include header.html -->
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">Feedback</p>
+        <p class="subtitle">Tell us what you think.</p>
+      </div>
+    </section>
+
+    <main class="section">
+      <div class="container">
+        <div class="box">
+          <h1 class="title is-4">Send us your feedback</h1>
+          <p class="content">
+            Fill in the form below and htmx will submit it without reloading the
+            page.
+          </p>
+
+          <form
+            id="feedback-form"
+            hx-get="/feedback/thanks.html"
+            hx-swap="innerHTML"
+            hx-target="#feedback-message"
+            hx-disabled-elt="find button[type='submit']"
+          >
+            <div class="field">
+              <label class="label" for="name">Name</label>
+              <div class="control">
+                <input
+                  class="input"
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="Your full name"
+                  autocomplete="name"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="membership-number">
+                Membership number <span class="has-text-grey">(optional)</span>
+              </label>
+              <div class="control">
+                <input
+                  class="input"
+                  id="membership-number"
+                  name="membership-number"
+                  type="text"
+                  inputmode="numeric"
+                  placeholder="e.g. 123456"
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="email">Email address</label>
+              <div class="control">
+                <input
+                  class="input"
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="comments">Comments</label>
+              <div class="control">
+                <textarea
+                  class="textarea"
+                  id="comments"
+                  name="comments"
+                  rows="5"
+                  placeholder="What would you like us to know?"
+                  required
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="human-check">
+                Human check: what is the current year?
+              </label>
+              <div class="control">
+                <input
+                  class="input"
+                  id="human-check"
+                  name="human-check"
+                  type="text"
+                  inputmode="numeric"
+                  maxlength="4"
+                  placeholder="e.g. 2026"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <p class="help">
+                Please enter the current 4-digit year to confirm you're not a
+                robot.
+              </p>
+            </div>
+
+            <div class="field is-grouped">
+              <div class="control">
+                <button class="button is-primary" type="submit">
+                  Send feedback
+                </button>
+              </div>
+              <div class="control">
+                <button class="button is-light" type="reset">Clear</button>
+              </div>
+            </div>
+          </form>
+
+          <div
+            id="feedback-message"
+            class="notification is-light mt-5"
+            aria-live="polite"
+          >
+            Your confirmation will appear here.
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!--#include footer.html -->
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

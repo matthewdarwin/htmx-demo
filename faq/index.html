@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FAQ | htmx Demo</title>
+  </head>
+  <body>
+    <!--#include header.html -->
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">Frequently Asked Questions</p>
+      </div>
+    </section>
+
+    <main class="section">
+      <div class="container">
+        <p class="content">
+          Here are a few frequently asked questions (with answers) about the
+          Ottawa Family Cinema.
+        </p>
+
+        <div id="faq-list" class="faq-list">
+          <progress class="progress is-small is-link" max="100">
+            Loading&hellip;
+          </progress>
+        </div>
+      </div>
+    </main>
+
+    <!--#include footer.html -->
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

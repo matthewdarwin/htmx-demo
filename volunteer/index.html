@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Volunteer | htmx Demo</title>
+  </head>
+  <body>
+    <!--#include header.html -->
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">Volunteer at the Cinema</p>
+      </div>
+    </section>
+
+    <main class="section">
+      <div class="container">
+        <p class="content">
+          Wondering about volunteering at the cinema? Here's a basic
+          introduction to get you started.
+        </p>
+
+        <div id="volunteer-list" class="faq-list">
+          <progress class="progress is-small is-link" max="100">
+            Loading&hellip;
+          </progress>
+        </div>
+      </div>
+    </main>
+
+    <!--#include footer.html -->
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

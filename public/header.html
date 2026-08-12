@@ -1,0 +1,113 @@
+<script>
+  (function () {
+    var theme = localStorage.getItem('theme')
+    if (theme) document.documentElement.setAttribute('data-theme', theme)
+  })()
+</script>
+
+<nav class="navbar NoPrint">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/">Ottawa Family Cinema</a>
+    <div class="navbar-burger burger" data-target="navMenuMain">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+  <div id="navMenuMain" class="navbar-menu">
+    <div class="navbar-start">
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">What's Happening</a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://www.familycinema.ca/shows/"
+            ><i class="fas fa-list"></i> &nbsp; Upcoming Shows</a
+          >
+          <hr class="navbar-divider" />
+          <a class="navbar-item" href="https://www.familycinema.ca/shows.ics"
+            ><i class="fas fa-calendar-alt"></i> &nbsp; Calendar</a
+          >
+          <a class="navbar-item" href="https://www.familycinema.ca/shows.rdf"
+            ><i class="fas fa-rss"></i> &nbsp; RSS Feed</a
+          >
+          <a class="navbar-item" href="https://x.com/ottfamilycinema"
+            ><i class="fa-brands fa-x-twitter"></i> &nbsp; Twitter</a
+          >
+          <a
+            class="navbar-item"
+            href="https://www.facebook.com/familycinema"
+            ><i class="fa-brands fa-facebook"></i> &nbsp; Facebook</a
+          >
+          <a
+            class="navbar-item"
+            href="https://www.youtube.com/channel/UCKCzuJ7LhZfGuN7fblD-41Q/videos"
+            ><i class="fa-brands fa-youtube"></i> &nbsp; YouTube</a
+          >
+          <a
+            class="navbar-item"
+            href="https://www.instagram.com/ottfamilycinema/"
+            ><i class="fa-brands fa-instagram"></i> &nbsp; Instagram</a
+          >
+          <a
+            class="navbar-item"
+            href="https://www.tiktok.com/@ottawafamilycinema"
+            ><i class="fa-brands fa-tiktok"></i> &nbsp; Tiktok</a
+          >
+        </div>
+      </div>
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">Features</a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="/member/">Memberships</a>
+          <a class="navbar-item" href="https://www.familycinema.ca/birthdays/"
+            >Birthday Parties</a
+          >
+          <a class="navbar-item" href="/giftcertificates/"
+            >Gift Certificates</a
+          >
+        </div>
+      </div>
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">About Us</a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="/faq/"
+            >Frequently Asked Questions</a
+          >
+          <a class="navbar-item" href="/location/">Theatre Location</a>
+          <a class="navbar-item" href="/tour/">Theatre Tour</a>
+          <a class="navbar-item" href="/volunteer/">Volunteering</a>
+          <a class="navbar-item" href="/history/">Cinema History</a>
+          <a class="navbar-item" href="/feedback/">Contact Us</a>
+        </div>
+      </div>
+    </div>
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <button
+          id="theme-toggle"
+          class="button is-small"
+          type="button"
+          aria-label="Toggle dark mode"
+        >
+          <i class="fas fa-moon"></i>
+          <span id="theme-toggle-label">Dark mode</span>
+        </button>
+      </div>
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link"
+          ><i class="fa-solid fa-user"></i>&nbsp;My Account</a
+        >
+        <div class="navbar-dropdown is-right">
+          <a class="navbar-item" href="https://account.familycinema.ca/my/"
+            >Account Login</a
+          >
+          <a
+            class="navbar-item"
+            href="https://account.familycinema.ca/register"
+            >Registration</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

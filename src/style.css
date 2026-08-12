@@ -1,5 +1,71 @@
+:root {
+  /* Brand palette (fixed swatches, independent of theme) */
+  --color-blue: #336699;
+  --color-lblue: #00ffff;
+  --color-lgrey: #cccccc;
+  --color-xlgrey: #eeeeee;
+  --color-black: #000000;
+
+  /* Light theme (default) */
+  --brand-surface: var(--color-blue);
+  --brand-accent: var(--color-blue);
+  --brand-hover: var(--color-lblue);
+  --page-background: #f5f7fa;
+  --footer-background: var(--color-xlgrey);
+
+  /* Bulma theme colors */
+  /* !important pins these ahead of Bulma's own dark-mode overrides for
+     the same custom properties, which a CSS minifier can hoist after
+     these rules regardless of source order. */
+  --bulma-primary-h: 210deg !important;
+  --bulma-primary-s: 50% !important;
+  --bulma-primary-l: 40% !important;
+}
+
+/* Dark theme: applies automatically by OS preference, or explicitly via
+   data-theme="dark" set by the toggle in the navbar (see main.js). The
+   :not([data-theme="light"]) guard lets an explicit light choice win over
+   a dark OS preference. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --brand-surface: hsl(210deg, 45%, 22%);
+    --brand-accent: hsl(210deg, 70%, 72%);
+    --page-background: hsl(220deg, 12%, 10%);
+    --footer-background: hsl(220deg, 12%, 16%);
+
+    --bulma-primary-h: 210deg !important;
+    --bulma-primary-s: 55% !important;
+    --bulma-primary-l: 60% !important;
+  }
+}
+
+[data-theme='dark'] {
+  --brand-surface: hsl(210deg, 45%, 22%);
+  --brand-accent: hsl(210deg, 70%, 72%);
+  --page-background: hsl(220deg, 12%, 10%);
+  --footer-background: hsl(220deg, 12%, 16%);
+
+  --bulma-primary-h: 210deg !important;
+  --bulma-primary-s: 55% !important;
+  --bulma-primary-l: 60% !important;
+}
+
 html {
-  background: #f5f7fa;
+  background: var(--page-background);
+}
+
+/* Scale up the root font-size on very large/4K screens so Bulma's rem-based
+   type and spacing feel proportionate rather than lost in the extra width. */
+@media screen and (min-width: 2560px) {
+  html {
+    font-size: 120%;
+  }
+}
+
+@media screen and (min-width: 3840px) {
+  html {
+    font-size: 135%;
+  }
 }
 
 body {
@@ -9,4 +75,153 @@ body {
 .box {
   max-width: 40rem;
   margin: 0 auto;
+}
+
+/* Membership and gift certificate info boxes */
+
+.MembershipBox,
+.GiftCertificatesBox {
+  background-color: var(--footer-background);
+}
+
+/* Title, card header, and footer theme
+   Bulma re-declares these custom properties as local defaults directly on
+   the component's own selector, which shadows any value set at :root.
+   Matching that selector (without !important, so more specific contextual
+   overrides like .hero .title still win) fixes it. */
+
+.title {
+  --bulma-title-color: var(--brand-accent);
+}
+
+.card {
+  --bulma-card-header-color: var(--brand-accent);
+}
+
+.footer {
+  --bulma-footer-background-color: var(--footer-background);
+}
+
+/* Navbar theme */
+
+.navbar {
+  --bulma-navbar-background-color: var(--brand-surface);
+  --bulma-navbar-dropdown-background-color: var(--brand-surface);
+  --bulma-navbar-item-color: white;
+  --bulma-navbar-dropdown-arrow: white;
+  --bulma-navbar-burger-color: white;
+}
+
+.navbar-dropdown .navbar-item:not(.is-active, .is-selected) {
+  background-color: var(--brand-surface);
+  color: white;
+}
+
+a.navbar-item:hover,
+.navbar-link:hover {
+  background-color: var(--brand-surface);
+  color: var(--brand-hover);
+}
+
+.navbar-dropdown a.navbar-item.is-active,
+.navbar-dropdown a.navbar-item.is-selected {
+  background-color: var(--brand-surface);
+}
+
+/* Theme toggle button */
+
+#theme-toggle {
+  background: transparent;
+  border-color: transparent;
+  color: white;
+}
+
+#theme-toggle-label {
+  margin-left: 0.4em;
+}
+
+#theme-toggle:hover {
+  background: transparent;
+  border-color: transparent;
+  color: var(--brand-hover);
+}
+
+/* FAQ page */
+
+.faq-list details.box {
+  margin-bottom: 1rem;
+}
+
+.faq-list summary {
+  cursor: pointer;
+}
+
+/* Location page map */
+
+.LocationMap {
+  width: 100%;
+  height: 600px;
+  border: 1px solid var(--bulma-border);
+  margin-bottom: 1.5rem;
+}
+
+/* YouTube video embeds (tour, history) */
+
+.Video {
+  display: block;
+  width: 560px;
+  max-width: 100%;
+  height: 315px;
+  border: none;
+  margin: 0 auto 1.5rem;
+}
+
+/* Header */
+
+@media print {
+  .NoPrint {
+    display: none;
+  }
+}
+
+/* Footer navigation links */
+
+.footer .content a {
+  color: var(--brand-accent);
+  text-decoration: none;
+}
+
+.footer .content a:hover {
+  color: var(--brand-hover);
+}
+
+.footer .footer-link-disabled {
+  color: var(--color-lgrey);
+  text-decoration: none;
+  cursor: default;
+}
+
+/* Footer social icons */
+
+.footer-social {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.icon-social {
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.icon-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }

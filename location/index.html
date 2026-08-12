@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Theatre Location | htmx Demo</title>
+  </head>
+  <body>
+    <!--#include header.html -->
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">Theatre Location</p>
+      </div>
+    </section>
+
+    <main class="section">
+      <div class="container">
+        <div class="notification is-warning">
+          <b
+            >Please note: The Ottawa Family Cinema has moved to Rideau
+            Community Hub at 815 St-Laurent Boulevard. The old location at
+            710 Broadview Avenue is closed.</b
+          >
+        </div>
+
+        <p class="content">
+          Ottawa Family Cinema is located at Rideau Community Hub, 815
+          St-Laurent Boulevard, Ottawa, Ontario, K1K 3A7. Use the main
+          entrance facing St-Laurent Boulevard.
+        </p>
+
+        <p class="content">
+          <a href="http://www.octranspo.com/">OC Transpo bus route</a>
+          <b>7</b> will drop you off on St-Laurent Boulevard near the
+          building.
+        </p>
+
+        <p class="content">Directions for people coming via the Queensway:</p>
+        <ol>
+          <li>exit at St-Laurent Boulevard</li>
+          <li>go North on St-Laurent</li>
+          <li>turn right into Rideau Hub</li>
+        </ol>
+
+        <p class="content">
+          There is free parking in the lot behind the auditorium and on
+          nearby streets.
+        </p>
+
+        <div id="map_canvas" class="LocationMap"></div>
+      </div>
+    </main>
+
+    <!--#include footer.html -->
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
