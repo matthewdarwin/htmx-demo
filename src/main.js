@@ -68,12 +68,16 @@ if (themeToggles.length) {
 // "message" fragment and an X-Form-Result: ok/error header, and on
 // success the form should hide in favor of the message — but on failure
 // stay up so the user can fix the offending field and resubmit, rather
-// than getting stuck with no way back to the form.
-function setupResultForm(formId, messageId) {
+// than getting stuck with no way back to the form. infoId is an optional
+// page intro box (register/recover's "here's what this form does" notice)
+// that should disappear alongside the form on success, but stay put
+// through any failure.
+function setupResultForm(formId, messageId, infoId) {
   const form = document.getElementById(formId)
   if (!form) return
 
   const message = document.getElementById(messageId)
+  const info = infoId ? document.getElementById(infoId) : null
 
   const showFailure = (text) => {
     message.innerHTML = `<article class="message is-danger">
@@ -91,6 +95,7 @@ function setupResultForm(formId, messageId) {
     message.classList.remove('is-hidden')
     const isError = evt.detail.xhr.getResponseHeader('X-Form-Result') === 'error'
     form.classList.toggle('is-hidden', !isError)
+    if (info) info.classList.toggle('is-hidden', !isError)
   })
 
   // htmx's default responseHandling treats 4xx/5xx as swap:false, so
@@ -113,8 +118,8 @@ function setupResultForm(formId, messageId) {
 }
 
 setupResultForm('feedback-form', 'feedback-message')
-setupResultForm('register-form', 'register-message')
-setupResultForm('recover-form', 'recover-message')
+setupResultForm('register-form', 'register-message', 'register-info')
+setupResultForm('recover-form', 'recover-message', 'recover-info')
 
 function loadAccordionList(elementId, apiUrl, errorMessage) {
   const list = document.getElementById(elementId)
