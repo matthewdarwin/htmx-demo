@@ -99,9 +99,10 @@ so a validation failure leaves the form up to fix and resubmit rather than
 stranding the user with no way back to it. Success/failure is read from an
 `X-Form-Result: ok`/`error` response header (a convention meant to be
 reused by any future form-processing `/api/*` endpoint, not feedback-
-specific) — the backend doesn't send this yet, so `main.js` falls back to
-checking the message HTML for an `is-danger` class when the header is
-absent. Drop the fallback once the backend reliably sends the header.
+specific) — read directly, no client-side sniffing of the message HTML.
+An earlier version fell back to checking for an `is-danger` class while
+the backend didn't send the header yet; now that it does, don't
+reintroduce that fallback.
 
 **A server error gets no `htmx:afterSwap` at all**, by design: htmx's
 default `responseHandling` treats 4xx/5xx as `swap: false`, so nothing
