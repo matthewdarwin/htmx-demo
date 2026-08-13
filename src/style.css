@@ -87,6 +87,18 @@ main.section {
   margin: 0 auto;
 }
 
+/* Several pages (volunteer, faq, history, tour) open with a short static
+   intro paragraph before their fetched content, which is itself narrower
+   than the page (.box-wrapped accordion items on faq/volunteer, .Video
+   iframes on history/tour) — without this, the intro spans the full
+   container width while everything below it is centered and narrower,
+   which reads as misaligned. Matches .box's existing 40rem rather than
+   introducing another width to keep track of. */
+.PageIntro {
+  max-width: 40rem;
+  margin: 0 auto 1.5rem;
+}
+
 /* Bulma's reset removes default browser list-marker styling everywhere,
    only restoring it inside .content (its own prose-block class — see
    https://bulma.io/documentation/elements/content/). The real API

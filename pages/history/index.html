@@ -19,20 +19,20 @@
 
     <main class="section">
       <div class="container">
-        <p class="content">
-          The Ottawa Family Cinema has a long history. It first started in the
-          Alexander Community Center back in 1977. Since then, it moved
-          locations several times as it outgrew its locations. Below you can see
-          a history of our past shows and watch some videos we created:
-        </p>
+        <div class="PageIntro">
+          <p class="content">
+            The Ottawa Family Cinema has a long history. It first started in the
+            Alexander Community Center back in 1977. Since then, it moved
+            locations several times as it outgrew its locations. Below you can
+            see a history of our past shows and watch some videos we created:
+          </p>
 
-        <ul class="history-links">
-          <li><a href="/history/shows_by_name.html">View by name</a></li>
-          <li><a href="/history/shows_by_date.html">View by date</a></li>
-          <li><a href="/history/gallery.html">Poster Gallery</a></li>
-        </ul>
-
-        <p class="content"></p>
+          <ul class="history-links">
+            <li><a href="/history/shows_by_name.html">View by name</a></li>
+            <li><a href="/history/shows_by_date.html">View by date</a></li>
+            <li><a href="/history/gallery.html">Poster Gallery</a></li>
+          </ul>
+        </div>
 
         <div hx-get="/api/history.html" hx-trigger="load" hx-swap="innerHTML">
           <progress class="progress is-small is-link" max="100">
