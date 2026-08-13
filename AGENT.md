@@ -245,6 +245,19 @@ CI note: the workflow pins Node 22 (`actions/setup-node`) — cspell 10.x
 requires ≥22.18, and the default `ubuntu-latest` Node (20) fails the build
 step with a version error if this ever gets reverted.
 
+## Maintenance automation
+
+`.github/dependabot.yml` opens weekly PRs for outdated npm deps (grouped
+into one PR to avoid per-package noise) and GitHub Actions versions
+(ungrouped — there are only a handful, and action bumps are worth
+reviewing individually since behavior can shift more than a typical npm
+patch). `.github/workflows/ci.yml` runs `npm run build` (spellcheck +
+build) on every pull request — this is what actually gates Dependabot's
+own PRs before merge; without it they'd open but nothing would verify
+they still build. Dependabot alerts and automated security-fix PRs are
+also enabled at the repo level (Settings → Code security, not something
+tracked in this repo's files).
+
 `pages/404.html` (built to `dist/404.html`, at the *output* root — GitHub
 Pages requires it there, regardless of where the source lives) is GitHub
 Pages' own convention: auto-served, with a real `404` status, for any
