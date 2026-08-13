@@ -211,6 +211,16 @@ one. It mirrors the reference site's 404 page, filling in the missing path
 client-side via `location.pathname` since there's no server-side rendering
 available.
 
+`dist/sitemap.xml` is generated at build time (the `sitemap` plugin in
+`vite.config.js`, keyed off `pageEntries` — the same object
+`build.rollupOptions.input` uses) rather than hand-maintained, so adding or
+removing a page can't leave it stale. `404.html` is deliberately excluded
+(it's an error page, not indexable content), and there's no `<lastmod>`
+since nothing here tracks real per-page modification times. `public/robots.txt`
+points at it. Note the reference site has neither a sitemap nor a
+`Sitemap:` line in its own `robots.txt` — nothing to mirror here, this is
+just standard practice for a real site being added on top of it.
+
 ## Local testing notes
 
 - **zsh gotcha:** never use `path` as a shell loop variable name

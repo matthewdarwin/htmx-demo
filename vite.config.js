@@ -1,6 +1,31 @@
 import { defineConfig } from 'vite'
-import { resolve } from 'node:path'
-import { readFileSync } from 'node:fs'
+import { resolve, relative } from 'node:path'
+import { readFileSync, writeFileSync } from 'node:fs'
+
+const siteUrl = 'https://testdemo.familycinema.ca'
+const pagesRoot = resolve(import.meta.dirname, 'pages')
+
+// The same page list build.rollupOptions.input needs, keyed the way Rollup
+// wants (name -> absolute entry path) — defined once here so the sitemap
+// plugin below reads it instead of carrying its own separately-maintained
+// copy that could silently drift out of sync as pages are added/removed.
+const pageEntries = {
+  index: resolve(pagesRoot, 'index.html'),
+  404: resolve(pagesRoot, '404.html'),
+  feedback: resolve(pagesRoot, 'feedback/index.html'),
+  faq: resolve(pagesRoot, 'faq/index.html'),
+  location: resolve(pagesRoot, 'location/index.html'),
+  volunteer: resolve(pagesRoot, 'volunteer/index.html'),
+  tour: resolve(pagesRoot, 'tour/index.html'),
+  history: resolve(pagesRoot, 'history/index.html'),
+  'history-shows-by-name': resolve(pagesRoot, 'history/shows_by_name.html'),
+  'history-shows-by-date': resolve(pagesRoot, 'history/shows_by_date.html'),
+  'history-gallery': resolve(pagesRoot, 'history/gallery.html'),
+  member: resolve(pagesRoot, 'member/index.html'),
+  giftcertificates: resolve(pagesRoot, 'giftcertificates/index.html'),
+  shows: resolve(pagesRoot, 'shows/index.html'),
+  birthdays: resolve(pagesRoot, 'birthdays/index.html'),
+}
 
 // Inlines <!--#include name.html --> markers with the contents of the
 // matching file under public/, at build time and in dev (transformIndexHtml
@@ -40,6 +65,38 @@ function redirectProxy() {
   }
 }
 
+// Generates dist/sitemap.xml from pageEntries at build time (not maintained
+// by hand) so it can't go stale the way a static file would as pages get
+// added or removed. 404.html is excluded — it's an error page, not content
+// a search engine should index. No <lastmod>: this is a static demo with
+// no real per-page modification tracking, and a fabricated date is worse
+// than omitting it.
+function sitemap() {
+  return {
+    name: 'sitemap',
+    apply: 'build',
+    closeBundle() {
+      const urls = Object.values(pageEntries)
+        .map((absPath) => relative(pagesRoot, absPath).replaceAll('\\', '/'))
+        .filter((relPath) => relPath !== '404.html')
+        .map((relPath) => {
+          if (relPath === 'index.html') return `${siteUrl}/`
+          if (relPath.endsWith('/index.html')) {
+            return `${siteUrl}/${relPath.slice(0, -'index.html'.length)}`
+          }
+          return `${siteUrl}/${relPath}`
+        })
+
+      const body = urls
+        .map((url) => `  <url>\n    <loc>${url}</loc>\n  </url>`)
+        .join('\n')
+      const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`
+
+      writeFileSync(resolve(import.meta.dirname, 'dist/sitemap.xml'), xml)
+    },
+  }
+}
+
 // Mirrors the production nginx rule for /api/*, which proxies it straight
 // through to the real backend — not present in local dev/preview, so pages
 // fetch this the same relative "/api/..." way in every environment instead
@@ -60,7 +117,7 @@ export default defineConfig({
       '/src': resolve(import.meta.dirname, 'src'),
     },
   },
-  plugins: [includePartials(), redirectProxy()],
+  plugins: [includePartials(), redirectProxy(), sitemap()],
   server: {
     port: 5173,
     strictPort: true,
@@ -75,38 +132,7 @@ export default defineConfig({
     outDir: resolve(import.meta.dirname, 'dist'),
     emptyOutDir: true,
     rollupOptions: {
-      input: {
-        index: resolve(import.meta.dirname, 'pages/index.html'),
-        404: resolve(import.meta.dirname, 'pages/404.html'),
-        feedback: resolve(import.meta.dirname, 'pages/feedback/index.html'),
-        faq: resolve(import.meta.dirname, 'pages/faq/index.html'),
-        location: resolve(import.meta.dirname, 'pages/location/index.html'),
-        volunteer: resolve(
-          import.meta.dirname,
-          'pages/volunteer/index.html',
-        ),
-        tour: resolve(import.meta.dirname, 'pages/tour/index.html'),
-        history: resolve(import.meta.dirname, 'pages/history/index.html'),
-        'history-shows-by-name': resolve(
-          import.meta.dirname,
-          'pages/history/shows_by_name.html',
-        ),
-        'history-shows-by-date': resolve(
-          import.meta.dirname,
-          'pages/history/shows_by_date.html',
-        ),
-        'history-gallery': resolve(
-          import.meta.dirname,
-          'pages/history/gallery.html',
-        ),
-        member: resolve(import.meta.dirname, 'pages/member/index.html'),
-        giftcertificates: resolve(
-          import.meta.dirname,
-          'pages/giftcertificates/index.html',
-        ),
-        shows: resolve(import.meta.dirname, 'pages/shows/index.html'),
-        birthdays: resolve(import.meta.dirname, 'pages/birthdays/index.html'),
-      },
+      input: pageEntries,
     },
   },
 })

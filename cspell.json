@@ -45,7 +45,8 @@
     "EMFILE",
     "inotify",
     "nojekyll",
-    "realname"
+    "realname",
+    "lastmod"
   ],
   "ignorePaths": ["node_modules/**", "dist/**", "package-lock.json"]
 }
