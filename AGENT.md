@@ -37,15 +37,11 @@ just a location.** `pages/*.html` are full documents and Vite build
 entries — each gets the `<!--#include-->` treatment, its `<script
 src="/src/main.js">` bundled, etc. — meant to be navigated to directly.
 Anything meant to be served byte-for-byte with zero processing goes in
-`public/` instead, including HTML *fragments* loaded via htmx rather than
-navigated to: `public/feedback/thanks.html` (the feedback form's
-`hx-get` target) is not a page, just a swap target, so it doesn't belong
-under `pages/` even though `public/feedback/` sits right next to
-`pages/feedback/`. `public/header.html`/`public/footer.html` (the include
-partials themselves) are the same kind of thing, as is `public/meta-og.html`
-(Open Graph `<meta>` tags plus the reference site's `Organization`/
-`LocalBusiness` JSON-LD, included into `<head>` — currently just the
-homepage, via `<!--#include meta-og.html -->`).
+`public/` instead: `public/header.html`/`public/footer.html` (the include
+partials themselves), and `public/meta-og.html` (Open Graph `<meta>` tags
+plus the reference site's `Organization`/`LocalBusiness` JSON-LD, included
+into `<head>` — currently just the homepage, via `<!--#include
+meta-og.html -->`).
 
 ## Adding a new page
 
@@ -89,6 +85,17 @@ hard-coding it, using one of two patterns:
   JSON and renders each `{title, name, detail}` item as a `<details
   class="box">` accordion entry. Reuse this helper for any new JSON-backed
   list rather than duplicating the fetch/render logic.
+
+The feedback form (`hx-post="/api/feedback.html"`) is the one write path:
+field `name`s are dictated by the real server (`realname`, `membership`,
+`email`, `comments`, `check`), not by what reads nicely in markup, since
+it's form-encoded straight through to production. It has no client-side
+validation — including the `check` (human/year check) field — because the
+response HTML already says exactly what was wrong; duplicating that logic
+client-side would just be a second place for it to drift out of sync. On
+response, `main.js` swaps the result into `#feedback-message` and hides the
+form (`htmx:afterSwap`, keyed off that target's id) rather than showing
+both at once.
 
 **`/api/*` is always requested relative to the current page, never as a
 hard-coded `https://www.familycinema.ca/...` URL.** In production this

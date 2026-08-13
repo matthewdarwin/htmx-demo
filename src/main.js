@@ -56,36 +56,17 @@ if (themeToggle) {
   })
 }
 
-document.body.addEventListener('htmx:confirm', (evt) => {
-  if (evt.target.id !== 'feedback-form') return
-
-  const yearInput = evt.target.elements['human-check']
-  const currentYear = String(new Date().getFullYear())
-
-  const message = document.getElementById('feedback-message')
-
-  if (yearInput.value.trim() === currentYear) {
-    message.classList.remove('is-danger')
-    message.classList.add('is-light')
-    return
-  }
-
-  evt.preventDefault()
-  yearInput.classList.add('is-danger')
-  yearInput.focus()
-
-  message.classList.remove('is-light')
-  message.classList.add('is-danger')
-  message.textContent = `That's not the current year. Please enter ${currentYear}.`
-})
-
-document
-  .getElementById('feedback-form')
-  ?.addEventListener('input', (evt) => {
-    if (evt.target.id === 'human-check') {
-      evt.target.classList.remove('is-danger')
-    }
+const feedbackForm = document.getElementById('feedback-form')
+if (feedbackForm) {
+  // The server validates the human-check year itself (and every other
+  // field); on response, reveal the result in place of the form rather
+  // than showing both at once.
+  document.body.addEventListener('htmx:afterSwap', (evt) => {
+    if (evt.target.id !== 'feedback-message') return
+    evt.target.classList.remove('is-hidden')
+    feedbackForm.classList.add('is-hidden')
   })
+}
 
 function loadAccordionList(elementId, apiUrl, errorMessage) {
   const list = document.getElementById(elementId)

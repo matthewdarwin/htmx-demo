@@ -85,25 +85,21 @@
 
         <div class="box">
           <h1 class="title is-4">Send us your feedback</h1>
-          <p class="content">
-            Fill in the form below and htmx will submit it without reloading the
-            page.
-          </p>
 
           <form
             id="feedback-form"
-            hx-get="/feedback/thanks.html"
+            hx-post="/api/feedback.html"
             hx-swap="innerHTML"
             hx-target="#feedback-message"
             hx-disabled-elt="find button[type='submit']"
           >
             <div class="field">
-              <label class="label" for="name">Name</label>
+              <label class="label" for="realname">Name</label>
               <div class="control">
                 <input
                   class="input"
-                  id="name"
-                  name="name"
+                  id="realname"
+                  name="realname"
                   type="text"
                   placeholder="Your full name"
                   autocomplete="name"
@@ -113,14 +109,14 @@
             </div>
 
             <div class="field">
-              <label class="label" for="membership-number">
+              <label class="label" for="membership">
                 Membership number <span class="has-text-grey">(optional)</span>
               </label>
               <div class="control">
                 <input
                   class="input"
-                  id="membership-number"
-                  name="membership-number"
+                  id="membership"
+                  name="membership"
                   type="text"
                   inputmode="numeric"
                   placeholder="e.g. 123456"
@@ -158,14 +154,14 @@
             </div>
 
             <div class="field">
-              <label class="label" for="human-check">
+              <label class="label" for="check">
                 Human check: what is the current year?
               </label>
               <div class="control">
                 <input
                   class="input"
-                  id="human-check"
-                  name="human-check"
+                  id="check"
+                  name="check"
                   type="text"
                   inputmode="numeric"
                   maxlength="4"
@@ -192,13 +188,7 @@
             </div>
           </form>
 
-          <div
-            id="feedback-message"
-            class="notification is-light mt-5"
-            aria-live="polite"
-          >
-            Your confirmation will appear here.
-          </div>
+          <div id="feedback-message" class="mt-5 is-hidden" aria-live="polite"></div>
         </div>
       </div>
     </main>
