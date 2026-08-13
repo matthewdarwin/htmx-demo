@@ -146,11 +146,26 @@ default though — it beat a legitimate, more-specific contextual override
 once (`.hero.is-link .title`) and caused a real regression.
 
 **Dark/light toggle:** manual override via `document.documentElement`'s
-`data-theme` attribute, set by the button in `public/header.html` /
+`data-theme` attribute, set by the button(s) in `public/header.html` /
 handled in `src/main.js`, persisted to `localStorage`. There's a small
 synchronous inline `<script>` at the very top of `header.html` (before the
 `<nav>`) that applies the stored theme immediately, specifically to avoid a
-flash of the wrong theme before the deferred module script runs.
+flash of the wrong theme before the deferred module script runs. There are
+two toggle buttons — `#theme-toggle` (icon + label, in the collapsible
+menu) and `#theme-toggle-mobile` (icon only, next to the burger on
+small/medium screens) — `main.js` keeps both in sync regardless of which
+one is clicked.
+
+**Another Bulma breakpoint gotcha:** `$navbar-breakpoint` (where the
+burger hides and the full menu shows) defaults to *desktop*, 1024px — not
+*tablet*, 769px, despite "tablet" being the more natural-sounding match
+for "mobile nav collapses." Anything meant to show/hide in lockstep with
+the burger (like `#theme-toggle-mobile`'s wrapper) needs `is-hidden-desktop`/
+`is-hidden-touch`, not `is-hidden-tablet` — using the tablet-breakpoint
+helper left a ~769–1023px gap where the burger showed but the element
+didn't, which also broke that element's `margin-left: auto` (see below)
+since it wasn't there to claim the free space, leaving the burger
+sitting wherever normal flow put it instead of pushed to the right.
 
 ## MapLibre / Mapbox (location page)
 
