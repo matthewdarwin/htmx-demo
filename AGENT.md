@@ -43,7 +43,8 @@ navigated to: `public/feedback/thanks.html` (the feedback form's
 under `pages/` even though `public/feedback/` sits right next to
 `pages/feedback/`. `public/header.html`/`public/footer.html` (the include
 partials themselves) are the same kind of thing, as is `public/meta-og.html`
-(Open Graph `<meta>` tags, included into `<head>` — currently just the
+(Open Graph `<meta>` tags plus the reference site's `Organization`/
+`LocalBusiness` JSON-LD, included into `<head>` — currently just the
 homepage, via `<!--#include meta-og.html -->`).
 
 ## Adding a new page
