@@ -39,11 +39,12 @@ src="/src/main.js">` bundled, etc. — meant to be navigated to directly.
 Anything meant to be served byte-for-byte with zero processing goes in
 `public/` instead, including HTML *fragments* loaded via htmx rather than
 navigated to: `public/feedback/thanks.html` (the feedback form's
-`hx-get` target) and `public/hello-world.html` (the homepage demo
-button's target) are not pages, just swap targets, so they don't belong
+`hx-get` target) is not a page, just a swap target, so it doesn't belong
 under `pages/` even though `public/feedback/` sits right next to
 `pages/feedback/`. `public/header.html`/`public/footer.html` (the include
-partials themselves) are the same kind of thing.
+partials themselves) are the same kind of thing, as is `public/meta-og.html`
+(Open Graph `<meta>` tags, included into `<head>` — currently just the
+homepage, via `<!--#include meta-og.html -->`).
 
 ## Adding a new page
 
