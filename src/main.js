@@ -64,6 +64,19 @@ if (themeToggles.length) {
 
 const feedbackForm = document.getElementById('feedback-form')
 if (feedbackForm) {
+  const feedbackMessage = document.getElementById('feedback-message')
+
+  const showFeedbackFailure = (text) => {
+    feedbackMessage.innerHTML = `<article class="message is-danger">
+  <div class="message-header">
+    <p><strong>Error</strong></p>
+  </div>
+  <div class="message-body">${text}</div>
+</article>`
+    feedbackMessage.classList.remove('is-hidden')
+    feedbackForm.classList.remove('is-hidden')
+  }
+
   // The server validates the human-check year itself (and every other
   // field); on response, reveal the result in place of the form. Only hide
   // the form on success — on failure leave it up so the user can fix the
@@ -82,6 +95,26 @@ if (feedbackForm) {
       ? resultHeader === 'error'
       : evt.target.querySelector('.message.is-danger') !== null
     feedbackForm.classList.toggle('is-hidden', !isError)
+  })
+
+  // htmx's default responseHandling treats 4xx/5xx as swap:false, so
+  // htmx:afterSwap above never fires for a server error — without this,
+  // the user gets no feedback at all beyond the submit button re-enabling.
+  // htmx:sendError covers the network-failure case (server unreachable),
+  // which never gets a response to hand responseHandling in the first
+  // place.
+  document.body.addEventListener('htmx:responseError', (evt) => {
+    if (evt.target !== feedbackForm) return
+    showFeedbackFailure(
+      'Something went wrong submitting your feedback. Please try again.',
+    )
+  })
+
+  document.body.addEventListener('htmx:sendError', (evt) => {
+    if (evt.target !== feedbackForm) return
+    showFeedbackFailure(
+      'Could not reach the server. Please check your connection and try again.',
+    )
   })
 }
 
