@@ -138,9 +138,10 @@ a.navbar-item:hover,
   background-color: var(--brand-surface);
 }
 
-/* Theme toggle button */
+/* Theme toggle buttons */
 
-#theme-toggle {
+#theme-toggle,
+#theme-toggle-mobile {
   background: transparent;
   border-color: transparent;
   color: white;
@@ -150,10 +151,21 @@ a.navbar-item:hover,
   margin-left: 0.4em;
 }
 
-#theme-toggle:hover {
+#theme-toggle:hover,
+#theme-toggle-mobile:hover {
   background: transparent;
   border-color: transparent;
   color: var(--brand-hover);
+}
+
+/* Bulma's .navbar-burger has its own margin-left: auto to push itself to
+   the far right of .navbar-brand — if the mobile theme toggle right before
+   it also has margin-left: auto (ml-auto), flexbox splits the free space
+   between both auto margins, leaving a gap between them. Zeroing the
+   burger's here instead lets the toggle's auto margin claim all of it, so
+   the two sit flush together at the right edge. */
+.theme-toggle-mobile-item + .navbar-burger {
+  margin-left: 0;
 }
 
 /* FAQ page */

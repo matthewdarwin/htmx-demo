@@ -28,31 +28,37 @@ document.querySelectorAll('.navbar-burger').forEach((burger) => {
   })
 })
 
-const themeToggle = document.getElementById('theme-toggle')
-if (themeToggle) {
+// theme-toggle-mobile (icon only, next to the burger) mirrors theme-toggle
+// (icon + label, in the collapsible menu) — both stay in sync regardless of
+// which one is clicked.
+const themeToggles = document.querySelectorAll(
+  '#theme-toggle, #theme-toggle-mobile',
+)
+if (themeToggles.length) {
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)')
 
   const currentTheme = () =>
     document.documentElement.getAttribute('data-theme') ||
     (prefersDark.matches ? 'dark' : 'light')
 
-  const updateToggle = () => {
+  const updateToggles = () => {
     const isDark = currentTheme() === 'dark'
-    themeToggle.querySelector('i').className = isDark
-      ? 'fas fa-sun'
-      : 'fas fa-moon'
-    themeToggle.querySelector('#theme-toggle-label').textContent = isDark
-      ? 'Light mode'
-      : 'Dark mode'
+    themeToggles.forEach((toggle) => {
+      toggle.querySelector('i').className = isDark ? 'fas fa-sun' : 'fas fa-moon'
+      const label = toggle.querySelector('#theme-toggle-label')
+      if (label) label.textContent = isDark ? 'Light mode' : 'Dark mode'
+    })
   }
 
-  updateToggle()
+  updateToggles()
 
-  themeToggle.addEventListener('click', () => {
-    const next = currentTheme() === 'dark' ? 'light' : 'dark'
-    document.documentElement.setAttribute('data-theme', next)
-    localStorage.setItem('theme', next)
-    updateToggle()
+  themeToggles.forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      const next = currentTheme() === 'dark' ? 'light' : 'dark'
+      document.documentElement.setAttribute('data-theme', next)
+      localStorage.setItem('theme', next)
+      updateToggles()
+    })
   })
 }
 
