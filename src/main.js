@@ -171,9 +171,10 @@ if (mapCanvas) {
     validateStyle: false,
   })
 
-  const popup = new maplibregl.Popup({ offset: 25 }).setHTML(
-    'Ottawa Family Cinema<br>815 St-Laurent Boulevard',
-  )
+  const popup = new maplibregl.Popup({
+    offset: 25,
+    className: 'LocationPopup',
+  }).setHTML('Ottawa Family Cinema<br>815 St-Laurent Boulevard')
 
   const marker = new maplibregl.Marker()
     .setLngLat(coord)

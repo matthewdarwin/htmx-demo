@@ -220,6 +220,64 @@ a.navbar-item:hover,
   margin-bottom: 1.5rem;
 }
 
+/* Location map popup — same white-on-brand-surface pairing the navbar
+   already uses, rather than MapLibre's default plain white box (whose
+   text otherwise inherits this site's dark-mode foreground color, which
+   reads as low-contrast grey against that hardcoded white background).
+   The border is a translucent white, not --brand-accent: in light mode
+   --brand-accent is literally the same value as --brand-surface, so a
+   --brand-accent border would be invisible against its own background. */
+.LocationPopup .maplibregl-popup-content {
+  background-color: var(--brand-surface);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+.LocationPopup.maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+.LocationPopup.maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
+.LocationPopup.maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip {
+  border-top-color: var(--brand-surface);
+}
+
+.LocationPopup.maplibregl-popup-anchor-top .maplibregl-popup-tip,
+.LocationPopup.maplibregl-popup-anchor-top-left .maplibregl-popup-tip,
+.LocationPopup.maplibregl-popup-anchor-top-right .maplibregl-popup-tip {
+  border-bottom-color: var(--brand-surface);
+}
+
+.LocationPopup.maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-right-color: var(--brand-surface);
+}
+
+.LocationPopup.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-left-color: var(--brand-surface);
+}
+
+/* The popup auto-opens on page load (map.on('load') calls
+   marker.togglePopup()), and the close button ends up focused at that
+   point — the browser's default focus ring on it reads as far too loud
+   against the map. Keep a visible focus style for keyboard users, just a
+   subtler one that matches the popup's own colors instead of the
+   browser default. */
+.LocationPopup .maplibregl-popup-close-button {
+  color: white;
+  font-size: 16px;
+  padding: 2px 6px;
+}
+
+.LocationPopup .maplibregl-popup-close-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.LocationPopup .maplibregl-popup-close-button:focus-visible {
+  outline: 2px solid var(--brand-hover);
+  outline-offset: -2px;
+  background-color: transparent;
+}
+
 /* YouTube video embeds (tour, history) */
 
 .Video {
