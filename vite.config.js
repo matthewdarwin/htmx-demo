@@ -12,6 +12,7 @@ const pagesRoot = resolve(import.meta.dirname, 'pages')
 const pageEntries = {
   index: resolve(pagesRoot, 'index.html'),
   404: resolve(pagesRoot, '404.html'),
+  announcements: resolve(pagesRoot, 'announcements/index.html'),
   feedback: resolve(pagesRoot, 'feedback/index.html'),
   faq: resolve(pagesRoot, 'faq/index.html'),
   location: resolve(pagesRoot, 'location/index.html'),

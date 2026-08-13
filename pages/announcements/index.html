@@ -3,41 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ottawa Family Cinema</title>
-    <!--#include meta-og.html -->
+    <title>Cinema Announcements | htmx Demo</title>
   </head>
   <body>
     <!--#include header.html -->
 
     <section class="hero is-primary">
       <div class="hero-body">
-        <p class="title">Ottawa Family Cinema</p>
-        <p class="subtitle">The home of great family movies</p>
+        <p class="title">Cinema Announcements</p>
+        <p class="subtitle">What's new at the Ottawa Family Cinema.</p>
       </div>
     </section>
 
     <main class="section">
       <div class="container">
         <div
-          hx-get="/api/announcement_headlines.html"
+          hx-get="/api/announcements.html"
           hx-trigger="load"
-          hx-swap="outerHTML"
+          hx-swap="innerHTML"
         >
           <progress class="progress is-small is-link" max="100">
             Loading&hellip;
           </progress>
-        </div>
-
-        <div class="HomePromo">
-          <div
-            hx-get="/api/show_promotion.html"
-            hx-trigger="load"
-            hx-swap="outerHTML"
-          >
-            <progress class="progress is-small is-link" max="100">
-              Loading&hellip;
-            </progress>
-          </div>
         </div>
       </div>
     </main>
