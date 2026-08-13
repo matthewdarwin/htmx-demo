@@ -94,8 +94,14 @@ validation — including the `check` (human/year check) field — because the
 response HTML already says exactly what was wrong; duplicating that logic
 client-side would just be a second place for it to drift out of sync. On
 response, `main.js` swaps the result into `#feedback-message` and hides the
-form (`htmx:afterSwap`, keyed off that target's id) rather than showing
-both at once.
+form (`htmx:afterSwap`, keyed off that target's id) — but only on success,
+so a validation failure leaves the form up to fix and resubmit rather than
+stranding the user with no way back to it. Success/failure is read from an
+`X-Form-Result: ok`/`error` response header (a convention meant to be
+reused by any future form-processing `/api/*` endpoint, not feedback-
+specific) — the backend doesn't send this yet, so `main.js` falls back to
+checking the message HTML for an `is-danger` class when the header is
+absent. Drop the fallback once the backend reliably sends the header.
 
 **`/api/*` is always requested relative to the current page, never as a
 hard-coded `https://www.familycinema.ca/...` URL.** In production this

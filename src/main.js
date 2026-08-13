@@ -65,12 +65,23 @@ if (themeToggles.length) {
 const feedbackForm = document.getElementById('feedback-form')
 if (feedbackForm) {
   // The server validates the human-check year itself (and every other
-  // field); on response, reveal the result in place of the form rather
-  // than showing both at once.
+  // field); on response, reveal the result in place of the form. Only hide
+  // the form on success — on failure leave it up so the user can fix the
+  // offending field and resubmit, rather than getting stuck with no way
+  // back to the form.
+  //
+  // Prefers the X-Form-Result: ok/error response header when the server
+  // sends one, falling back to sniffing the message's own is-danger class
+  // otherwise — so this works today and gets more robust the moment the
+  // backend adds the header, with no coordinated deploy required.
   document.body.addEventListener('htmx:afterSwap', (evt) => {
     if (evt.target.id !== 'feedback-message') return
     evt.target.classList.remove('is-hidden')
-    feedbackForm.classList.add('is-hidden')
+    const resultHeader = evt.detail.xhr.getResponseHeader('X-Form-Result')
+    const isError = resultHeader
+      ? resultHeader === 'error'
+      : evt.target.querySelector('.message.is-danger') !== null
+    feedbackForm.classList.toggle('is-hidden', !isError)
   })
 }
 
