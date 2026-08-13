@@ -87,6 +87,39 @@ main.section {
   margin: 0 auto;
 }
 
+/* Bulma's reset removes default browser list-marker styling everywhere,
+   only restoring it inside .content (its own prose-block class — see
+   https://bulma.io/documentation/elements/content/). The real API
+   fragments loaded into pages (member, history, etc.) return plain <ul>/
+   <ol> without that wrapper, so they were rendering with no bullets/
+   numbers at all, and — since Bulma also zeroes the default left
+   padding/margin lists normally get for their markers — the numbers on
+   <ol> lists had no room to sit in and spilled left of the page's own
+   left edge. Restoring Bulma's own .content list rules, scoped to
+   main.section so they apply to fetched content without affecting
+   .footer-social (styled separately) or other deliberately-bulleted-free
+   lists elsewhere. */
+main.section ul {
+  list-style: disc outside;
+  margin-inline-start: 2em;
+}
+
+main.section ol {
+  list-style: decimal outside;
+  margin-inline-start: 2em;
+}
+
+/* History page's own link list (View by name/date, Poster Gallery) is a
+   nav-style list, not fetched prose — opt back out of the restoration
+   above. Needs the main.section prefix to out-specificity that rule
+   (main.section ul is two elements + one class; a bare .history-links
+   class alone is less specific and would lose regardless of source
+   order). */
+main.section .history-links {
+  list-style: none;
+  margin-inline-start: 0;
+}
+
 /* Membership and gift certificate info boxes */
 
 .MembershipBox,
