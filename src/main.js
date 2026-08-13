@@ -3,7 +3,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import 'swiper/css'
 import './style.css'
-import htmx from 'htmx.org'
+import 'htmx.org'
 import Swiper from 'swiper'
 import { Autoplay } from 'swiper/modules'
 import { isMapboxURL, transformMapboxUrl } from './mapbox-request-transformer.js'
@@ -14,20 +14,6 @@ import { isMapboxURL, transformMapboxUrl } from './mapbox-request-transformer.js
 // chunk never gets emitted and the worker 404s. Keeping both files side by
 // side at a fixed path keeps that relative import intact.
 const maplibreWorkerUrl = '/maplibre/maplibre-gl-worker.mjs'
-
-window.htmx = htmx
-
-// htmx 2.x blocks cross-origin hx-get/hx-post by default (selfRequestsOnly)
-// before htmx:validateUrl even fires, so the flag has to come off first. The
-// validateUrl listener then puts the restriction back as an explicit
-// allowlist instead of opening up every origin.
-htmx.config.selfRequestsOnly = false
-
-document.body.addEventListener('htmx:validateUrl', (evt) => {
-  if (!evt.detail.sameHost && evt.detail.url.origin !== 'https://www.familycinema.ca') {
-    evt.preventDefault()
-  }
-})
 
 const missingPath = document.getElementById('missing-path')
 if (missingPath) {
@@ -136,24 +122,24 @@ function loadAccordionList(elementId, apiUrl, errorMessage) {
 
 loadAccordionList(
   'faq-list',
-  'https://www.familycinema.ca/api/faq.json',
+  '/api/faq.json',
   'Unable to load the FAQ right now. Please try again later.',
 )
 
 loadAccordionList(
   'volunteer-list',
-  'https://www.familycinema.ca/api/volunteer.json',
+  '/api/volunteer.json',
   'Unable to load volunteer info right now. Please try again later.',
 )
 
 const promoWrapper = document.querySelector('.HomePromo')
 if (promoWrapper) {
-  // The fetched fragment is itself a full .swiper-container element, so
+  // The fetched fragment is itself a full .swiper element, so
   // hx-swap="outerHTML" replaces the placeholder with it outright rather
   // than nesting it inside one. Querying fresh here (instead of caching a
   // reference before the swap) finds the live element once it lands.
   document.body.addEventListener('htmx:afterSwap', () => {
-    const promoContainer = promoWrapper.querySelector('.swiper-container')
+    const promoContainer = promoWrapper.querySelector('.swiper')
     if (!promoContainer) return
     new Swiper(promoContainer, {
       modules: [Autoplay],

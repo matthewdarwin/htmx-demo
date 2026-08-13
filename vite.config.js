@@ -40,6 +40,18 @@ function redirectProxy() {
   }
 }
 
+// Mirrors the production nginx rule for /api/*, which proxies it straight
+// through to the real backend — not present in local dev/preview, so pages
+// fetch this the same relative "/api/..." way in every environment instead
+// of hard-coding the upstream host (and dodging CORS/htmx's cross-origin
+// checks entirely, since the request never leaves the current origin).
+const apiProxy = {
+  '/api': {
+    target: 'https://www.familycinema.ca',
+    changeOrigin: true,
+  },
+}
+
 export default defineConfig({
   root: resolve(import.meta.dirname, 'pages'),
   publicDir: resolve(import.meta.dirname, 'public'),
@@ -52,10 +64,12 @@ export default defineConfig({
   server: {
     port: 5173,
     strictPort: true,
+    proxy: apiProxy,
   },
   preview: {
     port: 4173,
     strictPort: true,
+    proxy: apiProxy,
   },
   build: {
     outDir: resolve(import.meta.dirname, 'dist'),

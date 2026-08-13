@@ -178,7 +178,7 @@ a.navbar-item:hover,
 
 /* Home page promo carousel */
 
-.HomePromo .swiper-container {
+.HomePromo .swiper {
   max-width: 270px;
   margin: 0 auto;
 }

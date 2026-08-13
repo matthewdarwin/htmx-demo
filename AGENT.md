@@ -76,33 +76,30 @@ partials themselves) are the same kind of thing.
 
 ## Content sourcing
 
-Several pages load their real content live from `https://www.familycinema.ca/api/*`
-instead of hard-coding it, using one of two patterns:
+Several pages load their real content live from `/api/*` instead of
+hard-coding it, using one of two patterns:
 
 - **HTML fragments** (tour, history, member, giftcertificates): plain htmx —
-  `hx-get="https://www.familycinema.ca/api/whatever.html" hx-trigger="load"
-  hx-swap="innerHTML"` on a container div with a `<progress>` placeholder
-  inside. No JS needed.
+  `hx-get="/api/whatever.html" hx-trigger="load" hx-swap="innerHTML"` on a
+  container div with a `<progress>` placeholder inside. No JS needed.
 - **JSON lists** (FAQ, volunteer): `loadAccordionList(elementId, apiUrl,
   errorMessage)` in `src/main.js` — a small reusable helper that fetches
   JSON and renders each `{title, name, detail}` item as a `<details
   class="box">` accordion entry. Reuse this helper for any new JSON-backed
   list rather than duplicating the fetch/render logic.
 
-Two things that trip this up:
-
-- **htmx blocks cross-origin requests by default** (`htmx.config.selfRequestsOnly`).
-  This is disabled in `main.js`, with an `htmx:validateUrl` listener that
-  re-adds an explicit allowlist (currently just `familycinema.ca`) instead of
-  opening every origin. If a new page needs to hit a different external
-  host via `hx-get`, add it to that allowlist rather than loosening it
-  further.
-- **htmx's default request headers force a CORS preflight.** Every `hx-get`
-  sends `HX-Request`, `HX-Trigger`, `HX-Trigger-Name`, `HX-Target`,
-  `HX-Current-URL`. If a new API endpoint returns CORS errors that a plain
-  `fetch()` wouldn't hit, the server is almost certainly missing those in
-  its `Access-Control-Allow-Headers` — that's a server-side fix, not
-  something to work around here.
+**`/api/*` is always requested relative to the current page, never as a
+hard-coded `https://www.familycinema.ca/...` URL.** In production this
+matches nginx on `testdemo.familycinema.ca`, which proxies `/api/*`
+straight through (see "Deployment"). Locally there's no nginx, so
+`vite.config.js`'s `server.proxy`/`preview.proxy` (`apiProxy`) forwards
+`/api/*` to `https://www.familycinema.ca` for both `npm run dev` and `npm
+run preview`, the same way `redirectProxy` stands in for nginx's
+`/redirect/*` rule. Because the request never leaves the current origin
+(the browser only ever sees `/api/...`), htmx's default cross-origin block
+(`htmx.config.selfRequestsOnly`) and CORS never come into play at all —
+there's no client-side allowlist or preflight to work around, and no
+`Access-Control-Allow-Headers` requirement on the upstream server.
 
 Links inside fetched content that point at `/redirect/host/path` are the
 site's click-tracking mechanism (nginx rewrites them to `https://host/path`
@@ -189,8 +186,9 @@ domain is `testdemo.familycinema.ca`, which runs nginx that:
 None of that nginx logic exists in the static build — locally, `/redirect/*`
 is instead handled by a small Vite plugin (`redirectProxy` in
 `vite.config.js`) that runs in `configureServer`/`configurePreviewServer`
-only, so `npm run dev`/`npm run preview` behave like the real deployment
-without needing nginx locally.
+only, and `/api/*` by Vite's built-in `server.proxy`/`preview.proxy`
+(`apiProxy`, same file), so `npm run dev`/`npm run preview` behave like the
+real deployment without needing nginx locally.
 
 CI note: the workflow pins Node 22 (`actions/setup-node`) — cspell 10.x
 requires ≥22.18, and the default `ubuntu-latest` Node (20) fails the build
