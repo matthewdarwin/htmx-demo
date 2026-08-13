@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recover Account</title>
+  </head>
+  <body>
+    <!--#include header.html -->
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">Recover Account</p>
+        <p class="subtitle">Get a login link sent to your e-mail address</p>
+      </div>
+    </section>
+
+    <main class="section">
+      <div class="container">
+        <article class="message is-info box">
+          <div class="message-header">
+            <p><strong>Info</strong></p>
+          </div>
+          <div class="message-body">
+            <p>
+              Please enter your e-mail address. A link to allow you to
+              login will be e-mailed to you. If you do not have a valid
+              e-mail address on file, please
+              <a href="/register/">register for a new account.</a>
+            </p>
+          </div>
+        </article>
+
+        <div class="box">
+          <form
+            id="recover-form"
+            hx-post="/api/account_recover.html"
+            hx-swap="innerHTML"
+            hx-target="#recover-message"
+            hx-disabled-elt="find button[type='submit']"
+          >
+            <div class="field">
+              <label class="label" for="email">E-mail address</label>
+              <div class="control">
+                <input
+                  class="input"
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="check">
+                Human check: what is the current year?
+              </label>
+              <div class="control">
+                <input
+                  class="input"
+                  id="check"
+                  name="check"
+                  type="text"
+                  inputmode="numeric"
+                  maxlength="4"
+                  placeholder="e.g. YYYY"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="field is-grouped">
+              <div class="control">
+                <button class="button is-primary" type="submit">
+                  Submit
+                </button>
+              </div>
+              <div class="control">
+                <button class="button is-light" type="reset">Clear</button>
+              </div>
+            </div>
+          </form>
+
+          <div
+            id="recover-message"
+            class="mt-5 is-hidden"
+            aria-live="polite"
+          ></div>
+        </div>
+      </div>
+    </main>
+
+    <!--#include footer.html -->
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

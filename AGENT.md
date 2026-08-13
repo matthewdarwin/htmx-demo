@@ -86,18 +86,20 @@ hard-coding it, using one of two patterns:
   class="box">` accordion entry. Reuse this helper for any new JSON-backed
   list rather than duplicating the fetch/render logic.
 
-The feedback (`/feedback/`, `hx-post="/api/feedback.html"`) and register
-(`/register/`, `hx-post="/api/account_new.html"`) forms are the write
+The feedback (`/feedback/`, `hx-post="/api/feedback.html"`), register
+(`/register/`, `hx-post="/api/account_new.html"`), and recover
+(`/recover/`, `hx-post="/api/account_recover.html"`) forms are the write
 paths: field `name`s are dictated by the real server (`realname`,
 `membership`, `email`, `comments`, `check` for feedback; `login`, `name`,
-`send_announcement`, `send_promo`, `send_schedule`, `check` for register),
-not by what reads nicely in markup, since they're form-encoded straight
-through to production. Neither has client-side validation — including the
-`check` (human/year check) field on both — because the response HTML
-already says exactly what was wrong; duplicating that logic client-side
-would just be a second place for it to drift out of sync.
+`send_announcement`, `send_promo`, `send_schedule`, `check` for register;
+`email`, `check` for recover), not by what reads nicely in markup, since
+they're form-encoded straight through to production. None of the three
+has client-side validation — including the `check` (human/year check)
+field on all of them — because the response HTML already says exactly
+what was wrong; duplicating that logic client-side would just be a second
+place for it to drift out of sync.
 
-Both forms share the exact same result-handling behavior via
+All three forms share the exact same result-handling behavior via
 `setupResultForm(formId, messageId)` in `main.js` — add any future
 form-processing `/api/*` endpoint to this same helper rather than
 hand-rolling the wiring again. On response, it swaps the result into the

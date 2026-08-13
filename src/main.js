@@ -114,6 +114,7 @@ function setupResultForm(formId, messageId) {
 
 setupResultForm('feedback-form', 'feedback-message')
 setupResultForm('register-form', 'register-message')
+setupResultForm('recover-form', 'recover-message')
 
 function loadAccordionList(elementId, apiUrl, errorMessage) {
   const list = document.getElementById(elementId)
