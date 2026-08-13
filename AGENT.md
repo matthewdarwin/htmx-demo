@@ -219,6 +219,24 @@ class names, base64 token substrings, etc. — go in `cspell.json`'s `words`
 list rather than being ignored some other way. Requires Node ≥22.18 (see
 CI note below).
 
+## Formatting and linting
+
+`npm run build` also runs `npm run format:check` (Prettier) and `npm run
+lint` (ESLint flat config, `eslint.config.js`) before `vite build` —
+`npm run format` applies fixes. Config is `semi: false, singleQuote:
+true` (`.prettierrc.json`), matching the no-semicolon style already used
+throughout `src/`, not Prettier's own defaults (which add semicolons and
+prefer double quotes) — don't "fix" files back to Prettier's defaults.
+
+Both tools skip `public/maplibre/*` (vendored verbatim from
+`node_modules/maplibre-gl/dist/`, must stay byte-identical to upstream —
+see the MapLibre section above) and `.prettierignore` also skips `*.md`:
+Prettier's markdown formatter has a real bug where it drops the
+indentation on some list-item continuation lines that contain a code
+span split across a line-wrap, corrupting list structure (verified
+against this file before excluding it) — not worth fighting for prose
+that wasn't the point of adding Prettier in the first place.
+
 ## Deployment
 
 Static build published to GitHub Pages via `.github/workflows/deploy.yml`

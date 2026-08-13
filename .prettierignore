@@ -1,0 +1,11 @@
+dist
+node_modules
+package-lock.json
+# Vendored verbatim from node_modules/maplibre-gl/dist/ (see AGENT.md) — must
+# stay byte-identical to upstream.
+public/maplibre
+# Prettier's markdown formatter has a real bug: it drops the indentation on
+# some list-item continuation lines that contain a code span split across a
+# line-wrap (verified against AGENT.md), corrupting list structure. Style
+# consistency for prose isn't what this project needs Prettier for anyway.
+*.md

@@ -6,7 +6,10 @@ import './style.css'
 import 'htmx.org'
 import Swiper from 'swiper'
 import { Autoplay } from 'swiper/modules'
-import { isMapboxURL, transformMapboxUrl } from './mapbox-request-transformer.js'
+import {
+  isMapboxURL,
+  transformMapboxUrl,
+} from './mapbox-request-transformer.js'
 
 // Self-hosted from public/maplibre/ rather than a bundler `?url` import: the
 // worker chunk has its own relative `import './maplibre-gl-shared.mjs'`, which
@@ -44,7 +47,9 @@ if (themeToggles.length) {
   const updateToggles = () => {
     const isDark = currentTheme() === 'dark'
     themeToggles.forEach((toggle) => {
-      toggle.querySelector('i').className = isDark ? 'fas fa-sun' : 'fas fa-moon'
+      toggle.querySelector('i').className = isDark
+        ? 'fas fa-sun'
+        : 'fas fa-moon'
       const label = toggle.querySelector('#theme-toggle-label')
       if (label) label.textContent = isDark ? 'Light mode' : 'Dark mode'
     })
@@ -93,7 +98,8 @@ function setupResultForm(formId, messageId, infoId) {
   document.body.addEventListener('htmx:afterSwap', (evt) => {
     if (evt.target !== message) return
     message.classList.remove('is-hidden')
-    const isError = evt.detail.xhr.getResponseHeader('X-Form-Result') === 'error'
+    const isError =
+      evt.detail.xhr.getResponseHeader('X-Form-Result') === 'error'
     form.classList.toggle('is-hidden', !isError)
     if (info) info.classList.toggle('is-hidden', !isError)
   })
