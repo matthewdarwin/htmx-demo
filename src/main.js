@@ -121,51 +121,6 @@ setupResultForm('feedback-form', 'feedback-message')
 setupResultForm('register-form', 'register-message', 'register-info')
 setupResultForm('recover-form', 'recover-message', 'recover-info')
 
-function loadAccordionList(elementId, apiUrl, errorMessage) {
-  const list = document.getElementById(elementId)
-  if (!list) return
-
-  fetch(apiUrl)
-    .then((res) => {
-      if (!res.ok) throw new Error(`Request failed: ${res.status}`)
-      return res.json()
-    })
-    .then((items) => {
-      list.innerHTML = ''
-      items.forEach((item) => {
-        const details = document.createElement('details')
-        details.className = 'box'
-
-        const summary = document.createElement('summary')
-        summary.className = 'title is-5'
-        summary.textContent = item.title
-        details.appendChild(summary)
-
-        const content = document.createElement('div')
-        content.className = 'content'
-        content.innerHTML = item.detail
-        details.appendChild(content)
-
-        list.appendChild(details)
-      })
-    })
-    .catch(() => {
-      list.innerHTML = `<div class="notification is-danger">${errorMessage}</div>`
-    })
-}
-
-loadAccordionList(
-  'faq-list',
-  '/api/faq.json',
-  'Unable to load the FAQ right now. Please try again later.',
-)
-
-loadAccordionList(
-  'volunteer-list',
-  '/api/volunteer.json',
-  'Unable to load volunteer info right now. Please try again later.',
-)
-
 const promoWrapper = document.querySelector('.HomePromo')
 if (promoWrapper) {
   // The fetched fragment is itself a full .swiper element, so

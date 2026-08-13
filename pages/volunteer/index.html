@@ -22,7 +22,13 @@
           introduction to get you started.
         </p>
 
-        <div id="volunteer-list" class="faq-list">
+        <div
+          id="volunteer-list"
+          class="faq-list"
+          hx-get="/api/volunteer.html"
+          hx-trigger="load"
+          hx-swap="innerHTML"
+        >
           <progress class="progress is-small is-link" max="100">
             Loading&hellip;
           </progress>

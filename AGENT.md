@@ -74,17 +74,18 @@ meta-og.html -->`).
 
 ## Content sourcing
 
-Several pages load their real content live from `/api/*` instead of
-hard-coding it, using one of two patterns:
-
-- **HTML fragments** (tour, history, member, giftcertificates): plain htmx —
-  `hx-get="/api/whatever.html" hx-trigger="load" hx-swap="innerHTML"` on a
-  container div with a `<progress>` placeholder inside. No JS needed.
-- **JSON lists** (FAQ, volunteer): `loadAccordionList(elementId, apiUrl,
-  errorMessage)` in `src/main.js` — a small reusable helper that fetches
-  JSON and renders each `{title, name, detail}` item as a `<details
-  class="box">` accordion entry. Reuse this helper for any new JSON-backed
-  list rather than duplicating the fetch/render logic.
+Every content-sourcing page uses the same pattern: plain htmx —
+`hx-get="/api/whatever.html" hx-trigger="load" hx-swap="innerHTML"` on a
+container div with a `<progress>` placeholder inside. No JS needed. FAQ and
+volunteer (`faq-list`/`volunteer-list`) used to be the exception — a
+`loadAccordionList` JS helper fetched JSON and built `<details class="box">`
+accordion entries client-side — but the backend now renders that same
+`<details class="box"><summary class="title is-5">…</summary><div
+class="content">…</div></details>` HTML directly (plus an `<a name="...">`
+anchor per entry), so they're plain `hx-get` targets like everything else
+now. If a future JSON-backed endpoint ever needs client-side rendering
+again, don't hand-roll it inline — but there's no longer a shared helper
+for it, since the one that existed is gone.
 
 The feedback (`/feedback/`, `hx-post="/api/feedback.html"`), register
 (`/register/`, `hx-post="/api/account_new.html"`), and recover

@@ -24,7 +24,13 @@
           Ottawa Family Cinema.
         </p>
 
-        <div id="faq-list" class="faq-list">
+        <div
+          id="faq-list"
+          class="faq-list"
+          hx-get="/api/faq.html"
+          hx-trigger="load"
+          hx-swap="innerHTML"
+        >
           <progress class="progress is-small is-link" max="100">
             Loading&hellip;
           </progress>
