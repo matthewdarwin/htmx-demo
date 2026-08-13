@@ -229,6 +229,7 @@ a.navbar-item:hover,
 }
 
 .icon-social {
+  background-color: var(--brand-surface);
   border-radius: 50%;
   overflow: hidden;
 }
