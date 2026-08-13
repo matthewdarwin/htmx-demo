@@ -10,13 +10,7 @@ import {
   isMapboxURL,
   transformMapboxUrl,
 } from './mapbox-request-transformer.js'
-
-// Self-hosted from public/maplibre/ rather than a bundler `?url` import: the
-// worker chunk has its own relative `import './maplibre-gl-shared.mjs'`, which
-// Vite can't see (it treats `?url` imports as opaque assets), so the shared
-// chunk never gets emitted and the worker 404s. Keeping both files side by
-// side at a fixed path keeps that relative import intact.
-const maplibreWorkerUrl = '/maplibre/maplibre-gl-worker.mjs'
+import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 
 const missingPath = document.getElementById('missing-path')
 if (missingPath) {

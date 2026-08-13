@@ -15,8 +15,6 @@ export default [
   },
   prettierConfig,
   {
-    // Vendored verbatim from node_modules/maplibre-gl/dist/ (see AGENT.md) —
-    // must stay byte-identical to upstream, not linted or reformatted.
-    ignores: ['dist/**', 'public/maplibre/**'],
+    ignores: ['dist/**'],
   },
 ]

@@ -194,12 +194,17 @@ sitting wherever normal flow put it instead of pushed to the right.
 ## MapLibre / Mapbox (location page)
 
 - MapLibre GL JS's worker script has its own internal relative import to a
-  "shared" chunk. Vite can't see through a `?url` import to also bundle
-  that second file, so the worker 404s if you try the obvious approach.
-  Fix: both files are self-hosted verbatim under `public/maplibre/` (copied
-  from `node_modules/maplibre-gl/dist/`), referenced by a fixed path rather
-  than a Vite-processed import. If `maplibre-gl` gets upgraded, re-copy
-  both files from the new version's `dist/`.
+  "shared" chunk. A plain `?url` import doesn't work — Vite treats the
+  target as an opaque asset and never follows that internal import, so the
+  worker 404s at runtime looking for the shared chunk. The fix is
+  `import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'`
+  — Vite's `?worker` suffix bundles the target as a real module graph
+  (following its imports, inlining the shared chunk into one self-contained
+  file) and `&url` gives back the resulting hashed URL to hand to
+  `maplibregl.setWorkerUrl()`, instead of the file being copied verbatim.
+  This used to be self-hosted by hand under `public/maplibre/` (copied from
+  `node_modules/maplibre-gl/dist/`, re-copied on every `maplibre-gl`
+  upgrade) — not needed anymore now that the real fix was found.
 - The Mapbox access token is chosen at runtime in `main.js` based on
   `location.hostname`: the production token (restricted by Mapbox's own URL
   allowlist to `familycinema.ca` subdomains) everywhere except `localhost`,
@@ -228,12 +233,10 @@ true` (`.prettierrc.json`), matching the no-semicolon style already used
 throughout `src/`, not Prettier's own defaults (which add semicolons and
 prefer double quotes) — don't "fix" files back to Prettier's defaults.
 
-Both tools skip `public/maplibre/*` (vendored verbatim from
-`node_modules/maplibre-gl/dist/`, must stay byte-identical to upstream —
-see the MapLibre section above) and `.prettierignore` also skips `*.md`:
-Prettier's markdown formatter has a real bug where it drops the
-indentation on some list-item continuation lines that contain a code
-span split across a line-wrap, corrupting list structure (verified
+`.prettierignore` also skips `*.md`: Prettier's markdown formatter has a
+real bug where it drops the indentation on some list-item continuation
+lines that contain a code span split across a line-wrap, corrupting list
+structure (verified
 against this file before excluding it) — not worth fighting for prose
 that wasn't the point of adding Prettier in the first place.
 

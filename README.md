@@ -32,7 +32,7 @@ npm run preview  # serve the built dist/ locally, on http://localhost:4173
 ```
 pages/            # page source — one directory per URL, e.g. pages/faq/index.html serves at /faq/
 public/           # static passthrough assets: header.html/footer.html includes,
-                   # the MapLibre worker files, CNAME, .nojekyll
+                   # CNAME, .nojekyll
                    # (robots.txt and sitemap.xml are generated at build time, not stored here)
 src/              # main.js and style.css, bundled by Vite
 vite.config.js    # multi-page build config, build-time include mechanism,
