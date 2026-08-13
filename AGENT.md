@@ -190,7 +190,13 @@ domain is `testdemo.familycinema.ca`, which runs nginx that:
 - proxies ordinary page requests through to `testdemostatic.familycinema.ca`,
 - handles `/redirect/*` itself (the click-tracking mechanism mentioned
   above — `/redirect/x.y.z/abc` → `302` to `https://x.y.z/abc`),
-- and handles `/api/*` itself.
+- handles `/api/*` itself,
+- and serves its own `/robots.txt` (the real familycinema.ca one) rather
+  than passing through to the static build's — confirmed by comparing
+  `testdemo.familycinema.ca/robots.txt` against
+  `testdemostatic.familycinema.ca/robots.txt`, which differ. Not something
+  fixable from this repo; `public/robots.txt` here is only ever actually
+  served on the raw `testdemostatic.familycinema.ca` domain.
 
 None of that nginx logic exists in the static build — locally, `/redirect/*`
 is instead handled by a small Vite plugin (`redirectProxy` in
