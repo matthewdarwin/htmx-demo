@@ -26,6 +26,7 @@ const pageEntries = {
   giftcertificates: resolve(pagesRoot, 'giftcertificates/index.html'),
   shows: resolve(pagesRoot, 'shows/index.html'),
   birthdays: resolve(pagesRoot, 'birthdays/index.html'),
+  register: resolve(pagesRoot, 'register/index.html'),
 }
 
 // Inlines <!--#include name.html --> markers with the contents of the

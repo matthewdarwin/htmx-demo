@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Registration</title>
+  </head>
+  <body>
+    <!--#include header.html -->
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">Account Registration</p>
+        <p class="subtitle">Create a new account to manage your membership online</p>
+      </div>
+    </section>
+
+    <main class="section">
+      <div class="container">
+        <article class="message is-info box">
+          <div class="message-header">
+            <p><strong>Info</strong></p>
+          </div>
+          <div class="message-body">
+            <p>
+              To register for a new account, please fill out the following
+              information. All fields are required.
+            </p>
+            <p class="mt-4">
+              <strong>Note:</strong> Complete this form only if you need a
+              new account. If you don't know your login information, see
+              <a href="https://account.familycinema.ca/email"
+                >how to receive your account information</a
+              >.
+            </p>
+          </div>
+        </article>
+
+        <div class="box">
+          <form
+            id="register-form"
+            hx-post="/api/account_new.html"
+            hx-swap="innerHTML"
+            hx-target="#register-message"
+            hx-disabled-elt="find button[type='submit']"
+          >
+            <div class="field">
+              <label class="label" for="login">E-mail address</label>
+              <div class="control">
+                <input
+                  class="input"
+                  id="login"
+                  name="login"
+                  type="email"
+                  placeholder="you@example.com"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="name">Full name</label>
+              <div class="control">
+                <input
+                  class="input"
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="Your full name"
+                  autocomplete="name"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Receive announcements</label>
+              <div class="control">
+                <label class="radio">
+                  <input
+                    type="radio"
+                    name="send_announcement"
+                    value="1"
+                    checked
+                  />
+                  Yes
+                </label>
+                <label class="radio">
+                  <input type="radio" name="send_announcement" value="0" />
+                  No
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">
+                Receive promotions (e.g. free ticket offers)
+              </label>
+              <div class="control">
+                <label class="radio">
+                  <input type="radio" name="send_promo" value="1" checked />
+                  Yes
+                </label>
+                <label class="radio">
+                  <input type="radio" name="send_promo" value="0" />
+                  No
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Receive weekly schedule</label>
+              <div class="control">
+                <label class="radio">
+                  <input
+                    type="radio"
+                    name="send_schedule"
+                    value="1"
+                    checked
+                  />
+                  Yes
+                </label>
+                <label class="radio">
+                  <input type="radio" name="send_schedule" value="0" />
+                  No
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="check">
+                Human check: what is the current year?
+              </label>
+              <div class="control">
+                <input
+                  class="input"
+                  id="check"
+                  name="check"
+                  type="text"
+                  inputmode="numeric"
+                  maxlength="4"
+                  placeholder="e.g. 2026"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="field is-grouped">
+              <div class="control">
+                <button class="button is-primary" type="submit">
+                  Create account
+                </button>
+              </div>
+              <div class="control">
+                <button class="button is-light" type="reset">Clear</button>
+              </div>
+            </div>
+          </form>
+
+          <div
+            id="register-message"
+            class="mt-5 is-hidden"
+            aria-live="polite"
+          ></div>
+        </div>
+      </div>
+    </main>
+
+    <!--#include footer.html -->
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

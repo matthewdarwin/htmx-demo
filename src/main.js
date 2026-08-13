@@ -62,32 +62,35 @@ if (themeToggles.length) {
   })
 }
 
-const feedbackForm = document.getElementById('feedback-form')
-if (feedbackForm) {
-  const feedbackMessage = document.getElementById('feedback-message')
+// Wires up the shared result-handling behavior for any hx-post form that
+// follows the feedback form's convention: server validates everything
+// (no client-side validation to duplicate/drift), responds with a Bulma
+// "message" fragment and an X-Form-Result: ok/error header, and on
+// success the form should hide in favor of the message — but on failure
+// stay up so the user can fix the offending field and resubmit, rather
+// than getting stuck with no way back to the form.
+function setupResultForm(formId, messageId) {
+  const form = document.getElementById(formId)
+  if (!form) return
 
-  const showFeedbackFailure = (text) => {
-    feedbackMessage.innerHTML = `<article class="message is-danger">
+  const message = document.getElementById(messageId)
+
+  const showFailure = (text) => {
+    message.innerHTML = `<article class="message is-danger">
   <div class="message-header">
     <p><strong>Error</strong></p>
   </div>
   <div class="message-body">${text}</div>
 </article>`
-    feedbackMessage.classList.remove('is-hidden')
-    feedbackForm.classList.remove('is-hidden')
+    message.classList.remove('is-hidden')
+    form.classList.remove('is-hidden')
   }
 
-  // The server validates the human-check year itself (and every other
-  // field); on response, reveal the result in place of the form. Only hide
-  // the form on success — on failure leave it up so the user can fix the
-  // offending field and resubmit, rather than getting stuck with no way
-  // back to the form. Success/failure comes from the X-Form-Result:
-  // ok/error response header, not from sniffing the message HTML.
   document.body.addEventListener('htmx:afterSwap', (evt) => {
-    if (evt.target.id !== 'feedback-message') return
-    evt.target.classList.remove('is-hidden')
+    if (evt.target !== message) return
+    message.classList.remove('is-hidden')
     const isError = evt.detail.xhr.getResponseHeader('X-Form-Result') === 'error'
-    feedbackForm.classList.toggle('is-hidden', !isError)
+    form.classList.toggle('is-hidden', !isError)
   })
 
   // htmx's default responseHandling treats 4xx/5xx as swap:false, so
@@ -97,19 +100,20 @@ if (feedbackForm) {
   // which never gets a response to hand responseHandling in the first
   // place.
   document.body.addEventListener('htmx:responseError', (evt) => {
-    if (evt.target !== feedbackForm) return
-    showFeedbackFailure(
-      'Something went wrong submitting your feedback. Please try again.',
-    )
+    if (evt.target !== form) return
+    showFailure('Something went wrong submitting the form. Please try again.')
   })
 
   document.body.addEventListener('htmx:sendError', (evt) => {
-    if (evt.target !== feedbackForm) return
-    showFeedbackFailure(
+    if (evt.target !== form) return
+    showFailure(
       'Could not reach the server. Please check your connection and try again.',
     )
   })
 }
+
+setupResultForm('feedback-form', 'feedback-message')
+setupResultForm('register-form', 'register-message')
 
 function loadAccordionList(elementId, apiUrl, errorMessage) {
   const list = document.getElementById(elementId)

@@ -86,23 +86,27 @@ hard-coding it, using one of two patterns:
   class="box">` accordion entry. Reuse this helper for any new JSON-backed
   list rather than duplicating the fetch/render logic.
 
-The feedback form (`hx-post="/api/feedback.html"`) is the one write path:
-field `name`s are dictated by the real server (`realname`, `membership`,
-`email`, `comments`, `check`), not by what reads nicely in markup, since
-it's form-encoded straight through to production. It has no client-side
-validation — including the `check` (human/year check) field — because the
-response HTML already says exactly what was wrong; duplicating that logic
-client-side would just be a second place for it to drift out of sync. On
-response, `main.js` swaps the result into `#feedback-message` and hides the
-form (`htmx:afterSwap`, keyed off that target's id) — but only on success,
-so a validation failure leaves the form up to fix and resubmit rather than
-stranding the user with no way back to it. Success/failure is read from an
-`X-Form-Result: ok`/`error` response header (a convention meant to be
-reused by any future form-processing `/api/*` endpoint, not feedback-
-specific) — read directly, no client-side sniffing of the message HTML.
-An earlier version fell back to checking for an `is-danger` class while
-the backend didn't send the header yet; now that it does, don't
-reintroduce that fallback.
+The feedback (`/feedback/`, `hx-post="/api/feedback.html"`) and register
+(`/register/`, `hx-post="/api/account_new.html"`) forms are the write
+paths: field `name`s are dictated by the real server (`realname`,
+`membership`, `email`, `comments`, `check` for feedback; `login`, `name`,
+`send_announcement`, `send_promo`, `send_schedule`, `check` for register),
+not by what reads nicely in markup, since they're form-encoded straight
+through to production. Neither has client-side validation — including the
+`check` (human/year check) field on both — because the response HTML
+already says exactly what was wrong; duplicating that logic client-side
+would just be a second place for it to drift out of sync.
+
+Both forms share the exact same result-handling behavior via
+`setupResultForm(formId, messageId)` in `main.js` — add any future
+form-processing `/api/*` endpoint to this same helper rather than
+hand-rolling the wiring again. On response, it swaps the result into the
+message target and hides the form (`htmx:afterSwap`, keyed off that
+target's id) — but only on success, so a validation failure leaves the
+form up to fix and resubmit rather than stranding the user with no way
+back to it. Success/failure is read from an `X-Form-Result: ok`/`error`
+response header, read directly with no client-side sniffing of the
+message HTML.
 
 **A server error gets no `htmx:afterSwap` at all**, by design: htmx's
 default `responseHandling` treats 4xx/5xx as `swap: false`, so nothing
@@ -110,7 +114,7 @@ above ever runs. Without separate `htmx:responseError` (bad response) and
 `htmx:sendError` (request never got a response — network down) handlers,
 a 500 or an unreachable server is completely silent: button re-enables,
 nothing else happens, no indication anything went wrong. Both are handled
-by writing a generic error message directly into `#feedback-message`
+by writing a generic error message directly into the message target
 (there's no server HTML to reuse in this case) while leaving the form
 visible, same as a validation failure.
 
