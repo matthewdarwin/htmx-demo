@@ -259,6 +259,22 @@ only, and `/api/*` by Vite's built-in `server.proxy`/`preview.proxy`
 (`apiProxy`, same file), so `npm run dev`/`npm run preview` behave like the
 real deployment without needing nginx locally.
 
+**Caching**: GitHub Pages sends `Cache-Control: max-age=600` on every
+response, hashed assets and frequently-changing pages alike, and there's
+no way to override that from the repo/build side (GitHub Pages doesn't
+support custom response headers). nginx on `testdemo.familycinema.ca`
+fixes this at the proxy: ordinary page requests get `Cache-Control:
+no-cache, must-revalidate` (browsers still get a cheap `304` via the
+ETag GitHub Pages already sends, rather than a full re-download, just
+always check freshness first), while `/assets/*` — Vite's
+content-hashed build output, where a changed file gets a new filename —
+gets `public, max-age=31536000, immutable`. `/maplibre/*` deliberately
+stays under the `no-cache` rule despite also being a build artifact: those
+two files are copied verbatim rather than content-hashed (see the
+MapLibre section above), so their URL doesn't change across a
+maplibre-gl version upgrade — a long cache there could leave clients
+stuck with a stale, possibly-incompatible worker file for up to a year.
+
 CI note: the workflow pins Node 22 (`actions/setup-node`) — cspell 10.x
 requires ≥22.18, and the default `ubuntu-latest` Node (20) fails the build
 step with a version error if this ever gets reverted.
