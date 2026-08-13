@@ -97,6 +97,22 @@ function sitemap() {
   }
 }
 
+// Generated (rather than a static public/robots.txt) so siteUrl has exactly
+// one home in the whole repo — the Sitemap: directive must be a
+// fully-qualified URL per the sitemap protocol spec (unlike Allow/Disallow,
+// it can't be relative), so without this the domain would be hard-coded
+// here *and* in the sitemap plugin above, free to drift apart.
+function robotsTxt() {
+  return {
+    name: 'robots-txt',
+    apply: 'build',
+    closeBundle() {
+      const contents = `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`
+      writeFileSync(resolve(import.meta.dirname, 'dist/robots.txt'), contents)
+    },
+  }
+}
+
 // Mirrors the production nginx rule for /api/*, which proxies it straight
 // through to the real backend — not present in local dev/preview, so pages
 // fetch this the same relative "/api/..." way in every environment instead
@@ -117,7 +133,7 @@ export default defineConfig({
       '/src': resolve(import.meta.dirname, 'src'),
     },
   },
-  plugins: [includePartials(), redirectProxy(), sitemap()],
+  plugins: [includePartials(), redirectProxy(), sitemap(), robotsTxt()],
   server: {
     port: 5173,
     strictPort: true,

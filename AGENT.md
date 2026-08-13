@@ -187,16 +187,13 @@ Static build published to GitHub Pages via `.github/workflows/deploy.yml`
 `testdemostatic.familycinema.ca` (`public/CNAME`). The real public-facing
 domain is `testdemo.familycinema.ca`, which runs nginx that:
 
-- proxies ordinary page requests through to `testdemostatic.familycinema.ca`,
+- proxies ordinary page requests through to `testdemostatic.familycinema.ca`
+  (this now includes `/robots.txt` — it was briefly overridden by nginx
+  serving the real familycinema.ca's own robots.txt instead, but that's
+  since been fixed on the nginx side),
 - handles `/redirect/*` itself (the click-tracking mechanism mentioned
   above — `/redirect/x.y.z/abc` → `302` to `https://x.y.z/abc`),
-- handles `/api/*` itself,
-- and serves its own `/robots.txt` (the real familycinema.ca one) rather
-  than passing through to the static build's — confirmed by comparing
-  `testdemo.familycinema.ca/robots.txt` against
-  `testdemostatic.familycinema.ca/robots.txt`, which differ. Not something
-  fixable from this repo; `public/robots.txt` here is only ever actually
-  served on the raw `testdemostatic.familycinema.ca` domain.
+- and handles `/api/*` itself.
 
 None of that nginx logic exists in the static build — locally, `/redirect/*`
 is instead handled by a small Vite plugin (`redirectProxy` in
@@ -217,15 +214,21 @@ one. It mirrors the reference site's 404 page, filling in the missing path
 client-side via `location.pathname` since there's no server-side rendering
 available.
 
-`dist/sitemap.xml` is generated at build time (the `sitemap` plugin in
-`vite.config.js`, keyed off `pageEntries` — the same object
-`build.rollupOptions.input` uses) rather than hand-maintained, so adding or
-removing a page can't leave it stale. `404.html` is deliberately excluded
-(it's an error page, not indexable content), and there's no `<lastmod>`
-since nothing here tracks real per-page modification times. `public/robots.txt`
-points at it. Note the reference site has neither a sitemap nor a
-`Sitemap:` line in its own `robots.txt` — nothing to mirror here, this is
-just standard practice for a real site being added on top of it.
+`dist/sitemap.xml` and `dist/robots.txt` are both generated at build time
+(the `sitemap`/`robotsTxt` plugins in `vite.config.js`) rather than
+hand-maintained as static `public/` files. The sitemap is keyed off
+`pageEntries` — the same object `build.rollupOptions.input` uses — so
+adding or removing a page can't leave it stale; `404.html` is deliberately
+excluded (it's an error page, not indexable content), and there's no
+`<lastmod>` since nothing here tracks real per-page modification times.
+`robots.txt`'s `Sitemap:` line is built from the same `siteUrl` constant
+the sitemap plugin uses — generating it, rather than hard-coding the line
+into a static file, keeps the domain in exactly one place (the sitemap
+protocol requires `Sitemap:` to be a fully-qualified absolute URL, unlike
+`Allow`/`Disallow`, so it can't just be relative instead). Note the
+reference site has neither a sitemap nor a `Sitemap:` line in its own
+`robots.txt` — nothing to mirror here, this is just standard practice for
+a real site being added on top of it.
 
 ## Local testing notes
 
