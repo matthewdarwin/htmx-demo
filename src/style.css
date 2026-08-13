@@ -68,8 +68,18 @@ html {
   }
 }
 
+/* Sticky footer: body is a full-viewport-height column, and main grows to
+   fill whatever space the header/hero don't use, pushing the footer (a
+   later sibling, from the included footer.html) to the bottom even when
+   the page's own content is shorter than the viewport. */
 body {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main.section {
+  flex: 1 0 auto;
 }
 
 .box {
