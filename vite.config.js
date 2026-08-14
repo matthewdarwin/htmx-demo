@@ -28,6 +28,9 @@ const pageEntries = {
   birthdays: resolve(pagesRoot, 'birthdays/index.html'),
   register: resolve(pagesRoot, 'register/index.html'),
   recover: resolve(pagesRoot, 'recover/index.html'),
+  login: resolve(pagesRoot, 'login/index.html'),
+  'login-link': resolve(pagesRoot, 'login-link/index.html'),
+  logout: resolve(pagesRoot, 'logout/index.html'),
 }
 
 // Inlines <!--#include name.html --> markers with the contents of the

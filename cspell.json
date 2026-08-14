@@ -46,7 +46,8 @@
     "inotify",
     "nojekyll",
     "realname",
-    "lastmod"
+    "lastmod",
+    "httponly"
   ],
   "ignorePaths": ["node_modules/**", "dist/**", "package-lock.json"]
 }

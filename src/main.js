@@ -61,6 +61,33 @@ if (themeToggles.length) {
   })
 }
 
+// Toggles the navbar/footer between logged-out (Login/Registration) and
+// logged-in (Logout) states. The jwt cookie itself is httponly (can't be
+// read here by design), so this reads account_hint instead — a second,
+// plain cookie the backend bakes alongside jwt specifically so a static
+// site with no server-side rendering can tell which state to show without
+// a fetch round-trip (and the flash of the wrong state that would cause).
+function getCookie(name) {
+  const match = document.cookie.match(
+    new RegExp('(?:^|; )' + name + '=([^;]*)'),
+  )
+  return match ? decodeURIComponent(match[1]) : null
+}
+
+const loggedIn = getCookie('account_hint')
+document
+  .getElementById('nav-account-logged-out')
+  ?.classList.toggle('is-hidden', !!loggedIn)
+document
+  .getElementById('nav-account-logged-in')
+  ?.classList.toggle('is-hidden', !loggedIn)
+document
+  .getElementById('footer-login')
+  ?.classList.toggle('is-hidden', !!loggedIn)
+document
+  .getElementById('footer-logout')
+  ?.classList.toggle('is-hidden', !loggedIn)
+
 // Wires up the shared result-handling behavior for any hx-post form that
 // follows the feedback form's convention: server validates everything
 // (no client-side validation to duplicate/drift), responds with a Bulma
@@ -120,6 +147,9 @@ function setupResultForm(formId, messageId, infoId) {
 setupResultForm('feedback-form', 'feedback-message')
 setupResultForm('register-form', 'register-message', 'register-info')
 setupResultForm('recover-form', 'recover-message', 'recover-info')
+setupResultForm('login-form', 'login-message')
+setupResultForm('login-link-form', 'login-link-message')
+setupResultForm('logout-form', 'logout-message')
 
 const promoWrapper = document.querySelector('.HomePromo')
 if (promoWrapper) {

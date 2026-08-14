@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+  </head>
+  <body>
+    <!--#include header.html -->
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">Login</p>
+        <p class="subtitle">Access your account</p>
+      </div>
+    </section>
+
+    <main class="section">
+      <div class="container">
+        <div class="box">
+          <form
+            id="login-form"
+            hx-post="/api/account_login.html"
+            hx-swap="innerHTML"
+            hx-target="#login-message"
+            hx-disabled-elt="find button[type='submit']"
+          >
+            <div class="field">
+              <label class="label" for="login">E-mail address</label>
+              <div class="control">
+                <input
+                  class="input"
+                  id="login"
+                  name="login"
+                  type="email"
+                  placeholder="you@example.com"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="password">Password</label>
+              <div class="control">
+                <input
+                  class="input"
+                  id="password"
+                  name="password"
+                  type="password"
+                  autocomplete="current-password"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="control">
+                <button class="button is-primary" type="submit">Login</button>
+              </div>
+            </div>
+          </form>
+
+          <div
+            id="login-message"
+            class="mt-5 is-hidden"
+            aria-live="polite"
+          ></div>
+
+          <p class="mt-4">
+            No password set, or forgot it?
+            <a href="/recover/">Get a one-time login link e-mailed to you</a>.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!--#include footer.html -->
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

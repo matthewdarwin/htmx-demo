@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login via E-mail Link</title>
+  </head>
+  <body>
+    <!--#include header.html -->
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">Login via E-mail Link</p>
+      </div>
+    </section>
+
+    <main class="section">
+      <div class="container">
+        <div class="box">
+          <form
+            id="login-link-form"
+            hx-post="/api/account_login_link.html"
+            hx-swap="innerHTML"
+            hx-target="#login-link-message"
+            hx-trigger="load"
+          >
+            <input type="hidden" id="login-link-username" name="username" />
+            <input type="hidden" id="login-link-recovery" name="recovery" />
+          </form>
+          <script>
+            var params = new URLSearchParams(location.search)
+            document.getElementById('login-link-username').value =
+              params.get('username') || ''
+            document.getElementById('login-link-recovery').value =
+              params.get('recovery') || ''
+          </script>
+
+          <div id="login-link-message" class="mt-5">
+            <progress class="progress is-primary" max="100"></progress>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!--#include footer.html -->
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

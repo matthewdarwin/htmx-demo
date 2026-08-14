@@ -122,10 +122,13 @@
           ><i class="fa-solid fa-user"></i>&nbsp;My Account</a
         >
         <div class="navbar-dropdown is-right">
-          <a class="navbar-item" href="https://account.familycinema.ca/my/"
-            >Account Login</a
-          >
-          <a class="navbar-item" href="/register/">Registration</a>
+          <div id="nav-account-logged-out">
+            <a class="navbar-item" href="/login/">Login</a>
+            <a class="navbar-item" href="/register/">Registration</a>
+          </div>
+          <div id="nav-account-logged-in" class="is-hidden">
+            <a class="navbar-item" href="/logout/">Logout</a>
+          </div>
         </div>
       </div>
     </div>
