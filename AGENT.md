@@ -73,7 +73,7 @@ meta-og.html -->`).
    (see below) and will fail loudly on both typos and missing pages.
 
 **Logged-in-only pages** (Change Password, Change Name, Communication
-Preferences, and future Link Membership/Shopping Cart) live under
+Preferences, My Membership, and future Shopping Cart) live under
 `pages/account/` (e.g. `pages/account/password/index.html` →
 `/account/password/`), and follow one more convention on top of the
 above: wrap the page's real content in `<div id="account-page-content"
@@ -90,13 +90,14 @@ disabled-until-loaded submit button that goes with it) in "Content
 sourcing" below.
 
 **`/account/` (`pages/account/index.html`) is the account management
-landing page** — a `Change Name` / `Communication Preferences` / `Change
-Password` button grid, gated by the same `account-page-content`/
-`account-login-prompt` pair as every other logged-in-only page. It's the
-"home base" these forms link back to: each one has a single "← Back to
-Account" link near the top (not a repeated list of every sibling task —
-deliberately, see below), and the navbar's "My Account" dropdown has a
-matching "Account Overview" entry above the individual task links, so
+landing page** — a `My Membership` / `Change Name` / `Communication
+Preferences` / `Change Password` button grid, gated by the same
+`account-page-content`/`account-login-prompt` pair as every other
+logged-in-only page. It's the "home base" these forms link back to: each
+one has a single "← Back to Account" link near the top (not a repeated
+list of every sibling task — deliberately, see below), and the navbar's
+"My Account" dropdown has a matching "Account Overview" entry above the
+individual task links, so
 there are always two ways in (drop straight into a task, or browse from
 the overview). New "edit my X" pages should add themselves to this
 button grid and the navbar dropdown, not just the navbar.
@@ -107,6 +108,14 @@ project and it confused users (unclear whether clicking a sibling tab
 navigates away or just changes a view within the same page). A single
 "← Back to Account" link avoids that ambiguity; the overview page's
 button grid is the one place all the siblings are listed together.
+
+**`/account/membership/` is a nested hub, one level down**: it's a
+`My Membership` button in `/account/`'s grid, but it's also its own
+mini "home base" for the membership-specific sub-pages (`.../new/`,
+and future `.../share/`, `.../buy/`, `.../pay/`) — each of those has its
+own "← Back to Membership" link pointing at `/account/membership/`, not
+all the way back to `/account/`. Same reasoning as the top-level hub,
+just one level deeper.
 
 ## Content sourcing
 

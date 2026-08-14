@@ -38,6 +38,11 @@ const pageEntries = {
     pagesRoot,
     'account/communication/index.html',
   ),
+  'account-membership': resolve(pagesRoot, 'account/membership/index.html'),
+  'account-membership-new': resolve(
+    pagesRoot,
+    'account/membership/new/index.html',
+  ),
 }
 
 // Inlines <!--#include name.html --> markers with the contents of the

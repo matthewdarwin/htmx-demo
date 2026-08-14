@@ -53,10 +53,10 @@ memberships, gift certificates, upcoming shows, and birthday parties —
 plus a custom 404 page.
 
 Account management: login (password or a one-time e-mail link), logout,
-and — once logged in — an account overview page linking to change name,
-communication preferences, and change password, each pre-filled with the
-account's current value(s) where there's one to show. See `AGENT.md`'s
-"Login/logout" and "Content sourcing" sections for the JWT cookie
+and — once logged in — an account overview page linking to a membership
+status/creation hub, change name, communication preferences, and change
+password, each pre-filled with the account's current value(s) where
+there's one to show. See `AGENT.md`'s "Login/logout" and "Content sourcing" sections for the JWT cookie
 handling and the fetched-fields pattern behind these.
 
 ## Notable pieces
