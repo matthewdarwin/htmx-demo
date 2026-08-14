@@ -167,7 +167,11 @@ main.section .history-links {
   --bulma-navbar-burger-color: white;
 }
 
-.navbar-dropdown .navbar-item:not(.is-active, .is-selected) {
+/* Bulma has both a bare `.navbar-item` rule and a more specific
+   `a.navbar-item` rule for dropdown items; matching only the bare class
+   here lost to Bulma's own tag-qualified rule for every actual (anchor)
+   item, leaving them on Bulma's un-themed default instead of this. */
+.navbar-dropdown a.navbar-item:not(.is-active, .is-selected) {
   background-color: var(--brand-surface);
   color: white;
 }
@@ -181,6 +185,18 @@ a.navbar-item:hover,
 .navbar-dropdown a.navbar-item.is-active,
 .navbar-dropdown a.navbar-item.is-selected {
   background-color: var(--brand-surface);
+}
+
+/* .navbar-divider and .navbar-dropdown's box-shadow both compute their
+   color from Bulma's own scheme/background HSL variables rather than the
+   --bulma-navbar-dropdown-background-color we override above, so they
+   render as a mismatched band instead of blending into the dropdown. */
+.navbar-divider {
+  background-color: var(--brand-surface);
+}
+
+.navbar-dropdown {
+  box-shadow: none;
 }
 
 /* Theme toggle buttons */

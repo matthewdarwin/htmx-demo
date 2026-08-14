@@ -162,6 +162,23 @@ override on the same selector Bulma uses (`.navbar { --bulma-navbar-background-c
 color, card-header color, and footer background so far; assume any new
 Bulma color override needs the same treatment.
 
+**A related variant:** some Bulma elements don't shadow the same custom
+property at all — they compute their own color from a *different* formula
+that was never themed. `.navbar-divider`'s background is
+`hsl(var(--bulma-navbar-h), var(--bulma-navbar-s),
+var(--bulma-navbar-divider-background-l))`, none of which this project
+overrides, so it always rendered as Bulma's own default regardless of
+`--brand-surface`; likewise `.navbar-dropdown`'s `box-shadow` is tinted via
+`--bulma-scheme-invert-l`, showing up as a mismatched band under the open
+dropdown. And separately, Bulma has both a bare `.navbar-item` background
+rule and a more specific `a.navbar-item` one for dropdown items — an
+override matching only the bare class silently loses to Bulma's tag-
+qualified rule for every actual (anchor) item. Fix for all three: override
+the literal property directly on Bulma's own selector (`.navbar-divider`,
+`.navbar-dropdown`, `.navbar-dropdown a.navbar-item`) rather than trying to
+thread values through Bulma's internal HSL variables or matching specificity
+loosely.
+
 The `--bulma-primary-h/s/l` override at `:root` *does* need `!important` —
 that one has no more-specific competing selector, only competing `:root`
 declarations inside Bulma's own dark-mode media query, which a CSS
