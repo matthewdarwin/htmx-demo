@@ -247,6 +247,15 @@ login/login-link/logout change the cookie via an in-page AJAX POST with no
 navigation — without that, the nav would only catch up after the user
 happened to click through to another page.
 
+`/login/` also fetches `/api/announcement_headlines.html` at the top of
+the page (same content-sourcing idiom as the home page — `hx-trigger="load"`
++ `<progress>` placeholder), since people can land directly on it (a
+bookmark, a link from an e-mail) without ever seeing the home page's
+announcements first. And it's the one form with a `nextStepsId`
+(`login-next-steps`: Account Overview / Home buttons) even though it
+isn't under `pages/account/` — logging in has the exact same "now what?"
+gap the account forms had before that pattern existed.
+
 ## Styling (`src/style.css`)
 
 Bulma 1.0.4, with a light/dark theme layered on top via semantic custom

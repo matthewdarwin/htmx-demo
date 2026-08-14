@@ -221,7 +221,7 @@ setupPrefillFields('communication-fields', 'communication-form')
 setupResultForm('feedback-form', 'feedback-message')
 setupResultForm('register-form', 'register-message', 'register-info')
 setupResultForm('recover-form', 'recover-message', 'recover-info')
-setupResultForm('login-form', 'login-message', 'login-info')
+setupResultForm('login-form', 'login-message', 'login-info', 'login-next-steps')
 setupResultForm('login-link-form', 'login-link-message')
 setupResultForm('logout-form', 'logout-message')
 setupResultForm(
