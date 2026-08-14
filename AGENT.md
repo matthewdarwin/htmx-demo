@@ -243,19 +243,51 @@ CI note below).
 
 ## Formatting and linting
 
-`npm run build` also runs `npm run format:check` (Prettier) and `npm run
-lint` (ESLint flat config, `eslint.config.js`) before `vite build` —
-`npm run format` applies fixes. Config is `semi: false, singleQuote:
-true` (`.prettierrc.json`), matching the no-semicolon style already used
-throughout `src/`, not Prettier's own defaults (which add semicolons and
-prefer double quotes) — don't "fix" files back to Prettier's defaults.
+[Biome](https://biomejs.dev/) handles both formatting and linting for
+JS/CSS/HTML/JSON, replacing the previous ESLint + Prettier setup — one
+tool, one config file (`biome.json`), far fewer `node_modules` (swapping
+in `@biomejs/biome` removed `eslint`, `eslint-config-prettier`, `@eslint/js`,
+and `globals` — about 70 fewer packages overall). `npm run build` runs
+`npm run format:check` (`biome format .`) and `npm run lint` (`biome lint
+.`) before `vite build` — `npm run format` (`biome format --write .`)
+applies formatting fixes; `biome check --write .` (not currently wired to
+an npm script) applies both formatting and safe lint/import-sort fixes in
+one pass.
 
-`.prettierignore` also skips `*.md`: Prettier's markdown formatter has a
-real bug where it drops the indentation on some list-item continuation
-lines that contain a code span split across a line-wrap, corrupting list
-structure (verified
-against this file before excluding it) — not worth fighting for prose
-that wasn't the point of adding Prettier in the first place.
+`biome.json`'s `javascript.formatter` is set to `quoteStyle: "single"`,
+`semicolons: "asNeeded"` — matching the no-semicolon, single-quote style
+already used throughout `src/`, not Biome's own defaults (double quotes,
+always-semicolons) — don't "fix" files back to Biome's defaults.
+`html.formatter.enabled` must stay `true`: Biome silently skips HTML files
+entirely (no error) if it's left off or missing, which would make
+`format`/`lint`/`check` look clean while doing nothing for the vast
+majority of this project's files. `indentScriptAndStyle: true` matches
+this codebase's existing convention of indenting embedded `<script>`/
+`<style>` content to the surrounding HTML nesting level — the default
+(`false`) undershoots it by one level.
+
+`linter.rules` uses Biome's own `recommended` preset (broader than the old
+ESLint `js.configs.recommended`, since it also covers CSS and HTML/a11y
+rules) with four categories explicitly turned off, each for a real,
+previously-debugged reason rather than convenience:
+- `a11y.useValidAnchor` — Bulma's `<a class="navbar-link">` dropdown
+  trigger has no `href` by design (it's a hover/click target for the
+  dropdown, not a navigation link).
+- `a11y.noLabelWithoutControl` — the register form's radio-group `<label
+  class="label">` headings (e.g. "Receive announcements") describe a
+  group of inputs, not one; the semantically-correct fix
+  (`<fieldset>`/`<legend>`) is a real markup change, left as a follow-up
+  rather than bundled into the linter swap.
+- `complexity.noImportantStyles` / `style.noDescendingSpecificity` — see
+  the CSS gotchas above: the `--bulma-primary-h/s/l` `!important` override
+  and the footer/`.icon-social` selector order are deliberate, tested
+  choices, not oversights a linter should keep flagging.
+
+`*.md` stays excluded from formatting (`formatter.includes` in
+`biome.json`), though it's currently a no-op either way — Biome has no
+Markdown formatter at all (confirmed: it silently skips `.md` files
+regardless of this setting). The exclude is left in for clarity/future-
+proofing in case that ever changes.
 
 ## Deployment
 

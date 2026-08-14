@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite'
-import { resolve, relative } from 'node:path'
 import { readFileSync, writeFileSync } from 'node:fs'
+import { relative, resolve } from 'node:path'
+import { defineConfig } from 'vite'
 
 const siteUrl = 'https://testdemo.familycinema.ca'
 const pagesRoot = resolve(import.meta.dirname, 'pages')
@@ -52,7 +52,7 @@ function includePartials() {
 // path after the prefix are used verbatim, query string included).
 function redirectProxy() {
   const middleware = (req, res, next) => {
-    if (req.url && req.url.startsWith('/redirect/')) {
+    if (req.url?.startsWith('/redirect/')) {
       const target = `https://${req.url.slice('/redirect/'.length)}`
       res.writeHead(302, { Location: target })
       res.end()

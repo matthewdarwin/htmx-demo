@@ -5,7 +5,7 @@ export function isMapboxURL(url) {
 }
 
 export function transformMapboxStyle(_previousStyle, nextStyle) {
-  if (nextStyle.projection && nextStyle.projection.name) {
+  if (nextStyle.projection?.name) {
     delete nextStyle.projection.name
   }
   return nextStyle

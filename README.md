@@ -22,8 +22,8 @@ Opens on `http://localhost:5173`.
 
 ```bash
 npm run build    # spellcheck, format check, lint, then `vite build`
-npm run format   # auto-fix formatting (Prettier)
-npm run lint     # ESLint
+npm run format   # auto-fix formatting (Biome)
+npm run lint     # Biome lint
 npm run preview  # serve the built dist/ locally, on http://localhost:4173
 ```
 
@@ -39,8 +39,7 @@ vite.config.js    # multi-page build config, build-time include mechanism,
                    # sitemap.xml/robots.txt generation, local dev/preview
                    # stand-ins for production nginx behavior
 cspell.json       # spellcheck word list (proper nouns, brand names, etc.)
-.prettierrc.json / .prettierignore  # formatting config
-eslint.config.js  # lint config
+biome.json        # formatting + linting config (Biome)
 .github/workflows/deploy.yml  # publishes dist/ to GitHub Pages on push to main
 .github/workflows/ci.yml      # runs the build (spellcheck/format/lint) on every pull request
 .github/dependabot.yml        # weekly dependency update PRs (npm + GitHub Actions)

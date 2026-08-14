@@ -4,13 +4,13 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import 'swiper/css'
 import './style.css'
 import 'htmx.org'
+import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import Swiper from 'swiper'
 import { Autoplay } from 'swiper/modules'
 import {
   isMapboxURL,
   transformMapboxUrl,
 } from './mapbox-request-transformer.js'
-import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 
 const missingPath = document.getElementById('missing-path')
 if (missingPath) {
@@ -68,9 +68,7 @@ if (themeToggles.length) {
 // site with no server-side rendering can tell which state to show without
 // a fetch round-trip (and the flash of the wrong state that would cause).
 function getCookie(name) {
-  const match = document.cookie.match(
-    new RegExp('(?:^|; )' + name + '=([^;]*)'),
-  )
+  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`))
   return match ? decodeURIComponent(match[1]) : null
 }
 
