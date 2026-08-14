@@ -32,6 +32,11 @@ const pageEntries = {
   'login-link': resolve(pagesRoot, 'login-link/index.html'),
   logout: resolve(pagesRoot, 'logout/index.html'),
   'account-password': resolve(pagesRoot, 'account/password/index.html'),
+  'account-name': resolve(pagesRoot, 'account/name/index.html'),
+  'account-communication': resolve(
+    pagesRoot,
+    'account/communication/index.html',
+  ),
 }
 
 // Inlines <!--#include name.html --> markers with the contents of the

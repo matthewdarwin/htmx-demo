@@ -72,16 +72,22 @@ meta-og.html -->`).
 6. Run `npm run build` before considering it done — it runs `cspell` first
    (see below) and will fail loudly on both typos and missing pages.
 
-**Logged-in-only pages** (Change Password, and future Change Name/Link
-Membership/Shopping Cart) live under `pages/account/` (e.g.
-`pages/account/password/index.html` → `/account/password/`), and follow
-one more convention on top of the above: wrap the page's real content in
-`<div id="account-page-content" class="is-hidden">...</div>`, then include
-the shared `<!--#include account-login-prompt.html -->` partial right
-after it. `updateAccountNav` in `src/main.js` toggles between the two
-based on the `account_hint` cookie (see "Login/logout" below) — new pages
-get this "must be logged in" gating for free just by using those same two
-pieces, no new JS needed.
+**Logged-in-only pages** (Change Password, Change Name, Communication
+Preferences, and future Link Membership/Shopping Cart) live under
+`pages/account/` (e.g. `pages/account/password/index.html` →
+`/account/password/`), and follow one more convention on top of the
+above: wrap the page's real content in `<div id="account-page-content"
+class="is-hidden">...</div>`, then include the shared `<!--#include
+account-login-prompt.html -->` partial right after it. `updateAccountNav`
+in `src/main.js` toggles between the two based on the `account_hint`
+cookie (see "Login/logout" below) — new pages get this "must be logged
+in" gating for free just by using those same two pieces, no new JS
+needed.
+
+If the page needs to show the account's *current* values (Change Name,
+Communication Preferences) rather than just writing new ones (Change
+Password), see the note on the GET-for-current-values pattern in
+"Content sourcing" below.
 
 ## Content sourcing
 
@@ -149,6 +155,22 @@ Links inside fetched content that point at `/redirect/host/path` are the
 site's click-tracking mechanism (nginx rewrites them to `https://host/path`
 in production/on the proxy domain — see "Deployment" below). They're left
 untouched when fragments are inserted; don't try to rewrite them client-side.
+
+**Logged-in forms that need to pre-fill the account's current value(s)**
+(Change Name, Communication Preferences) use this same content-sourcing
+idiom for the form fields themselves, not just for read-only content: a
+placeholder div (`hx-get="/api/account_name.html" hx-trigger="load"
+hx-swap="innerHTML"` + `<progress>`) sits *inside* the `<form>`, in place
+of any hand-authored `<input>`/`<label>`. The backend's `run_action`
+branches on `GET` vs `POST` and, on `GET`, renders the real field HTML
+(already filled in with the current value) via the same
+`Davin::Element`/`form_element` rendering the old server-rendered pages
+used — there's no hand-written HTML for these fields anywhere in this
+repo, and no separate JSON-plus-client-rendering step. Change Password
+doesn't need this (there's no "current password" to show), so it's the
+one exception with static, hand-authored fields in its `<form>`. The next
+"edit my X" page (Link Membership) should follow the pre-fill pattern too
+if it has a current value worth showing.
 
 ## Login/logout
 

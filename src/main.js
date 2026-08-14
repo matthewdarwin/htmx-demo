@@ -168,6 +168,8 @@ setupResultForm('login-form', 'login-message')
 setupResultForm('login-link-form', 'login-link-message')
 setupResultForm('logout-form', 'logout-message')
 setupResultForm('password-form', 'password-message')
+setupResultForm('name-form', 'name-message')
+setupResultForm('communication-form', 'communication-message')
 
 const promoWrapper = document.querySelector('.HomePromo')
 if (promoWrapper) {

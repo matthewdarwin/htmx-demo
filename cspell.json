@@ -47,7 +47,8 @@
     "nojekyll",
     "realname",
     "lastmod",
-    "httponly"
+    "httponly",
+    "Davin"
   ],
   "ignorePaths": ["node_modules/**", "dist/**", "package-lock.json"]
 }
