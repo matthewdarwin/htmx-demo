@@ -251,10 +251,20 @@ happened to click through to another page.
 the page (same content-sourcing idiom as the home page — `hx-trigger="load"`
 + `<progress>` placeholder), since people can land directly on it (a
 bookmark, a link from an e-mail) without ever seeing the home page's
-announcements first. And it's the one form with a `nextStepsId`
-(`login-next-steps`: Account Overview / Home buttons) even though it
-isn't under `pages/account/` — logging in has the exact same "now what?"
-gap the account forms had before that pattern existed.
+announcements first. Both it and `/login-link/` are forms with a
+`nextStepsId` (Account Overview / Home buttons) even though neither is
+under `pages/account/` — logging in has the exact same "now what?" gap
+the account forms had before that pattern existed. `register`/`recover`
+don't need it (success there means "check your e-mail," not "you're
+in"), and `logout` has nowhere useful to send you.
+
+`/login-link/` also uses `infoId` in the opposite way register/recover
+do: `login-link-info` ("Having trouble? Request a new link / log in with
+your password") starts hidden in markup and only appears on failure,
+rather than being visible by default — there's no form here for it to
+sit alongside before the (immediate, on-load) submission resolves, so
+showing it only makes sense once something's actually gone wrong (e.g.
+`account_login_link.html`'s "this login link is invalid or has expired").
 
 ## Styling (`src/style.css`)
 
