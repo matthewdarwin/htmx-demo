@@ -176,6 +176,14 @@ main.section .history-links {
   color: white;
 }
 
+/* Same gotcha, different element: #nav-account-email is a <span>, not an
+   <a>, so it doesn't match the tag-qualified rule above either - only the
+   background needs fixing here, since its grey text color is intentional
+   (has-text-grey, to read as a non-interactive label). */
+#nav-account-email {
+  background-color: var(--brand-surface);
+}
+
 a.navbar-item:hover,
 .navbar-link:hover {
   background-color: var(--brand-surface);
