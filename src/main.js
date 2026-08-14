@@ -161,6 +161,57 @@ function setupResultForm(formId, messageId, infoId) {
   })
 }
 
+// Wires up the "fields fetched from the server" account forms (Change
+// Password, Change Name, Communication Preferences, and any future
+// "edit my X" page that follows the same shape): the submit button
+// starts disabled in markup so it can't be used before the real fields
+// have arrived, and only enables once that fetch actually lands -
+// without this, submitting while the placeholder <progress> is still
+// showing would post a form with none of its real fields present at
+// all. A failed fetch (network down, unexpected 5xx) replaces the
+// placeholder with an inline message instead of leaving the button
+// disabled forever with no explanation.
+function setupPrefillFields(fieldsId, formId) {
+  const fields = document.getElementById(fieldsId)
+  const form = document.getElementById(formId)
+  if (!fields || !form) return
+
+  const submit = form.querySelector('button[type="submit"]')
+
+  document.body.addEventListener('htmx:afterSwap', (evt) => {
+    if (evt.target !== fields) return
+    submit.disabled = false
+  })
+
+  const showLoadFailure = (text) => {
+    fields.innerHTML = `<article class="message is-warning">
+  <div class="message-body">${text}</div>
+</article>`
+  }
+
+  // Same reasoning as setupResultForm's htmx:responseError/sendError
+  // handlers: htmx's default responseHandling treats 4xx/5xx as
+  // swap:false, so htmx:afterSwap never fires for those and the button
+  // would otherwise stay disabled with no feedback at all.
+  document.body.addEventListener('htmx:responseError', (evt) => {
+    if (evt.target !== fields) return
+    showLoadFailure(
+      'Could not load this form. Please refresh the page to try again.',
+    )
+  })
+
+  document.body.addEventListener('htmx:sendError', (evt) => {
+    if (evt.target !== fields) return
+    showLoadFailure(
+      'Could not reach the server. Please check your connection and refresh the page to try again.',
+    )
+  })
+}
+
+setupPrefillFields('password-fields', 'password-form')
+setupPrefillFields('name-fields', 'name-form')
+setupPrefillFields('communication-fields', 'communication-form')
+
 setupResultForm('feedback-form', 'feedback-message')
 setupResultForm('register-form', 'register-message', 'register-info')
 setupResultForm('recover-form', 'recover-message', 'recover-info')

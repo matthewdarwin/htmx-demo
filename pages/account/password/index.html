@@ -25,39 +25,22 @@
               hx-target="#password-message"
               hx-disabled-elt="find button[type='submit']"
             >
-              <div class="field">
-                <label class="label" for="password">New password</label>
-                <div class="control">
-                  <input
-                    class="input"
-                    id="password"
-                    name="password"
-                    type="password"
-                    autocomplete="new-password"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div class="field">
-                <label class="label" for="password_again"
-                  >New password again</label
-                >
-                <div class="control">
-                  <input
-                    class="input"
-                    id="password_again"
-                    name="password_again"
-                    type="password"
-                    autocomplete="new-password"
-                    required
-                  />
-                </div>
+              <div
+                id="password-fields"
+                hx-get="/api/account_password.html"
+                hx-trigger="load"
+                hx-swap="innerHTML"
+                hx-target="this"
+                hx-disabled-elt="unset"
+              >
+                <progress class="progress is-small is-link" max="100">
+                  Loading&hellip;
+                </progress>
               </div>
 
               <div class="field">
                 <div class="control">
-                  <button class="button is-primary" type="submit">
+                  <button class="button is-primary" type="submit" disabled>
                     Update Password
                   </button>
                 </div>

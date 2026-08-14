@@ -84,10 +84,10 @@ cookie (see "Login/logout" below) — new pages get this "must be logged
 in" gating for free just by using those same two pieces, no new JS
 needed.
 
-If the page needs to show the account's *current* values (Change Name,
-Communication Preferences) rather than just writing new ones (Change
-Password), see the note on the GET-for-current-values pattern in
-"Content sourcing" below.
+Every one of these forms fetches its own fields from the server rather
+than hand-authoring them — see the note on this pattern (and the
+disabled-until-loaded submit button that goes with it) in "Content
+sourcing" below.
 
 ## Content sourcing
 
@@ -156,21 +156,43 @@ site's click-tracking mechanism (nginx rewrites them to `https://host/path`
 in production/on the proxy domain — see "Deployment" below). They're left
 untouched when fragments are inserted; don't try to rewrite them client-side.
 
-**Logged-in forms that need to pre-fill the account's current value(s)**
-(Change Name, Communication Preferences) use this same content-sourcing
-idiom for the form fields themselves, not just for read-only content: a
-placeholder div (`hx-get="/api/account_name.html" hx-trigger="load"
-hx-swap="innerHTML"` + `<progress>`) sits *inside* the `<form>`, in place
-of any hand-authored `<input>`/`<label>`. The backend's `run_action`
-branches on `GET` vs `POST` and, on `GET`, renders the real field HTML
-(already filled in with the current value) via the same
-`Davin::Element`/`form_element` rendering the old server-rendered pages
-used — there's no hand-written HTML for these fields anywhere in this
-repo, and no separate JSON-plus-client-rendering step. Change Password
-doesn't need this (there's no "current password" to show), so it's the
-one exception with static, hand-authored fields in its `<form>`. The next
-"edit my X" page (Link Membership) should follow the pre-fill pattern too
-if it has a current value worth showing.
+**Every account form (Change Password, Change Name, Communication
+Preferences) fetches its own fields from the server** with this same
+content-sourcing idiom, not just for read-only content: a placeholder div
+(`hx-get="/api/account_name.html" hx-trigger="load" hx-swap="innerHTML"
+hx-target="this" hx-disabled-elt="unset"` + `<progress>`) sits *inside*
+the `<form>`, in place of any hand-authored `<input>`/`<label>`. The
+backend's `run_action` branches on `GET` vs `POST` and, on `GET`, renders
+the real field HTML via the same `Davin::Element`/`form_element`
+rendering the old server-rendered pages used — pre-filled with the
+account's current value where there is one to show (Change Name,
+Communication Preferences); blank fields for Change Password, which has
+none, but the same shape regardless. There's no hand-written field HTML
+anywhere in this repo, and no separate JSON-plus-client-rendering step.
+The next "edit my X" page (Link Membership) should follow this same
+pattern rather than hand-authoring fields, whether or not it has a
+current value to pre-fill.
+
+**`hx-target="this"` and `hx-disabled-elt="unset"` on the fields div are
+required, not decorative.** Without them, the fields div inherits
+`hx-target`/`hx-disabled-elt` from the surrounding `<form>` (set there for
+the POST *submission*, targeting the message div and disabling the submit
+button) — so its own `GET` response lands in the message div instead of
+the fields div, and htmx logs a console warning trying to resolve "find
+button" against the wrong element. Caught by driving a real browser
+against these pages (`jwt` is httponly, so cookies had to be set via CDP's
+`Network.setCookie`, not `document.cookie`) rather than assuming the
+pattern worked from source alone.
+
+**The submit button starts `disabled` in each form's markup**, and
+`setupPrefillFields(fieldsId, formId)` in `main.js` enables it once the
+fields fetch actually lands (`htmx:afterSwap` on the fields div) — without
+this, a user could submit before the real fields exist at all (the POST
+would carry none of the expected params). A failed fetch
+(`htmx:responseError`/`htmx:sendError`, same reasoning as
+`setupResultForm`'s handlers) replaces the placeholder with an inline
+message and leaves the button disabled, rather than leaving it stuck
+disabled with no explanation.
 
 ## Login/logout
 
