@@ -90,6 +90,16 @@ function updateAccountNav() {
   document
     .getElementById('footer-logout')
     ?.classList.toggle('is-hidden', !loggedIn)
+  document
+    .getElementById('account-page-content')
+    ?.classList.toggle('is-hidden', !loggedIn)
+  document
+    .getElementById('account-login-prompt')
+    ?.classList.toggle('is-hidden', !!loggedIn)
+  const emailLabel = document.getElementById('nav-account-email')
+  if (emailLabel) {
+    emailLabel.textContent = loggedIn ? `Signed in as ${loggedIn}` : ''
+  }
 }
 
 updateAccountNav()
@@ -157,6 +167,7 @@ setupResultForm('recover-form', 'recover-message', 'recover-info')
 setupResultForm('login-form', 'login-message')
 setupResultForm('login-link-form', 'login-link-message')
 setupResultForm('logout-form', 'logout-message')
+setupResultForm('password-form', 'password-message')
 
 const promoWrapper = document.querySelector('.HomePromo')
 if (promoWrapper) {

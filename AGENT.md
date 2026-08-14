@@ -72,6 +72,17 @@ meta-og.html -->`).
 6. Run `npm run build` before considering it done — it runs `cspell` first
    (see below) and will fail loudly on both typos and missing pages.
 
+**Logged-in-only pages** (Change Password, and future Change Name/Link
+Membership/Shopping Cart) live under `pages/account/` (e.g.
+`pages/account/password/index.html` → `/account/password/`), and follow
+one more convention on top of the above: wrap the page's real content in
+`<div id="account-page-content" class="is-hidden">...</div>`, then include
+the shared `<!--#include account-login-prompt.html -->` partial right
+after it. `updateAccountNav` in `src/main.js` toggles between the two
+based on the `account_hint` cookie (see "Login/logout" below) — new pages
+get this "must be logged in" gating for free just by using those same two
+pieces, no new JS needed.
+
 ## Content sourcing
 
 Every content-sourcing page uses the same pattern: plain htmx —
@@ -138,6 +149,35 @@ Links inside fetched content that point at `/redirect/host/path` are the
 site's click-tracking mechanism (nginx rewrites them to `https://host/path`
 in production/on the proxy domain — see "Deployment" below). They're left
 untouched when fragments are inserted; don't try to rewrite them client-side.
+
+## Login/logout
+
+Three pages handle authentication: `/login/` (password, `hx-post
+/api/account_login.html`), `/login-link/` (consumes the one-time link from
+a recovery e-mail — hidden `username`/`recovery` fields filled from the
+URL query string by a small inline `<script>`, then auto-submitted via
+`hx-trigger="load"` to `/api/account_login_link.html`), and `/logout/`
+(auto-posts to `/api/account_logout.html` on load, same shape). All three
+use `setupResultForm` like every other form here.
+
+A successful login sets **two** cookies, not one: `jwt` (httponly — the
+real credential, never readable from JS by design) and `account_hint`
+(plain, holds the account's e-mail) — the second exists specifically
+because this is a static site with no server-side rendering, so client JS
+has no other way to know "is someone logged in, and as whom" without an
+extra fetch round-trip (and the flash of the wrong state that would cause
+on every page load). `updateAccountNav()` in `main.js` reads
+`account_hint` and:
+- toggles the navbar's `#nav-account-logged-out`/`#nav-account-logged-in`
+  and the footer's `#footer-login`/`#footer-logout`,
+- fills `#nav-account-email` with "Signed in as \<e-mail\>",
+- toggles `#account-page-content`/`#account-login-prompt` — see "Adding a
+  new page" above for how logged-in-only pages use this pair.
+
+It re-runs on every `htmx:afterSwap`, not just once at page load, since
+login/login-link/logout change the cookie via an in-page AJAX POST with no
+navigation — without that, the nav would only catch up after the user
+happened to click through to another page.
 
 ## Styling (`src/style.css`)
 
