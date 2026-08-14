@@ -89,6 +89,25 @@ than hand-authoring them — see the note on this pattern (and the
 disabled-until-loaded submit button that goes with it) in "Content
 sourcing" below.
 
+**`/account/` (`pages/account/index.html`) is the account management
+landing page** — a `Change Name` / `Communication Preferences` / `Change
+Password` button grid, gated by the same `account-page-content`/
+`account-login-prompt` pair as every other logged-in-only page. It's the
+"home base" these forms link back to: each one has a single "← Back to
+Account" link near the top (not a repeated list of every sibling task —
+deliberately, see below), and the navbar's "My Account" dropdown has a
+matching "Account Overview" entry above the individual task links, so
+there are always two ways in (drop straight into a task, or browse from
+the overview). New "edit my X" pages should add themselves to this
+button grid and the navbar dropdown, not just the navbar.
+
+We deliberately did **not** build a persistent sub-nav bar of every
+account task shown on every account page — tried before on another
+project and it confused users (unclear whether clicking a sibling tab
+navigates away or just changes a view within the same page). A single
+"← Back to Account" link avoids that ambiguity; the overview page's
+button grid is the one place all the siblings are listed together.
+
 ## Content sourcing
 
 Every content-sourcing page uses the same pattern: plain htmx —
@@ -118,15 +137,20 @@ what was wrong; duplicating that logic client-side would just be a second
 place for it to drift out of sync.
 
 All three forms share the exact same result-handling behavior via
-`setupResultForm(formId, messageId)` in `main.js` — add any future
-form-processing `/api/*` endpoint to this same helper rather than
-hand-rolling the wiring again. On response, it swaps the result into the
-message target and hides the form (`htmx:afterSwap`, keyed off that
-target's id) — but only on success, so a validation failure leaves the
-form up to fix and resubmit rather than stranding the user with no way
-back to it. Success/failure is read from an `X-Form-Result: ok`/`error`
-response header, read directly with no client-side sniffing of the
-message HTML.
+`setupResultForm(formId, messageId, infoId, nextStepsId)` in `main.js` —
+add any future form-processing `/api/*` endpoint to this same helper
+rather than hand-rolling the wiring again. On response, it swaps the
+result into the message target and hides the form (`htmx:afterSwap`,
+keyed off that target's id) — but only on success, so a validation
+failure leaves the form up to fix and resubmit rather than stranding the
+user with no way back to it. Success/failure is read from an
+`X-Form-Result: ok`/`error` response header, read directly with no
+client-side sniffing of the message HTML. `infoId` (register/recover's
+intro box) is the inverse of `nextStepsId` (the account forms'
+Back-to-Account/Home buttons): `infoId` hides on success and stays put on
+failure, `nextStepsId` is hidden by default and only appears on success —
+the account forms use `nextStepsId` so a completed action always ends
+with "what do you want to do next" instead of just a static message.
 
 **A server error gets no `htmx:afterSwap` at all**, by design: htmx's
 default `responseHandling` treats 4xx/5xx as `swap: false`, so nothing

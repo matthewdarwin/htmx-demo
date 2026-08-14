@@ -31,6 +31,7 @@ const pageEntries = {
   login: resolve(pagesRoot, 'login/index.html'),
   'login-link': resolve(pagesRoot, 'login-link/index.html'),
   logout: resolve(pagesRoot, 'logout/index.html'),
+  account: resolve(pagesRoot, 'account/index.html'),
   'account-password': resolve(pagesRoot, 'account/password/index.html'),
   'account-name': resolve(pagesRoot, 'account/name/index.html'),
   'account-communication': resolve(

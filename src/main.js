@@ -114,13 +114,18 @@ document.body.addEventListener('htmx:afterSwap', updateAccountNav)
 // than getting stuck with no way back to the form. infoId is an optional
 // page intro box (register/recover's "here's what this form does" notice)
 // that should disappear alongside the form on success, but stay put
-// through any failure.
-function setupResultForm(formId, messageId, infoId) {
+// through any failure. nextStepsId is the opposite: an optional block
+// (the account forms' "Back to Account"/"Home" buttons) that stays
+// hidden by default and on failure, and only appears on success — so
+// the user isn't left on a page with nothing but a static "done"
+// message and no indication of what to do next.
+function setupResultForm(formId, messageId, infoId, nextStepsId) {
   const form = document.getElementById(formId)
   if (!form) return
 
   const message = document.getElementById(messageId)
   const info = infoId ? document.getElementById(infoId) : null
+  const nextSteps = nextStepsId ? document.getElementById(nextStepsId) : null
 
   const showFailure = (text) => {
     message.innerHTML = `<article class="message is-danger">
@@ -140,6 +145,7 @@ function setupResultForm(formId, messageId, infoId) {
       evt.detail.xhr.getResponseHeader('X-Form-Result') === 'error'
     form.classList.toggle('is-hidden', !isError)
     if (info) info.classList.toggle('is-hidden', !isError)
+    if (nextSteps) nextSteps.classList.toggle('is-hidden', isError)
   })
 
   // htmx's default responseHandling treats 4xx/5xx as swap:false, so
@@ -218,9 +224,19 @@ setupResultForm('recover-form', 'recover-message', 'recover-info')
 setupResultForm('login-form', 'login-message', 'login-info')
 setupResultForm('login-link-form', 'login-link-message')
 setupResultForm('logout-form', 'logout-message')
-setupResultForm('password-form', 'password-message')
-setupResultForm('name-form', 'name-message')
-setupResultForm('communication-form', 'communication-message')
+setupResultForm(
+  'password-form',
+  'password-message',
+  undefined,
+  'password-next-steps',
+)
+setupResultForm('name-form', 'name-message', undefined, 'name-next-steps')
+setupResultForm(
+  'communication-form',
+  'communication-message',
+  undefined,
+  'communication-next-steps',
+)
 
 const promoWrapper = document.querySelector('.HomePromo')
 if (promoWrapper) {
