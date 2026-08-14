@@ -12,6 +12,17 @@ import {
   transformMapboxUrl,
 } from './mapbox-request-transformer.js'
 
+// The backend renders postal code fields (Davin::Element::PostalCode) with
+// inline onkeyup/onblur="uc_postal_code(this)" attributes, expecting a
+// global function of that name - matching the old site's script. Inline
+// event handler attributes always run against `window`, never a module's
+// own scope, so this has to be an explicit global assignment rather than a
+// plain top-level function/const - this file is loaded as a module, whose
+// top-level bindings are NOT globals.
+window.uc_postal_code = (e) => {
+  e.value = e.value.toUpperCase()
+}
+
 const missingPath = document.getElementById('missing-path')
 if (missingPath) {
   missingPath.textContent = location.pathname

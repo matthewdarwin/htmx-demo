@@ -227,6 +227,22 @@ would carry none of the expected params). A failed fetch
 message and leaves the button disabled, rather than leaving it stuck
 disabled with no explanation.
 
+**Some backend-rendered fields carry inline `onkeyup`/`onblur`/`onclick`
+attributes expecting a global JS function to exist** — e.g.
+`Davin::Element::PostalCode` renders `onkeyup="uc_postal_code(this)"
+onblur="uc_postal_code(this)"`, matching the old site's own script.
+Inline event attributes always run against `window`, and this file is
+loaded as `type="module"` — a module's top-level bindings are *not*
+globals — so these have to be attached explicitly (`window.uc_postal_code
+= (e) => { e.value = e.value.toUpperCase() }`), not just declared as a
+normal function/const. Easy to miss: setting a field's `.value` directly
+in a test (rather than a real keystroke/blur) never fires these handlers,
+so a missing global function won't show up unless you dispatch a real
+event. `Davin::Element::List` has several more of these
+(`add_button`/`remove_button`/`up_button`/`down_button`/`from_list`/
+`to_list`) — not used by any page here yet, but the next one that uses
+that element type will need the same treatment.
+
 ## Login/logout
 
 Three pages handle authentication: `/login/` (password, `hx-post
