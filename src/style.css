@@ -177,11 +177,17 @@ main.section .history-links {
 }
 
 /* Same gotcha, different element: #nav-account-email is a <span>, not an
-   <a>, so it doesn't match the tag-qualified rule above either - only the
-   background needs fixing here, since its grey text color is intentional
-   (has-text-grey, to read as a non-interactive label). */
+   <a>, so it doesn't match the tag-qualified rule above either. Text color
+   is set explicitly here too, rather than Bulma's has-text-grey utility -
+   that's a fixed mid-grey with no relationship to --brand-surface, so its
+   contrast against this custom-themed (and dark-mode-swapped) background
+   is uncontrolled and came out unreadable. Dimming the navbar's own white
+   via opacity keeps contrast tied to whatever --brand-surface actually is
+   in either theme, instead of an unrelated absolute color. */
 #nav-account-email {
   background-color: var(--brand-surface);
+  color: white;
+  opacity: 0.7;
 }
 
 a.navbar-item:hover,
