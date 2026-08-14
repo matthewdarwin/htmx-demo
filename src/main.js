@@ -74,19 +74,28 @@ function getCookie(name) {
   return match ? decodeURIComponent(match[1]) : null
 }
 
-const loggedIn = getCookie('account_hint')
-document
-  .getElementById('nav-account-logged-out')
-  ?.classList.toggle('is-hidden', !!loggedIn)
-document
-  .getElementById('nav-account-logged-in')
-  ?.classList.toggle('is-hidden', !loggedIn)
-document
-  .getElementById('footer-login')
-  ?.classList.toggle('is-hidden', !!loggedIn)
-document
-  .getElementById('footer-logout')
-  ?.classList.toggle('is-hidden', !loggedIn)
+// Re-run on every htmx swap, not just once at page load: the login/
+// login-link/logout forms change the cookie via an in-page AJAX POST with
+// no navigation, so without this the nav would only reflect the new state
+// after the user happened to click through to another page.
+function updateAccountNav() {
+  const loggedIn = getCookie('account_hint')
+  document
+    .getElementById('nav-account-logged-out')
+    ?.classList.toggle('is-hidden', !!loggedIn)
+  document
+    .getElementById('nav-account-logged-in')
+    ?.classList.toggle('is-hidden', !loggedIn)
+  document
+    .getElementById('footer-login')
+    ?.classList.toggle('is-hidden', !!loggedIn)
+  document
+    .getElementById('footer-logout')
+    ?.classList.toggle('is-hidden', !loggedIn)
+}
+
+updateAccountNav()
+document.body.addEventListener('htmx:afterSwap', updateAccountNav)
 
 // Wires up the shared result-handling behavior for any hx-post form that
 // follows the feedback form's convention: server validates everything
