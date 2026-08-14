@@ -229,6 +229,8 @@ setupPrefillFields('password-fields', 'password-form')
 setupPrefillFields('name-fields', 'name-form')
 setupPrefillFields('communication-fields', 'communication-form')
 setupPrefillFields('membership-new-fields', 'membership-new-form')
+setupPrefillFields('membership-edit-fields', 'membership-edit-form')
+setupPrefillFields('membership-share-fields', 'membership-share-form')
 
 setupResultForm('feedback-form', 'feedback-message')
 setupResultForm('register-form', 'register-message', 'register-info')
@@ -259,6 +261,18 @@ setupResultForm(
   'membership-new-message',
   undefined,
   'membership-new-next-steps',
+)
+setupResultForm(
+  'membership-edit-form',
+  'membership-edit-message',
+  undefined,
+  'membership-edit-next-steps',
+)
+setupResultForm(
+  'membership-share-form',
+  'membership-share-message',
+  undefined,
+  'membership-share-next-steps',
 )
 
 const promoWrapper = document.querySelector('.HomePromo')

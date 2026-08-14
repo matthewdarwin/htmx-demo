@@ -217,6 +217,21 @@ against these pages (`jwt` is httponly, so cookies had to be set via CDP's
 `Network.setCookie`, not `document.cookie`) rather than assuming the
 pattern worked from source alone.
 
+**A page that needs to say "which record" (e.g. `?member_id=123` when an
+account has more than one membership) needs `hx-include` on the fields
+div too — htmx does *not* auto-include the enclosing form's other fields
+for a plain `<div>`'s own request.** (Its default "include the closest
+form" behavior only kicks in for an element that's itself a form
+control, or the form itself — a `<div>` issuing its own `hx-get` doesn't
+qualify, confirmed by inspecting the actual outgoing request in a real
+browser: the query string came back completely empty without this.) The
+pattern: a hidden `<input name="member_id">` inside the `<form>`,
+populated from `location.search` by a small inline `<script>` (same
+convention as `/login-link/`'s hidden `username`/`recovery` fields), plus
+`hx-include="#the-form-id"` on the fields div so its GET picks that value
+up. The form's own POST doesn't need this — a real `<form>` submission
+already serializes all its own descendant inputs regardless.
+
 **The submit button starts `disabled` in each form's markup**, and
 `setupPrefillFields(fieldsId, formId)` in `main.js` enables it once the
 fields fetch actually lands (`htmx:afterSwap` on the fields div) — without

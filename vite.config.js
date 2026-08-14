@@ -43,6 +43,14 @@ const pageEntries = {
     pagesRoot,
     'account/membership/new/index.html',
   ),
+  'account-membership-edit': resolve(
+    pagesRoot,
+    'account/membership/edit/index.html',
+  ),
+  'account-membership-share': resolve(
+    pagesRoot,
+    'account/membership/share/index.html',
+  ),
 }
 
 // Inlines <!--#include name.html --> markers with the contents of the
