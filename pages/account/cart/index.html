@@ -24,20 +24,25 @@
             >
           </p>
 
+          <div
+            id="cart-content"
+            class="hx-content"
+            hx-get="/api/account_order_review.html"
+            hx-trigger="load"
+            hx-swap="innerHTML"
+            hx-target="this"
+            hx-disabled-elt="unset"
+          >
+            <progress class="progress is-small is-link" max="100">
+              Loading&hellip;
+            </progress>
+          </div>
+
           <div class="box">
-            <div
-              id="cart-content"
-              class="hx-content"
-              hx-get="/api/account_order_review.html"
-              hx-trigger="load"
-              hx-vals="js:{member_id: new URLSearchParams(location.search).get('member_id')}"
-              hx-swap="innerHTML"
-              hx-target="this"
-              hx-disabled-elt="unset"
-            >
-              <progress class="progress is-small is-link" max="100">
-                Loading&hellip;
-              </progress>
+            <div class="buttons">
+              <a class="button is-primary" href="/account/membership/new/"
+                >Create Membership</a
+              >
             </div>
           </div>
         </div>
