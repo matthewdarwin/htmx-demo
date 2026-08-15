@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Change Name</title>
+    <title>Change Login Name</title>
   </head>
   <body>
     <!--#include header.html -->
 
     <section class="hero is-primary">
       <div class="hero-body">
-        <p class="title">Change Name</p>
+        <p class="title">Change Login Name</p>
       </div>
     </section>
 
@@ -41,6 +41,7 @@
             >
               <div
                 id="name-fields"
+                class="hx-content"
                 hx-get="/api/account_name.html"
                 hx-trigger="load"
                 hx-swap="innerHTML"
@@ -55,7 +56,7 @@
               <div class="field">
                 <div class="control">
                   <button class="button is-primary" type="submit" disabled>
-                    Update Name
+                    Update Login Name
                   </button>
                 </div>
               </div>
