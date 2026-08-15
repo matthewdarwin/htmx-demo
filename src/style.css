@@ -233,12 +233,25 @@ a.navbar-item:hover,
   color: var(--brand-hover);
 }
 
+/* Mobile cart icon (.navbar-brand, always visible next to the burger —
+   mirrors #theme-toggle-mobile's own icon-only treatment). */
+
+#nav-cart-mobile {
+  color: white;
+}
+
+#nav-cart-mobile:hover {
+  color: var(--brand-hover);
+}
+
 /* Bulma's .navbar-burger has its own margin-left: auto to push itself to
-   the far right of .navbar-brand — if the mobile theme toggle right before
-   it also has margin-left: auto (ml-auto), flexbox splits the free space
-   between both auto margins, leaving a gap between them. Zeroing the
-   burger's here instead lets the toggle's auto margin claim all of it, so
-   the two sit flush together at the right edge. */
+   the far right of .navbar-brand — #nav-cart-mobile carries ml-auto
+   instead (it's now the first of the 3 always-visible-on-mobile items:
+   cart, theme toggle, burger), so zero it here and on the theme toggle
+   right after it, letting cart's single auto margin push all 3 flush
+   together at the right edge instead of splitting the free space across
+   multiple auto margins. */
+.theme-toggle-mobile-item,
 .theme-toggle-mobile-item + .navbar-burger {
   margin-left: 0;
 }

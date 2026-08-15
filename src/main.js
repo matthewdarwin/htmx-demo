@@ -108,7 +108,6 @@ function updateAccountNav() {
   document
     .getElementById('account-login-prompt')
     ?.classList.toggle('is-hidden', !!loggedIn)
-  document.getElementById('nav-cart')?.classList.toggle('is-hidden', !loggedIn)
   const emailLabel = document.getElementById('nav-account-email')
   if (emailLabel) {
     emailLabel.textContent = loggedIn ? `Signed in as ${loggedIn}` : ''

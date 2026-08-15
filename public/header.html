@@ -8,7 +8,15 @@
 <nav class="navbar NoPrint">
   <div class="navbar-brand">
     <a class="navbar-item" href="/">Ottawa Family Cinema</a>
-    <div class="navbar-item is-hidden-desktop ml-auto theme-toggle-mobile-item">
+    <a
+      id="nav-cart-mobile"
+      class="navbar-item is-hidden-desktop ml-auto"
+      href="/account/cart/"
+      aria-label="Shopping cart"
+    >
+      <i class="fas fa-cart-shopping"></i>
+    </a>
+    <div class="navbar-item is-hidden-desktop theme-toggle-mobile-item">
       <button
         id="theme-toggle-mobile"
         class="button is-small"
@@ -123,6 +131,9 @@
       </div>
     </div>
     <div class="navbar-end">
+      <a id="nav-cart" class="navbar-item" href="/account/cart/"
+        ><i class="fas fa-cart-shopping"></i>&nbsp;Cart</a
+      >
       <div class="navbar-item">
         <button
           id="theme-toggle"
@@ -134,9 +145,6 @@
           <span id="theme-toggle-label">Dark mode</span>
         </button>
       </div>
-      <a id="nav-cart" class="navbar-item is-hidden" href="/account/cart/"
-        ><i class="fas fa-cart-shopping"></i>&nbsp;Cart</a
-      >
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link"
           ><i class="fa-solid fa-user"></i>&nbsp;My Account</a
