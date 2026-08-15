@@ -112,10 +112,11 @@ button grid is the one place all the siblings are listed together.
 **`/account/membership/` is a nested hub, one level down**: it's a
 `My Membership` button in `/account/`'s grid, but it's also its own
 mini "home base" for the membership-specific sub-pages (`.../new/`,
-and future `.../share/`, `.../buy/`, `.../pay/`) — each of those has its
-own "← Back to Membership" link pointing at `/account/membership/`, not
-all the way back to `/account/`. Same reasoning as the top-level hub,
-just one level deeper.
+`.../edit/`, `.../share/`, `.../delete/`, and future `.../buy/`,
+`.../pay/`) — each of those has its own "← Back to Membership" link
+pointing at `/account/membership/`, not all the way back to
+`/account/`. Same reasoning as the top-level hub, just one level
+deeper.
 
 ## Content sourcing
 
