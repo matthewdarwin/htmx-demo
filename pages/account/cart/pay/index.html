@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Buy/Renew Membership</title>
+    <title>Pay for Order</title>
   </head>
   <body>
     <!--#include header.html -->
 
     <section class="hero is-primary">
       <div class="hero-body">
-        <p class="title">Buy/Renew Membership</p>
+        <p class="title">Pay for Order</p>
       </div>
     </section>
 
@@ -18,32 +18,30 @@
       <div class="container">
         <div id="account-page-content" class="is-hidden">
           <p class="mb-4">
-            <a href="/account/membership/"
+            <a href="/account/cart/"
               ><i class="fas fa-arrow-left"></i>
-              Back to Membership</a
+              Back to Cart</a
             >
           </p>
 
           <div class="box">
             <form
-              id="membership-buy-form"
-              hx-post="/api/account_membership_buy.html"
+              id="order-pay-form"
+              hx-post="/api/account_order_pay.html"
               hx-swap="innerHTML"
-              hx-target="#membership-buy-message"
+              hx-target="#order-pay-message"
               hx-disabled-elt="find button[type='submit']"
             >
-              <input
-                type="hidden"
-                id="membership-buy-member-id"
-                name="member_id"
-              />
+              <input type="hidden" id="order-pay-member-id" name="member_id" />
+              <input type="hidden" id="order-pay-order-id" name="order_id" />
+              <input type="hidden" name="source_id" />
 
               <div
-                id="membership-buy-fields"
+                id="order-pay-fields"
                 class="hx-content"
-                hx-get="/api/account_membership_buy.html"
+                hx-get="/api/account_order_pay.html"
                 hx-trigger="load"
-                hx-include="#membership-buy-form"
+                hx-include="#order-pay-form"
                 hx-swap="innerHTML"
                 hx-target="this"
                 hx-disabled-elt="unset"
@@ -54,39 +52,39 @@
               </div>
 
               <div class="field">
+                <label class="label">Card Details</label>
                 <div class="control">
-                  <label class="checkbox">
-                    <input type="checkbox" name="tc" value="1" />
-                    I agree to the Terms and Conditions
-                  </label>
+                  <div id="square-card"></div>
                 </div>
               </div>
 
               <div class="field">
                 <div class="control">
                   <button class="button is-primary" type="submit" disabled>
-                    Update Order
+                    Pay Now
                   </button>
                 </div>
               </div>
             </form>
             <script>
-              document.getElementById('membership-buy-member-id').value =
+              document.getElementById('order-pay-member-id').value =
                 new URLSearchParams(location.search).get('member_id') || ''
+              document.getElementById('order-pay-order-id').value =
+                new URLSearchParams(location.search).get('order_id') || ''
             </script>
 
             <div
-              id="membership-buy-message"
+              id="order-pay-message"
               class="mt-5 is-hidden"
               aria-live="polite"
             ></div>
 
-            <div id="membership-buy-next-steps" class="mt-5 is-hidden">
+            <div id="order-pay-next-steps" class="mt-5 is-hidden">
               <div class="buttons">
-                <a class="button is-primary" href="/account/cart/">View Cart</a>
-                <a class="button is-light" href="/account/membership/"
-                  >Back to Membership</a
+                <a class="button is-primary" href="/account/cart/"
+                  >Back to Cart</a
                 >
+                <a class="button is-light" href="/">Home</a>
               </div>
             </div>
           </div>

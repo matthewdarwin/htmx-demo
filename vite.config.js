@@ -59,6 +59,8 @@ const pageEntries = {
     pagesRoot,
     'account/membership/buy/index.html',
   ),
+  'account-cart': resolve(pagesRoot, 'account/cart/index.html'),
+  'account-cart-pay': resolve(pagesRoot, 'account/cart/pay/index.html'),
 }
 
 // Inlines <!--#include name.html --> markers with the contents of the

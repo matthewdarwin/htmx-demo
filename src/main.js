@@ -11,6 +11,7 @@ import {
   isMapboxURL,
   transformMapboxUrl,
 } from './mapbox-request-transformer.js'
+import './square.js'
 
 // The backend renders postal code fields (Davin::Element::PostalCode) with
 // inline onkeyup/onblur="uc_postal_code(this)" attributes, expecting a
@@ -107,6 +108,7 @@ function updateAccountNav() {
   document
     .getElementById('account-login-prompt')
     ?.classList.toggle('is-hidden', !!loggedIn)
+  document.getElementById('nav-cart')?.classList.toggle('is-hidden', !loggedIn)
   const emailLabel = document.getElementById('nav-account-email')
   if (emailLabel) {
     emailLabel.textContent = loggedIn ? `Signed in as ${loggedIn}` : ''
@@ -287,6 +289,12 @@ setupResultForm(
   'membership-buy-message',
   undefined,
   'membership-buy-next-steps',
+)
+setupResultForm(
+  'order-pay-form',
+  'order-pay-message',
+  undefined,
+  'order-pay-next-steps',
 )
 
 const promoWrapper = document.querySelector('.HomePromo')
