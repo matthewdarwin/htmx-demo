@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Buy/Renew Membership</title>
+  </head>
+  <body>
+    <!--#include header.html -->
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">Buy/Renew Membership</p>
+      </div>
+    </section>
+
+    <main class="section">
+      <div class="container">
+        <div id="account-page-content" class="is-hidden">
+          <p class="mb-4">
+            <a href="/account/membership/"
+              ><i class="fas fa-arrow-left"></i>
+              Back to Membership</a
+            >
+          </p>
+
+          <div class="box">
+            <form
+              id="membership-buy-form"
+              hx-post="/api/account_membership_buy.html"
+              hx-swap="innerHTML"
+              hx-target="#membership-buy-message"
+              hx-disabled-elt="find button[type='submit']"
+            >
+              <input
+                type="hidden"
+                id="membership-buy-member-id"
+                name="member_id"
+              />
+
+              <div
+                id="membership-buy-fields"
+                class="hx-content"
+                hx-get="/api/account_membership_buy.html"
+                hx-trigger="load"
+                hx-include="#membership-buy-form"
+                hx-swap="innerHTML"
+                hx-target="this"
+                hx-disabled-elt="unset"
+              >
+                <progress class="progress is-small is-link" max="100">
+                  Loading&hellip;
+                </progress>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <label class="checkbox">
+                    <input type="checkbox" name="tc" value="1" />
+                    I agree to the Terms and Conditions
+                  </label>
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <button class="button is-primary" type="submit" disabled>
+                    Update Order
+                  </button>
+                </div>
+              </div>
+            </form>
+            <script>
+              document.getElementById('membership-buy-member-id').value =
+                new URLSearchParams(location.search).get('member_id') || ''
+            </script>
+
+            <div
+              id="membership-buy-message"
+              class="mt-5 is-hidden"
+              aria-live="polite"
+            ></div>
+
+            <div id="membership-buy-next-steps" class="mt-5 is-hidden">
+              <div class="buttons">
+                <a class="button is-primary" href="/account/membership/"
+                  >Back to Membership</a
+                >
+                <a class="button is-light" href="/">Home</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--#include account-login-prompt.html -->
+      </div>
+    </main>
+
+    <!--#include footer.html -->
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

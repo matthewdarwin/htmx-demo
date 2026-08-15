@@ -232,6 +232,7 @@ setupPrefillFields('membership-new-fields', 'membership-new-form')
 setupPrefillFields('membership-edit-fields', 'membership-edit-form')
 setupPrefillFields('membership-share-fields', 'membership-share-form')
 setupPrefillFields('membership-delete-fields', 'membership-delete-form')
+setupPrefillFields('membership-buy-fields', 'membership-buy-form')
 
 setupResultForm('feedback-form', 'feedback-message')
 setupResultForm('register-form', 'register-message', 'register-info')
@@ -280,6 +281,12 @@ setupResultForm(
   'membership-delete-message',
   undefined,
   'membership-delete-next-steps',
+)
+setupResultForm(
+  'membership-buy-form',
+  'membership-buy-message',
+  undefined,
+  'membership-buy-next-steps',
 )
 
 const promoWrapper = document.querySelector('.HomePromo')

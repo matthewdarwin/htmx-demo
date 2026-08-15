@@ -55,6 +55,10 @@ const pageEntries = {
     pagesRoot,
     'account/membership/delete/index.html',
   ),
+  'account-membership-buy': resolve(
+    pagesRoot,
+    'account/membership/buy/index.html',
+  ),
 }
 
 // Inlines <!--#include name.html --> markers with the contents of the
