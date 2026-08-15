@@ -12,6 +12,17 @@ import {
   transformMapboxUrl,
 } from './mapbox-request-transformer.js'
 
+// The backend renders postal code fields (Davin::Element::PostalCode) with
+// inline onkeyup/onblur="uc_postal_code(this)" attributes, expecting a
+// global function of that name - matching the old site's script. Inline
+// event handler attributes always run against `window`, never a module's
+// own scope, so this has to be an explicit global assignment rather than a
+// plain top-level function/const - this file is loaded as a module, whose
+// top-level bindings are NOT globals.
+window.uc_postal_code = (e) => {
+  e.value = e.value.toUpperCase()
+}
+
 const missingPath = document.getElementById('missing-path')
 if (missingPath) {
   missingPath.textContent = location.pathname
@@ -90,6 +101,16 @@ function updateAccountNav() {
   document
     .getElementById('footer-logout')
     ?.classList.toggle('is-hidden', !loggedIn)
+  document
+    .getElementById('account-page-content')
+    ?.classList.toggle('is-hidden', !loggedIn)
+  document
+    .getElementById('account-login-prompt')
+    ?.classList.toggle('is-hidden', !!loggedIn)
+  const emailLabel = document.getElementById('nav-account-email')
+  if (emailLabel) {
+    emailLabel.textContent = loggedIn ? `Signed in as ${loggedIn}` : ''
+  }
 }
 
 updateAccountNav()
@@ -104,13 +125,18 @@ document.body.addEventListener('htmx:afterSwap', updateAccountNav)
 // than getting stuck with no way back to the form. infoId is an optional
 // page intro box (register/recover's "here's what this form does" notice)
 // that should disappear alongside the form on success, but stay put
-// through any failure.
-function setupResultForm(formId, messageId, infoId) {
+// through any failure. nextStepsId is the opposite: an optional block
+// (the account forms' "Back to Account"/"Home" buttons) that stays
+// hidden by default and on failure, and only appears on success — so
+// the user isn't left on a page with nothing but a static "done"
+// message and no indication of what to do next.
+function setupResultForm(formId, messageId, infoId, nextStepsId) {
   const form = document.getElementById(formId)
   if (!form) return
 
   const message = document.getElementById(messageId)
   const info = infoId ? document.getElementById(infoId) : null
+  const nextSteps = nextStepsId ? document.getElementById(nextStepsId) : null
 
   const showFailure = (text) => {
     message.innerHTML = `<article class="message is-danger">
@@ -130,6 +156,7 @@ function setupResultForm(formId, messageId, infoId) {
       evt.detail.xhr.getResponseHeader('X-Form-Result') === 'error'
     form.classList.toggle('is-hidden', !isError)
     if (info) info.classList.toggle('is-hidden', !isError)
+    if (nextSteps) nextSteps.classList.toggle('is-hidden', isError)
   })
 
   // htmx's default responseHandling treats 4xx/5xx as swap:false, so
@@ -151,12 +178,102 @@ function setupResultForm(formId, messageId, infoId) {
   })
 }
 
+// Wires up the "fields fetched from the server" account forms (Change
+// Password, Change Name, Communication Preferences, and any future
+// "edit my X" page that follows the same shape): the submit button
+// starts disabled in markup so it can't be used before the real fields
+// have arrived, and only enables once that fetch actually lands -
+// without this, submitting while the placeholder <progress> is still
+// showing would post a form with none of its real fields present at
+// all. A failed fetch (network down, unexpected 5xx) replaces the
+// placeholder with an inline message instead of leaving the button
+// disabled forever with no explanation.
+function setupPrefillFields(fieldsId, formId) {
+  const fields = document.getElementById(fieldsId)
+  const form = document.getElementById(formId)
+  if (!fields || !form) return
+
+  const submit = form.querySelector('button[type="submit"]')
+
+  document.body.addEventListener('htmx:afterSwap', (evt) => {
+    if (evt.target !== fields) return
+    submit.disabled = false
+  })
+
+  const showLoadFailure = (text) => {
+    fields.innerHTML = `<article class="message is-warning">
+  <div class="message-body">${text}</div>
+</article>`
+  }
+
+  // Same reasoning as setupResultForm's htmx:responseError/sendError
+  // handlers: htmx's default responseHandling treats 4xx/5xx as
+  // swap:false, so htmx:afterSwap never fires for those and the button
+  // would otherwise stay disabled with no feedback at all.
+  document.body.addEventListener('htmx:responseError', (evt) => {
+    if (evt.target !== fields) return
+    showLoadFailure(
+      'Could not load this form. Please refresh the page to try again.',
+    )
+  })
+
+  document.body.addEventListener('htmx:sendError', (evt) => {
+    if (evt.target !== fields) return
+    showLoadFailure(
+      'Could not reach the server. Please check your connection and refresh the page to try again.',
+    )
+  })
+}
+
+setupPrefillFields('password-fields', 'password-form')
+setupPrefillFields('name-fields', 'name-form')
+setupPrefillFields('communication-fields', 'communication-form')
+setupPrefillFields('membership-new-fields', 'membership-new-form')
+setupPrefillFields('membership-edit-fields', 'membership-edit-form')
+setupPrefillFields('membership-share-fields', 'membership-share-form')
+
 setupResultForm('feedback-form', 'feedback-message')
 setupResultForm('register-form', 'register-message', 'register-info')
 setupResultForm('recover-form', 'recover-message', 'recover-info')
-setupResultForm('login-form', 'login-message')
-setupResultForm('login-link-form', 'login-link-message')
+setupResultForm('login-form', 'login-message', 'login-info', 'login-next-steps')
+setupResultForm(
+  'login-link-form',
+  'login-link-message',
+  'login-link-info',
+  'login-link-next-steps',
+)
 setupResultForm('logout-form', 'logout-message')
+setupResultForm(
+  'password-form',
+  'password-message',
+  undefined,
+  'password-next-steps',
+)
+setupResultForm('name-form', 'name-message', undefined, 'name-next-steps')
+setupResultForm(
+  'communication-form',
+  'communication-message',
+  undefined,
+  'communication-next-steps',
+)
+setupResultForm(
+  'membership-new-form',
+  'membership-new-message',
+  undefined,
+  'membership-new-next-steps',
+)
+setupResultForm(
+  'membership-edit-form',
+  'membership-edit-message',
+  undefined,
+  'membership-edit-next-steps',
+)
+setupResultForm(
+  'membership-share-form',
+  'membership-share-message',
+  undefined,
+  'membership-share-next-steps',
+)
 
 const promoWrapper = document.querySelector('.HomePromo')
 if (promoWrapper) {

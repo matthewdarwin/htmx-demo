@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Share Membership</title>
+  </head>
+  <body>
+    <!--#include header.html -->
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">Share Membership</p>
+      </div>
+    </section>
+
+    <main class="section">
+      <div class="container">
+        <div id="account-page-content" class="is-hidden">
+          <p class="mb-4">
+            <a href="/account/membership/"
+              ><i class="fas fa-arrow-left"></i>
+              Back to Membership</a
+            >
+          </p>
+
+          <article class="message is-warning">
+            <div class="message-body">
+              A membership can be shared between up to two accounts by listing
+              both e-mail addresses below. If you remove your own e-mail address
+              by accident, please
+              <a href="/feedback/">contact us</a>
+              to have it re-linked.
+            </div>
+          </article>
+
+          <div class="box">
+            <form
+              id="membership-share-form"
+              hx-post="/api/account_membership_share.html"
+              hx-swap="innerHTML"
+              hx-target="#membership-share-message"
+              hx-disabled-elt="find button[type='submit']"
+            >
+              <input
+                type="hidden"
+                id="membership-share-member-id"
+                name="member_id"
+              />
+
+              <div
+                id="membership-share-fields"
+                class="hx-content"
+                hx-get="/api/account_membership_share.html"
+                hx-trigger="load"
+                hx-include="#membership-share-form"
+                hx-swap="innerHTML"
+                hx-target="this"
+                hx-disabled-elt="unset"
+              >
+                <progress class="progress is-small is-link" max="100">
+                  Loading&hellip;
+                </progress>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <button class="button is-primary" type="submit" disabled>
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            </form>
+            <script>
+              document.getElementById('membership-share-member-id').value =
+                new URLSearchParams(location.search).get('member_id') || ''
+            </script>
+
+            <div
+              id="membership-share-message"
+              class="mt-5 is-hidden"
+              aria-live="polite"
+            ></div>
+
+            <div id="membership-share-next-steps" class="mt-5 is-hidden">
+              <div class="buttons">
+                <a class="button is-primary" href="/account/membership/"
+                  >Back to Membership</a
+                >
+                <a class="button is-light" href="/">Home</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--#include account-login-prompt.html -->
+      </div>
+    </main>
+
+    <!--#include footer.html -->
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

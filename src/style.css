@@ -176,6 +176,20 @@ main.section .history-links {
   color: white;
 }
 
+/* Same gotcha, different element: #nav-account-email is a <span>, not an
+   <a>, so it doesn't match the tag-qualified rule above either. Text color
+   is set explicitly here too, rather than Bulma's has-text-grey utility -
+   that's a fixed mid-grey with no relationship to --brand-surface, so its
+   contrast against this custom-themed (and dark-mode-swapped) background
+   is uncontrolled and came out unreadable. Dimming the navbar's own white
+   via opacity keeps contrast tied to whatever --brand-surface actually is
+   in either theme, instead of an unrelated absolute color. */
+#nav-account-email {
+  background-color: var(--brand-surface);
+  color: white;
+  opacity: 0.7;
+}
+
 a.navbar-item:hover,
 .navbar-link:hover {
   background-color: var(--brand-surface);
@@ -326,6 +340,23 @@ a.navbar-item:hover,
 
 .HomePromo .swiper-slide {
   text-align: center;
+}
+
+/* Content-sourcing wrapper divs (account forms' fetched fields, the
+   membership status fragment, etc.)
+
+   Bulma's spacing between stacked elements (.field, .box, etc.) comes
+   from rules like `.field:not(:last-child) { margin-bottom:
+   var(--bulma-block-spacing) }` - which only fire between direct
+   siblings. Every hx-get="..." content-sourcing target needs its own
+   wrapper div (somewhere to swap the response into), and that wrapper
+   breaks the sibling relationship: it isn't a .field/.box itself, so it
+   gets no spacing, and the actual last .field/.box inside it is the
+   wrapper's last child, not the page's, so it doesn't get any either -
+   whatever comes right after the wrapper (a submit button, another box)
+   ends up glued directly underneath with no gap at all. */
+.hx-content {
+  margin-bottom: var(--bulma-block-spacing);
 }
 
 /* Header */

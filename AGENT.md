@@ -72,6 +72,51 @@ meta-og.html -->`).
 6. Run `npm run build` before considering it done — it runs `cspell` first
    (see below) and will fail loudly on both typos and missing pages.
 
+**Logged-in-only pages** (Change Password, Change Name, Communication
+Preferences, My Membership, and future Shopping Cart) live under
+`pages/account/` (e.g. `pages/account/password/index.html` →
+`/account/password/`), and follow one more convention on top of the
+above: wrap the page's real content in `<div id="account-page-content"
+class="is-hidden">...</div>`, then include the shared `<!--#include
+account-login-prompt.html -->` partial right after it. `updateAccountNav`
+in `src/main.js` toggles between the two based on the `account_hint`
+cookie (see "Login/logout" below) — new pages get this "must be logged
+in" gating for free just by using those same two pieces, no new JS
+needed.
+
+Every one of these forms fetches its own fields from the server rather
+than hand-authoring them — see the note on this pattern (and the
+disabled-until-loaded submit button that goes with it) in "Content
+sourcing" below.
+
+**`/account/` (`pages/account/index.html`) is the account management
+landing page** — a `My Membership` / `Change Name` / `Communication
+Preferences` / `Change Password` button grid, gated by the same
+`account-page-content`/`account-login-prompt` pair as every other
+logged-in-only page. It's the "home base" these forms link back to: each
+one has a single "← Back to Account" link near the top (not a repeated
+list of every sibling task — deliberately, see below), and the navbar's
+"My Account" dropdown has a matching "Account Overview" entry above the
+individual task links, so
+there are always two ways in (drop straight into a task, or browse from
+the overview). New "edit my X" pages should add themselves to this
+button grid and the navbar dropdown, not just the navbar.
+
+We deliberately did **not** build a persistent sub-nav bar of every
+account task shown on every account page — tried before on another
+project and it confused users (unclear whether clicking a sibling tab
+navigates away or just changes a view within the same page). A single
+"← Back to Account" link avoids that ambiguity; the overview page's
+button grid is the one place all the siblings are listed together.
+
+**`/account/membership/` is a nested hub, one level down**: it's a
+`My Membership` button in `/account/`'s grid, but it's also its own
+mini "home base" for the membership-specific sub-pages (`.../new/`,
+and future `.../share/`, `.../buy/`, `.../pay/`) — each of those has its
+own "← Back to Membership" link pointing at `/account/membership/`, not
+all the way back to `/account/`. Same reasoning as the top-level hub,
+just one level deeper.
+
 ## Content sourcing
 
 Every content-sourcing page uses the same pattern: plain htmx —
@@ -101,15 +146,20 @@ what was wrong; duplicating that logic client-side would just be a second
 place for it to drift out of sync.
 
 All three forms share the exact same result-handling behavior via
-`setupResultForm(formId, messageId)` in `main.js` — add any future
-form-processing `/api/*` endpoint to this same helper rather than
-hand-rolling the wiring again. On response, it swaps the result into the
-message target and hides the form (`htmx:afterSwap`, keyed off that
-target's id) — but only on success, so a validation failure leaves the
-form up to fix and resubmit rather than stranding the user with no way
-back to it. Success/failure is read from an `X-Form-Result: ok`/`error`
-response header, read directly with no client-side sniffing of the
-message HTML.
+`setupResultForm(formId, messageId, infoId, nextStepsId)` in `main.js` —
+add any future form-processing `/api/*` endpoint to this same helper
+rather than hand-rolling the wiring again. On response, it swaps the
+result into the message target and hides the form (`htmx:afterSwap`,
+keyed off that target's id) — but only on success, so a validation
+failure leaves the form up to fix and resubmit rather than stranding the
+user with no way back to it. Success/failure is read from an
+`X-Form-Result: ok`/`error` response header, read directly with no
+client-side sniffing of the message HTML. `infoId` (register/recover's
+intro box) is the inverse of `nextStepsId` (the account forms'
+Back-to-Account/Home buttons): `infoId` hides on success and stays put on
+failure, `nextStepsId` is hidden by default and only appears on success —
+the account forms use `nextStepsId` so a completed action always ends
+with "what do you want to do next" instead of just a static message.
 
 **A server error gets no `htmx:afterSwap` at all**, by design: htmx's
 default `responseHandling` treats 4xx/5xx as `swap: false`, so nothing
@@ -138,6 +188,123 @@ Links inside fetched content that point at `/redirect/host/path` are the
 site's click-tracking mechanism (nginx rewrites them to `https://host/path`
 in production/on the proxy domain — see "Deployment" below). They're left
 untouched when fragments are inserted; don't try to rewrite them client-side.
+
+**Every account form (Change Password, Change Name, Communication
+Preferences) fetches its own fields from the server** with this same
+content-sourcing idiom, not just for read-only content: a placeholder div
+(`hx-get="/api/account_name.html" hx-trigger="load" hx-swap="innerHTML"
+hx-target="this" hx-disabled-elt="unset"` + `<progress>`) sits *inside*
+the `<form>`, in place of any hand-authored `<input>`/`<label>`. The
+backend's `run_action` branches on `GET` vs `POST` and, on `GET`, renders
+the real field HTML via the same `Davin::Element`/`form_element`
+rendering the old server-rendered pages used — pre-filled with the
+account's current value where there is one to show (Change Name,
+Communication Preferences); blank fields for Change Password, which has
+none, but the same shape regardless. There's no hand-written field HTML
+anywhere in this repo, and no separate JSON-plus-client-rendering step.
+The next "edit my X" page (Link Membership) should follow this same
+pattern rather than hand-authoring fields, whether or not it has a
+current value to pre-fill.
+
+**`hx-target="this"` and `hx-disabled-elt="unset"` on the fields div are
+required, not decorative.** Without them, the fields div inherits
+`hx-target`/`hx-disabled-elt` from the surrounding `<form>` (set there for
+the POST *submission*, targeting the message div and disabling the submit
+button) — so its own `GET` response lands in the message div instead of
+the fields div, and htmx logs a console warning trying to resolve "find
+button" against the wrong element. Caught by driving a real browser
+against these pages (`jwt` is httponly, so cookies had to be set via CDP's
+`Network.setCookie`, not `document.cookie`) rather than assuming the
+pattern worked from source alone.
+
+**A page that needs to say "which record" (e.g. `?member_id=123` when an
+account has more than one membership) needs `hx-include` on the fields
+div too — htmx does *not* auto-include the enclosing form's other fields
+for a plain `<div>`'s own request.** (Its default "include the closest
+form" behavior only kicks in for an element that's itself a form
+control, or the form itself — a `<div>` issuing its own `hx-get` doesn't
+qualify, confirmed by inspecting the actual outgoing request in a real
+browser: the query string came back completely empty without this.) The
+pattern: a hidden `<input name="member_id">` inside the `<form>`,
+populated from `location.search` by a small inline `<script>` (same
+convention as `/login-link/`'s hidden `username`/`recovery` fields), plus
+`hx-include="#the-form-id"` on the fields div so its GET picks that value
+up. The form's own POST doesn't need this — a real `<form>` submission
+already serializes all its own descendant inputs regardless.
+
+**The submit button starts `disabled` in each form's markup**, and
+`setupPrefillFields(fieldsId, formId)` in `main.js` enables it once the
+fields fetch actually lands (`htmx:afterSwap` on the fields div) — without
+this, a user could submit before the real fields exist at all (the POST
+would carry none of the expected params). A failed fetch
+(`htmx:responseError`/`htmx:sendError`, same reasoning as
+`setupResultForm`'s handlers) replaces the placeholder with an inline
+message and leaves the button disabled, rather than leaving it stuck
+disabled with no explanation.
+
+**Some backend-rendered fields carry inline `onkeyup`/`onblur`/`onclick`
+attributes expecting a global JS function to exist** — e.g.
+`Davin::Element::PostalCode` renders `onkeyup="uc_postal_code(this)"
+onblur="uc_postal_code(this)"`, matching the old site's own script.
+Inline event attributes always run against `window`, and this file is
+loaded as `type="module"` — a module's top-level bindings are *not*
+globals — so these have to be attached explicitly (`window.uc_postal_code
+= (e) => { e.value = e.value.toUpperCase() }`), not just declared as a
+normal function/const. Easy to miss: setting a field's `.value` directly
+in a test (rather than a real keystroke/blur) never fires these handlers,
+so a missing global function won't show up unless you dispatch a real
+event. `Davin::Element::List` has several more of these
+(`add_button`/`remove_button`/`up_button`/`down_button`/`from_list`/
+`to_list`) — not used by any page here yet, but the next one that uses
+that element type will need the same treatment.
+
+## Login/logout
+
+Three pages handle authentication: `/login/` (password, `hx-post
+/api/account_login.html`), `/login-link/` (consumes the one-time link from
+a recovery e-mail — hidden `username`/`recovery` fields filled from the
+URL query string by a small inline `<script>`, then auto-submitted via
+`hx-trigger="load"` to `/api/account_login_link.html`), and `/logout/`
+(auto-posts to `/api/account_logout.html` on load, same shape). All three
+use `setupResultForm` like every other form here.
+
+A successful login sets **two** cookies, not one: `jwt` (httponly — the
+real credential, never readable from JS by design) and `account_hint`
+(plain, holds the account's e-mail) — the second exists specifically
+because this is a static site with no server-side rendering, so client JS
+has no other way to know "is someone logged in, and as whom" without an
+extra fetch round-trip (and the flash of the wrong state that would cause
+on every page load). `updateAccountNav()` in `main.js` reads
+`account_hint` and:
+- toggles the navbar's `#nav-account-logged-out`/`#nav-account-logged-in`
+  and the footer's `#footer-login`/`#footer-logout`,
+- fills `#nav-account-email` with "Signed in as \<e-mail\>",
+- toggles `#account-page-content`/`#account-login-prompt` — see "Adding a
+  new page" above for how logged-in-only pages use this pair.
+
+It re-runs on every `htmx:afterSwap`, not just once at page load, since
+login/login-link/logout change the cookie via an in-page AJAX POST with no
+navigation — without that, the nav would only catch up after the user
+happened to click through to another page.
+
+`/login/` also fetches `/api/announcement_headlines.html` at the top of
+the page (same content-sourcing idiom as the home page — `hx-trigger="load"`
++ `<progress>` placeholder), since people can land directly on it (a
+bookmark, a link from an e-mail) without ever seeing the home page's
+announcements first. Both it and `/login-link/` are forms with a
+`nextStepsId` (Account Overview / Home buttons) even though neither is
+under `pages/account/` — logging in has the exact same "now what?" gap
+the account forms had before that pattern existed. `register`/`recover`
+don't need it (success there means "check your e-mail," not "you're
+in"), and `logout` has nowhere useful to send you.
+
+`/login-link/` also uses `infoId` in the opposite way register/recover
+do: `login-link-info` ("Having trouble? Request a new link / log in with
+your password") starts hidden in markup and only appears on failure,
+rather than being visible by default — there's no form here for it to
+sit alongside before the (immediate, on-load) submission resolves, so
+showing it only makes sense once something's actually gone wrong (e.g.
+`account_login_link.html`'s "this login link is invalid or has expired").
 
 ## Styling (`src/style.css`)
 

@@ -17,6 +17,16 @@
 
     <main class="section">
       <div class="container">
+        <div
+          hx-get="/api/announcement_headlines.html"
+          hx-trigger="load"
+          hx-swap="outerHTML"
+        >
+          <progress class="progress is-small is-link" max="100">
+            Loading&hellip;
+          </progress>
+        </div>
+
         <div class="box">
           <form
             id="login-form"
@@ -67,7 +77,14 @@
             aria-live="polite"
           ></div>
 
-          <p class="mt-4">
+          <div id="login-next-steps" class="mt-5 is-hidden">
+            <div class="buttons">
+              <a class="button is-primary" href="/account/">Account Overview</a>
+              <a class="button is-light" href="/">Home</a>
+            </div>
+          </div>
+
+          <p id="login-info" class="mt-4">
             No password set, or forgot it?
             <a href="/recover/">Get a one-time login link e-mailed to you</a>.
           </p>

@@ -31,6 +31,26 @@ const pageEntries = {
   login: resolve(pagesRoot, 'login/index.html'),
   'login-link': resolve(pagesRoot, 'login-link/index.html'),
   logout: resolve(pagesRoot, 'logout/index.html'),
+  account: resolve(pagesRoot, 'account/index.html'),
+  'account-password': resolve(pagesRoot, 'account/password/index.html'),
+  'account-name': resolve(pagesRoot, 'account/name/index.html'),
+  'account-communication': resolve(
+    pagesRoot,
+    'account/communication/index.html',
+  ),
+  'account-membership': resolve(pagesRoot, 'account/membership/index.html'),
+  'account-membership-new': resolve(
+    pagesRoot,
+    'account/membership/new/index.html',
+  ),
+  'account-membership-edit': resolve(
+    pagesRoot,
+    'account/membership/edit/index.html',
+  ),
+  'account-membership-share': resolve(
+    pagesRoot,
+    'account/membership/share/index.html',
+  ),
 }
 
 // Inlines <!--#include name.html --> markers with the contents of the

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Change Password</title>
+  </head>
+  <body>
+    <!--#include header.html -->
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">Change Password</p>
+      </div>
+    </section>
+
+    <main class="section">
+      <div class="container">
+        <div id="account-page-content" class="is-hidden">
+          <p class="mb-4">
+            <a href="/account/"
+              ><i class="fas fa-arrow-left"></i>
+              Back to Account</a
+            >
+          </p>
+
+          <div class="box">
+            <form
+              id="password-form"
+              hx-post="/api/account_password.html"
+              hx-swap="innerHTML"
+              hx-target="#password-message"
+              hx-disabled-elt="find button[type='submit']"
+            >
+              <div
+                id="password-fields"
+                class="hx-content"
+                hx-get="/api/account_password.html"
+                hx-trigger="load"
+                hx-swap="innerHTML"
+                hx-target="this"
+                hx-disabled-elt="unset"
+              >
+                <progress class="progress is-small is-link" max="100">
+                  Loading&hellip;
+                </progress>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <button class="button is-primary" type="submit" disabled>
+                    Update Password
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <div
+              id="password-message"
+              class="mt-5 is-hidden"
+              aria-live="polite"
+            ></div>
+
+            <div id="password-next-steps" class="mt-5 is-hidden">
+              <div class="buttons">
+                <a class="button is-primary" href="/account/"
+                  >Back to Account</a
+                >
+                <a class="button is-light" href="/">Home</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--#include account-login-prompt.html -->
+      </div>
+    </main>
+
+    <!--#include footer.html -->
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
