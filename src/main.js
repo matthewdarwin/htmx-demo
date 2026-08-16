@@ -236,6 +236,7 @@ setupPrefillFields('membership-delete-fields', 'membership-delete-form')
 setupPrefillFields('membership-buy-fields', 'membership-buy-form')
 setupPrefillFields('snack-buy-fields', 'snack-buy-form')
 setupPrefillFields('donation-buy-fields', 'donation-buy-form')
+setupPrefillFields('ticket-buy-fields', 'ticket-buy-form')
 
 setupResultForm('feedback-form', 'feedback-message')
 setupResultForm('register-form', 'register-message', 'register-info')
@@ -308,6 +309,12 @@ setupResultForm(
   'donation-buy-message',
   undefined,
   'donation-buy-next-steps',
+)
+setupResultForm(
+  'ticket-buy-form',
+  'ticket-buy-message',
+  undefined,
+  'ticket-buy-next-steps',
 )
 
 const promoWrapper = document.querySelector('.HomePromo')

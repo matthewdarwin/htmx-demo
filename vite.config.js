@@ -63,6 +63,7 @@ const pageEntries = {
   'account-cart-pay': resolve(pagesRoot, 'account/cart/pay/index.html'),
   'account-snacks-buy': resolve(pagesRoot, 'account/snacks/buy/index.html'),
   'account-donation-buy': resolve(pagesRoot, 'account/donation/buy/index.html'),
+  'account-tickets-buy': resolve(pagesRoot, 'account/tickets/buy/index.html'),
 }
 
 // Inlines <!--#include name.html --> markers with the contents of the
