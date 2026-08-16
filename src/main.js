@@ -188,17 +188,21 @@ function setupResultForm(formId, messageId, infoId, nextStepsId) {
 // showing would post a form with none of its real fields present at
 // all. A failed fetch (network down, unexpected 5xx) replaces the
 // placeholder with an inline message instead of leaving the button
-// disabled forever with no explanation.
+// disabled forever with no explanation. The submit button is looked up
+// fresh on every swap (rather than captured once at setup) since Order
+// Tickets' fields response conditionally omits the button entirely
+// when there's nothing to buy, replacing it with links elsewhere -
+// every other caller always renders a real button, so this is a no-op
+// change for them.
 function setupPrefillFields(fieldsId, formId) {
   const fields = document.getElementById(fieldsId)
   const form = document.getElementById(formId)
   if (!fields || !form) return
 
-  const submit = form.querySelector('button[type="submit"]')
-
   document.body.addEventListener('htmx:afterSwap', (evt) => {
     if (evt.target !== fields) return
-    submit.disabled = false
+    const submit = form.querySelector('button[type="submit"]')
+    if (submit) submit.disabled = false
   })
 
   const showLoadFailure = (text) => {
