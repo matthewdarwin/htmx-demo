@@ -256,6 +256,35 @@ a.navbar-item:hover,
   margin-left: 0;
 }
 
+/* Buy Snacks quantity fields */
+
+/* The backend renders these as ordinary form_element output (the same
+   label-above-input .field/.control/.input markup every other account
+   form uses) - fine for text fields, but Bulma's .input is width: 100%
+   by default, ignoring the number input's own small `size` attribute,
+   so an 0-20 quantity field stretched edge to edge. Scoped to this one
+   fields container rather than touching .input/.field globally, which
+   would affect every other form on the site. */
+#snack-buy-fields .field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+#snack-buy-fields .field .label {
+  margin-bottom: 0;
+}
+
+#snack-buy-fields .field .control {
+  flex: 0 0 auto;
+}
+
+#snack-buy-fields .field input.input {
+  width: 5rem;
+}
+
 /* FAQ page */
 
 .faq-list details.box {
