@@ -24,18 +24,20 @@
             >
           </p>
 
-          <div
-            id="volunteer-schedule-content"
-            class="hx-content"
-            hx-get="/api/account_volunteer_schedule.html"
-            hx-trigger="load"
-            hx-vals="js:{volunteer_id: new URLSearchParams(location.search).get('volunteer_id') || ''}"
-            hx-swap="innerHTML"
-            hx-target="this"
-          >
-            <progress class="progress is-small is-link" max="100">
-              Loading&hellip;
-            </progress>
+          <div class="box">
+            <div
+              id="volunteer-schedule-content"
+              class="hx-content"
+              hx-get="/api/account_volunteer_schedule.html"
+              hx-trigger="load"
+              hx-vals="js:{volunteer_id: new URLSearchParams(location.search).get('volunteer_id') || ''}"
+              hx-swap="innerHTML"
+              hx-target="this"
+            >
+              <progress class="progress is-small is-link" max="100">
+                Loading&hellip;
+              </progress>
+            </div>
           </div>
         </div>
 
