@@ -340,7 +340,10 @@ a.navbar-item:hover,
    identifiers like "CartItem" rather than literal display text, so
    wording changes here are CSS-only, no backend edit needed). */
 @media (max-width: 768px) {
-  .CartTable th {
+  /* Hides the whole header row, not just its <th> cells - hiding only
+     the cells left an empty bordered box floating above the first item,
+     since the <tr> itself still had the card border/padding applied. */
+  .CartTable tr:has(th) {
     display: none;
   }
 
@@ -392,6 +395,15 @@ a.navbar-item:hover,
   }
   .CartTable td[data-label='CartAction']::before {
     content: '';
+  }
+
+  /* Backend labels a content-less Action cell (fee/redemption rows,
+     the totals row) with this class explicitly, rather than CSS
+     inferring it from DOM structure (e.g. :has(button)) - keeps the
+     underlying table structure (and its other consumers: PDF export,
+     email receipts) completely untouched by this mobile-only rule. */
+  .CartTable .CartActionNull {
+    display: none;
   }
 }
 
