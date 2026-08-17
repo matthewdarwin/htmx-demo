@@ -17,10 +17,19 @@
 
     <main class="section">
       <div class="container">
+        <div
+          id="birthday-intro"
+          hx-get="/api/birthdays.html?section=intro"
+          hx-trigger="load"
+          hx-swap="innerHTML"
+        >
+          <progress class="progress is-small is-link" max="100">
+            Loading&hellip;
+          </progress>
+        </div>
+
         <div class="box">
           <form id="birthday-form">
-            <input type="hidden" id="birthday-test" name="test" />
-
             <div
               id="birthday-fields"
               hx-get="/api/birthdays.html"
@@ -28,6 +37,7 @@
               hx-include="#birthday-form"
               hx-swap="innerHTML"
               hx-target="this"
+              hx-vals='js:{"test": new URLSearchParams(location.search).get("test") || ""}'
             >
               <progress class="progress is-small is-link" max="100">
                 Loading&hellip;
@@ -37,15 +47,22 @@
 
           <div id="party-plan" class="mt-5"></div>
         </div>
+
+        <div
+          id="birthday-packages"
+          hx-get="/api/birthdays.html?section=packages"
+          hx-trigger="load"
+          hx-swap="innerHTML"
+        >
+          <progress class="progress is-small is-link" max="100">
+            Loading&hellip;
+          </progress>
+        </div>
       </div>
     </main>
 
     <!--#include footer.html -->
 
-    <script>
-      document.getElementById('birthday-test').value =
-        new URLSearchParams(location.search).get('test') || ''
-    </script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
