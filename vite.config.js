@@ -24,7 +24,6 @@ const pageEntries = {
   'history-gallery': resolve(pagesRoot, 'history/gallery.html'),
   member: resolve(pagesRoot, 'member/index.html'),
   giftcertificates: resolve(pagesRoot, 'giftcertificates/index.html'),
-  shows: resolve(pagesRoot, 'shows/index.html'),
   birthdays: resolve(pagesRoot, 'birthdays/index.html'),
   register: resolve(pagesRoot, 'register/index.html'),
   recover: resolve(pagesRoot, 'recover/index.html'),
