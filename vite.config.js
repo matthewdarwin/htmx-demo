@@ -84,6 +84,10 @@ const pageEntries = {
     pagesRoot,
     'account/volunteer/retire/index.html',
   ),
+  'account-volunteer-handbook': resolve(
+    pagesRoot,
+    'account/volunteer/handbook/index.html',
+  ),
 }
 
 // Inlines <!--#include name.html --> markers with the contents of the
