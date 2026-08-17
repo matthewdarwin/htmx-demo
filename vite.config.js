@@ -68,6 +68,18 @@ const pageEntries = {
     pagesRoot,
     'account/volunteer/new/index.html',
   ),
+  'account-volunteer-info': resolve(
+    pagesRoot,
+    'account/volunteer/info/index.html',
+  ),
+  'account-volunteer-interests': resolve(
+    pagesRoot,
+    'account/volunteer/interests/index.html',
+  ),
+  'account-volunteer-availability': resolve(
+    pagesRoot,
+    'account/volunteer/availability/index.html',
+  ),
 }
 
 // Inlines <!--#include name.html --> markers with the contents of the

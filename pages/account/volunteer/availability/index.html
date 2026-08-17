@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Auto Availability</title>
+  </head>
+  <body>
+    <!--#include header.html -->
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">Edit Auto Availability</p>
+      </div>
+    </section>
+
+    <main class="section">
+      <div class="container">
+        <div id="account-page-content" class="is-hidden">
+          <p class="mb-4">
+            <a href="/account/volunteer/"
+              ><i class="fas fa-arrow-left"></i>
+              Back to Volunteering</a
+            >
+          </p>
+
+          <div class="box">
+            <form
+              id="volunteer-availability-form"
+              hx-post="/api/account_volunteer_availability.html"
+              hx-swap="innerHTML"
+              hx-target="#volunteer-availability-message"
+              hx-disabled-elt="find button[type='submit']"
+            >
+              <input
+                type="hidden"
+                id="volunteer-availability-volunteer-id"
+                name="volunteer_id"
+              />
+
+              <div
+                id="volunteer-availability-fields"
+                class="hx-content"
+                hx-get="/api/account_volunteer_availability.html"
+                hx-trigger="load"
+                hx-include="#volunteer-availability-form"
+                hx-swap="innerHTML"
+                hx-target="this"
+                hx-disabled-elt="unset"
+              >
+                <progress class="progress is-small is-link" max="100">
+                  Loading&hellip;
+                </progress>
+              </div>
+
+              <div class="field">
+                <div class="control">
+                  <button class="button is-primary" type="submit" disabled>
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            </form>
+            <script>
+              document.getElementById(
+                'volunteer-availability-volunteer-id',
+              ).value =
+                new URLSearchParams(location.search).get('volunteer_id') || ''
+            </script>
+
+            <div
+              id="volunteer-availability-message"
+              class="mt-5 is-hidden"
+              aria-live="polite"
+            ></div>
+
+            <div id="volunteer-availability-next-steps" class="mt-5 is-hidden">
+              <div class="buttons">
+                <a class="button is-primary" href="/account/volunteer/"
+                  >Back to Volunteering</a
+                >
+                <a class="button is-light" href="/">Home</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--#include account-login-prompt.html -->
+      </div>
+    </main>
+
+    <!--#include footer.html -->
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

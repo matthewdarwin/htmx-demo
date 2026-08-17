@@ -239,6 +239,12 @@ setupPrefillFields('membership-share-fields', 'membership-share-form')
 setupPrefillFields('membership-delete-fields', 'membership-delete-form')
 setupPrefillFields('membership-buy-fields', 'membership-buy-form')
 setupPrefillFields('volunteer-new-fields', 'volunteer-new-form')
+setupPrefillFields('volunteer-info-fields', 'volunteer-info-form')
+setupPrefillFields('volunteer-interests-fields', 'volunteer-interests-form')
+setupPrefillFields(
+  'volunteer-availability-fields',
+  'volunteer-availability-form',
+)
 setupPrefillFields('snack-buy-fields', 'snack-buy-form')
 setupPrefillFields('donation-buy-fields', 'donation-buy-form')
 setupPrefillFields('ticket-buy-fields', 'ticket-buy-form')
@@ -302,6 +308,24 @@ setupResultForm(
   'volunteer-new-message',
   undefined,
   'volunteer-new-next-steps',
+)
+setupResultForm(
+  'volunteer-info-form',
+  'volunteer-info-message',
+  undefined,
+  'volunteer-info-next-steps',
+)
+setupResultForm(
+  'volunteer-interests-form',
+  'volunteer-interests-message',
+  undefined,
+  'volunteer-interests-next-steps',
+)
+setupResultForm(
+  'volunteer-availability-form',
+  'volunteer-availability-message',
+  undefined,
+  'volunteer-availability-next-steps',
 )
 setupResultForm(
   'order-pay-form',
