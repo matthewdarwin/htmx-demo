@@ -69,9 +69,21 @@ const pageEntries = {
     pagesRoot,
     'account/volunteer/new/index.html',
   ),
-  'account-volunteer-info': resolve(
+  'account-volunteer-name-address': resolve(
     pagesRoot,
-    'account/volunteer/info/index.html',
+    'account/volunteer/name-address/index.html',
+  ),
+  'account-volunteer-contact': resolve(
+    pagesRoot,
+    'account/volunteer/contact/index.html',
+  ),
+  'account-volunteer-references': resolve(
+    pagesRoot,
+    'account/volunteer/references/index.html',
+  ),
+  'account-volunteer-preferences': resolve(
+    pagesRoot,
+    'account/volunteer/preferences/index.html',
   ),
   'account-volunteer-interests': resolve(
     pagesRoot,

@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Edit Info</title>
+    <title>Volunteer Preferences</title>
   </head>
   <body>
     <!--#include header.html -->
 
     <section class="hero is-primary">
       <div class="hero-body">
-        <p class="title">Edit Info</p>
+        <p class="title">Volunteer Preferences</p>
       </div>
     </section>
 
@@ -26,24 +26,24 @@
 
           <div class="box">
             <form
-              id="volunteer-info-form"
-              hx-post="/api/account_volunteer_info.html"
+              id="volunteer-preferences-form"
+              hx-post="/api/account_volunteer_preferences.html"
               hx-swap="innerHTML"
-              hx-target="#volunteer-info-message"
+              hx-target="#volunteer-preferences-message"
               hx-disabled-elt="find button[type='submit']"
             >
               <input
                 type="hidden"
-                id="volunteer-info-volunteer-id"
+                id="volunteer-preferences-volunteer-id"
                 name="volunteer_id"
               />
 
               <div
-                id="volunteer-info-fields"
+                id="volunteer-preferences-fields"
                 class="hx-content"
-                hx-get="/api/account_volunteer_info.html"
+                hx-get="/api/account_volunteer_preferences.html"
                 hx-trigger="load"
-                hx-include="#volunteer-info-form"
+                hx-include="#volunteer-preferences-form"
                 hx-swap="innerHTML"
                 hx-target="this"
                 hx-disabled-elt="unset"
@@ -62,17 +62,19 @@
               </div>
             </form>
             <script>
-              document.getElementById('volunteer-info-volunteer-id').value =
+              document.getElementById(
+                'volunteer-preferences-volunteer-id',
+              ).value =
                 new URLSearchParams(location.search).get('volunteer_id') || ''
             </script>
 
             <div
-              id="volunteer-info-message"
+              id="volunteer-preferences-message"
               class="mt-5 is-hidden"
               aria-live="polite"
             ></div>
 
-            <div id="volunteer-info-next-steps" class="mt-5 is-hidden">
+            <div id="volunteer-preferences-next-steps" class="mt-5 is-hidden">
               <div class="buttons">
                 <a class="button is-primary" href="/account/volunteer/"
                   >Back to Volunteering</a

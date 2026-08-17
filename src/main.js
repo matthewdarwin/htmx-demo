@@ -239,7 +239,13 @@ setupPrefillFields('membership-share-fields', 'membership-share-form')
 setupPrefillFields('membership-delete-fields', 'membership-delete-form')
 setupPrefillFields('membership-buy-fields', 'membership-buy-form')
 setupPrefillFields('volunteer-new-fields', 'volunteer-new-form')
-setupPrefillFields('volunteer-info-fields', 'volunteer-info-form')
+setupPrefillFields(
+  'volunteer-name-address-fields',
+  'volunteer-name-address-form',
+)
+setupPrefillFields('volunteer-contact-fields', 'volunteer-contact-form')
+setupPrefillFields('volunteer-references-fields', 'volunteer-references-form')
+setupPrefillFields('volunteer-preferences-fields', 'volunteer-preferences-form')
 setupPrefillFields('volunteer-interests-fields', 'volunteer-interests-form')
 setupPrefillFields(
   'volunteer-availability-fields',
@@ -311,10 +317,28 @@ setupResultForm(
   'volunteer-new-next-steps',
 )
 setupResultForm(
-  'volunteer-info-form',
-  'volunteer-info-message',
+  'volunteer-name-address-form',
+  'volunteer-name-address-message',
   undefined,
-  'volunteer-info-next-steps',
+  'volunteer-name-address-next-steps',
+)
+setupResultForm(
+  'volunteer-contact-form',
+  'volunteer-contact-message',
+  undefined,
+  'volunteer-contact-next-steps',
+)
+setupResultForm(
+  'volunteer-references-form',
+  'volunteer-references-message',
+  undefined,
+  'volunteer-references-next-steps',
+)
+setupResultForm(
+  'volunteer-preferences-form',
+  'volunteer-preferences-message',
+  undefined,
+  'volunteer-preferences-next-steps',
 )
 setupResultForm(
   'volunteer-interests-form',
