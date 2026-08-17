@@ -248,6 +248,10 @@ setupPrefillFields('volunteer-references-fields', 'volunteer-references-form')
 setupPrefillFields('volunteer-preferences-fields', 'volunteer-preferences-form')
 setupPrefillFields('volunteer-interests-fields', 'volunteer-interests-form')
 setupPrefillFields(
+  'volunteer-availability-fields',
+  'volunteer-availability-form',
+)
+setupPrefillFields(
   'volunteer-default-availability-fields',
   'volunteer-default-availability-form',
 )
@@ -345,6 +349,12 @@ setupResultForm(
   'volunteer-interests-message',
   undefined,
   'volunteer-interests-next-steps',
+)
+setupResultForm(
+  'volunteer-availability-form',
+  'volunteer-availability-message',
+  undefined,
+  'volunteer-availability-next-steps',
 )
 setupResultForm(
   'volunteer-default-availability-form',
