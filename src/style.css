@@ -382,7 +382,7 @@ a.navbar-item:hover,
     content: 'Unit Price';
   }
   .CartTable td[data-label='CartQuantity']::before {
-    content: 'Qty';
+    content: 'Quantity';
   }
   .CartTable td[data-label='CartTotal']::before {
     content: 'Total';
