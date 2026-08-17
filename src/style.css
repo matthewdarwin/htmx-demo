@@ -330,6 +330,71 @@ a.navbar-item:hover,
   cursor: pointer;
 }
 
+/* Cart/order line-item tables (server-rendered by
+   OrderOrTransaction::x_html_header/item/total, cinema-lib-base - shared
+   with the old production system, so that code only adds a "CartTable"
+   class and a data-label per <td>; everything below is CSS-only and only
+   loads on this site). Below Bulma's own tablet breakpoint, each row
+   becomes its own bordered block instead of a cramped multi-column row,
+   with the column name injected via data-label (kept as internal
+   identifiers like "CartItem" rather than literal display text, so
+   wording changes here are CSS-only, no backend edit needed). */
+@media (max-width: 768px) {
+  .CartTable th {
+    display: none;
+  }
+
+  .CartTable,
+  .CartTable tr,
+  .CartTable td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .CartTable tr {
+    margin-bottom: 0.75rem;
+    border: 1px solid rgba(128, 128, 128, 0.35);
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .CartTable td {
+    text-align: right;
+    padding: 0.3rem 0 !important;
+    border: none !important;
+  }
+
+  .CartTable td[data-label]::before {
+    float: left;
+    font-weight: bold;
+    text-align: left;
+    padding-right: 0.5rem;
+  }
+
+  .CartTable td[data-label='CartItem']::before {
+    content: 'Item';
+  }
+  .CartTable td[data-label='CartUnitPrice']::before {
+    content: 'Unit Price';
+  }
+  .CartTable td[data-label='CartQuantity']::before {
+    content: 'Qty';
+  }
+  .CartTable td[data-label='CartTotal']::before {
+    content: 'Total';
+  }
+  .CartTable td[data-label='CartDate']::before {
+    content: 'Date';
+  }
+  .CartTable td[data-label='CartMember']::before {
+    content: 'Member';
+  }
+  .CartTable td[data-label='CartAction']::before {
+    content: '';
+  }
+}
+
 /* Location page map */
 
 .LocationMap {
