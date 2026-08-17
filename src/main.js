@@ -100,7 +100,7 @@ function updateAccountNav() {
     .getElementById('footer-login')
     ?.classList.toggle('is-hidden', !!loggedIn)
   document
-    .getElementById('footer-logout')
+    .getElementById('footer-account')
     ?.classList.toggle('is-hidden', !loggedIn)
   document
     .getElementById('account-page-content')

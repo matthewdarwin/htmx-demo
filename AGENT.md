@@ -278,7 +278,7 @@ extra fetch round-trip (and the flash of the wrong state that would cause
 on every page load). `updateAccountNav()` in `main.js` reads
 `account_hint` and:
 - toggles the navbar's `#nav-account-logged-out`/`#nav-account-logged-in`
-  and the footer's `#footer-login`/`#footer-logout`,
+  and the footer's `#footer-login`/`#footer-account`,
 - fills `#nav-account-email` with "Signed in as \<e-mail\>",
 - toggles `#account-page-content`/`#account-login-prompt` — see "Adding a
   new page" above for how logged-in-only pages use this pair.
