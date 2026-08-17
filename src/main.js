@@ -238,6 +238,7 @@ setupPrefillFields('membership-edit-fields', 'membership-edit-form')
 setupPrefillFields('membership-share-fields', 'membership-share-form')
 setupPrefillFields('membership-delete-fields', 'membership-delete-form')
 setupPrefillFields('membership-buy-fields', 'membership-buy-form')
+setupPrefillFields('volunteer-new-fields', 'volunteer-new-form')
 setupPrefillFields('snack-buy-fields', 'snack-buy-form')
 setupPrefillFields('donation-buy-fields', 'donation-buy-form')
 setupPrefillFields('ticket-buy-fields', 'ticket-buy-form')
@@ -295,6 +296,12 @@ setupResultForm(
   'membership-buy-message',
   undefined,
   'membership-buy-next-steps',
+)
+setupResultForm(
+  'volunteer-new-form',
+  'volunteer-new-message',
+  undefined,
+  'volunteer-new-next-steps',
 )
 setupResultForm(
   'order-pay-form',
