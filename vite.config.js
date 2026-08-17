@@ -89,9 +89,9 @@ const pageEntries = {
     pagesRoot,
     'account/volunteer/interests/index.html',
   ),
-  'account-volunteer-availability': resolve(
+  'account-volunteer-default-availability': resolve(
     pagesRoot,
-    'account/volunteer/availability/index.html',
+    'account/volunteer/default-availability/index.html',
   ),
   'account-volunteer-retire': resolve(
     pagesRoot,

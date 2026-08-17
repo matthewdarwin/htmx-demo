@@ -248,8 +248,8 @@ setupPrefillFields('volunteer-references-fields', 'volunteer-references-form')
 setupPrefillFields('volunteer-preferences-fields', 'volunteer-preferences-form')
 setupPrefillFields('volunteer-interests-fields', 'volunteer-interests-form')
 setupPrefillFields(
-  'volunteer-availability-fields',
-  'volunteer-availability-form',
+  'volunteer-default-availability-fields',
+  'volunteer-default-availability-form',
 )
 setupPrefillFields('volunteer-retire-fields', 'volunteer-retire-form')
 setupPrefillFields('snack-buy-fields', 'snack-buy-form')
@@ -347,10 +347,10 @@ setupResultForm(
   'volunteer-interests-next-steps',
 )
 setupResultForm(
-  'volunteer-availability-form',
-  'volunteer-availability-message',
+  'volunteer-default-availability-form',
+  'volunteer-default-availability-message',
   undefined,
-  'volunteer-availability-next-steps',
+  'volunteer-default-availability-next-steps',
 )
 setupResultForm(
   'volunteer-retire-form',

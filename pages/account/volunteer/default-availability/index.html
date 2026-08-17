@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Edit Auto Availability</title>
+    <title>Default Availability</title>
   </head>
   <body>
     <!--#include header.html -->
 
     <section class="hero is-primary">
       <div class="hero-body">
-        <p class="title">Edit Auto Availability</p>
+        <p class="title">Default Availability</p>
       </div>
     </section>
 
@@ -26,24 +26,24 @@
 
           <div class="box">
             <form
-              id="volunteer-availability-form"
-              hx-post="/api/account_volunteer_availability.html"
+              id="volunteer-default-availability-form"
+              hx-post="/api/account_volunteer_default_availability.html"
               hx-swap="innerHTML"
-              hx-target="#volunteer-availability-message"
+              hx-target="#volunteer-default-availability-message"
               hx-disabled-elt="find button[type='submit']"
             >
               <input
                 type="hidden"
-                id="volunteer-availability-volunteer-id"
+                id="volunteer-default-availability-volunteer-id"
                 name="volunteer_id"
               />
 
               <div
-                id="volunteer-availability-fields"
+                id="volunteer-default-availability-fields"
                 class="hx-content"
-                hx-get="/api/account_volunteer_availability.html"
+                hx-get="/api/account_volunteer_default_availability.html"
                 hx-trigger="load"
-                hx-include="#volunteer-availability-form"
+                hx-include="#volunteer-default-availability-form"
                 hx-swap="innerHTML"
                 hx-target="this"
                 hx-disabled-elt="unset"
@@ -63,18 +63,21 @@
             </form>
             <script>
               document.getElementById(
-                'volunteer-availability-volunteer-id',
+                'volunteer-default-availability-volunteer-id',
               ).value =
                 new URLSearchParams(location.search).get('volunteer_id') || ''
             </script>
 
             <div
-              id="volunteer-availability-message"
+              id="volunteer-default-availability-message"
               class="mt-5 is-hidden"
               aria-live="polite"
             ></div>
 
-            <div id="volunteer-availability-next-steps" class="mt-5 is-hidden">
+            <div
+              id="volunteer-default-availability-next-steps"
+              class="mt-5 is-hidden"
+            >
               <div class="buttons">
                 <a class="button is-primary" href="/account/volunteer/"
                   >Back to Volunteering</a
