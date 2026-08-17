@@ -65,6 +65,14 @@ const pageEntries = {
   'account-donation-buy': resolve(pagesRoot, 'account/donation/buy/index.html'),
   'account-tickets-buy': resolve(pagesRoot, 'account/tickets/buy/index.html'),
   'account-volunteer': resolve(pagesRoot, 'account/volunteer/index.html'),
+  'account-volunteer-profile': resolve(
+    pagesRoot,
+    'account/volunteer/profile/index.html',
+  ),
+  'account-volunteer-scheduling': resolve(
+    pagesRoot,
+    'account/volunteer/scheduling/index.html',
+  ),
   'account-volunteer-new': resolve(
     pagesRoot,
     'account/volunteer/new/index.html',

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Profile</title>
+  </head>
+  <body>
+    <!--#include header.html -->
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">Edit Profile</p>
+      </div>
+    </section>
+
+    <main class="section">
+      <div class="container">
+        <div id="account-page-content" class="is-hidden">
+          <p class="mb-4">
+            <a href="/account/volunteer/"
+              ><i class="fas fa-arrow-left"></i>
+              Back to Volunteering</a
+            >
+          </p>
+
+          <div class="box">
+            <div id="volunteer-profile-links" class="buttons">
+              <a
+                class="button is-primary"
+                href="/account/volunteer/name-address/"
+                >Name &amp; Address</a
+              >
+              <a class="button is-primary" href="/account/volunteer/contact/"
+                >Contact Details</a
+              >
+              <a class="button is-primary" href="/account/volunteer/references/"
+                >Emergency Contact &amp; References</a
+              >
+              <a
+                class="button is-primary"
+                href="/account/volunteer/preferences/"
+                >Volunteer Preferences</a
+              >
+              <a class="button is-primary" href="/account/volunteer/interests/"
+                >Interests</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <!--#include account-login-prompt.html -->
+      </div>
+    </main>
+
+    <!--#include footer.html -->
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

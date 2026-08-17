@@ -179,6 +179,26 @@ function setupResultForm(formId, messageId, infoId, nextStepsId) {
   })
 }
 
+// Static "hub" pages (Edit Profile, Scheduling) just link to existing
+// account pages - each of those pages reads volunteer_id off its own
+// URL (see the inline scripts on their hidden inputs), so the hub's
+// links need that same query param carried forward from whichever
+// volunteer's dashboard the hub was reached from.
+function setupVolunteerIdLinks(containerId) {
+  const container = document.getElementById(containerId)
+  if (!container) return
+
+  const volunteerId = new URLSearchParams(location.search).get('volunteer_id')
+  if (!volunteerId) return
+
+  container.querySelectorAll('a').forEach((a) => {
+    a.href += `?volunteer_id=${encodeURIComponent(volunteerId)}`
+  })
+}
+
+setupVolunteerIdLinks('volunteer-profile-links')
+setupVolunteerIdLinks('volunteer-scheduling-links')
+
 // Wires up the "fields fetched from the server" account forms (Change
 // Password, Change Name, Communication Preferences, and any future
 // "edit my X" page that follows the same shape): the submit button
