@@ -285,6 +285,31 @@ a.navbar-item:hover,
   width: 5rem;
 }
 
+/* Birthday Calculator fields - same compact side-by-side treatment as
+   Buy Snacks above, reused wholesale: the Package/Show/Member selects
+   get label-beside-control instead of label-above-full-width-control,
+   and the # Children/# Adults number inputs get the same narrow width
+   instead of stretching to fill the row. */
+#birthday-fields .field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+#birthday-fields .field .label {
+  margin-bottom: 0;
+}
+
+#birthday-fields .field .control {
+  flex: 0 0 auto;
+}
+
+#birthday-fields .field input.input {
+  width: 5rem;
+}
+
 /* FAQ page */
 
 .faq-list details.box {
