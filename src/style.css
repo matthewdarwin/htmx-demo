@@ -320,6 +320,16 @@ a.navbar-item:hover,
   cursor: pointer;
 }
 
+/* More page */
+
+.more-list details.box {
+  margin-bottom: 1rem;
+}
+
+.more-list summary {
+  cursor: pointer;
+}
+
 /* Location page map */
 
 .LocationMap {

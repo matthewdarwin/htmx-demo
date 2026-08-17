@@ -15,6 +15,7 @@ const pageEntries = {
   announcements: resolve(pagesRoot, 'announcements/index.html'),
   feedback: resolve(pagesRoot, 'feedback/index.html'),
   faq: resolve(pagesRoot, 'faq/index.html'),
+  more: resolve(pagesRoot, 'more/index.html'),
   location: resolve(pagesRoot, 'location/index.html'),
   volunteer: resolve(pagesRoot, 'volunteer/index.html'),
   tour: resolve(pagesRoot, 'tour/index.html'),
