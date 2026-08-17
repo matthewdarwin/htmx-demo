@@ -377,6 +377,18 @@ if (promoWrapper) {
   })
 }
 
+const morePhotoReel = document.querySelector('.MorePhotoReel .swiper')
+if (morePhotoReel) {
+  // Static slides baked into the page (unlike .HomePromo, there's no
+  // htmx fetch involved), so Swiper can init immediately on load.
+  new Swiper(morePhotoReel, {
+    modules: [Autoplay],
+    direction: 'horizontal',
+    loop: true,
+    autoplay: { delay: 4000 },
+  })
+}
+
 const mapCanvas = document.getElementById('map_canvas')
 if (mapCanvas) {
   const maplibregl = await import('maplibre-gl')

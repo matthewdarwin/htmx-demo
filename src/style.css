@@ -330,6 +330,32 @@ a.navbar-item:hover,
   cursor: pointer;
 }
 
+/* Photo reel: a mixed, unlabelled rotation of event photos spanning the
+   cinema's history - deliberately not grouped by theme or era, so it
+   reads as "decades of memories" rather than illustrating any one
+   section below it. Full-bleed under the hero, unlike the narrow
+   270px .HomePromo slider. */
+.MorePhotoReel .swiper {
+  width: 100%;
+}
+
+.MorePhotoReel .swiper-slide {
+  height: 380px;
+}
+
+.MorePhotoReel .swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .MorePhotoReel .swiper-slide {
+    height: 220px;
+  }
+}
+
 /* Cart/order line-item tables (server-rendered by
    OrderOrTransaction::x_html_header/item/total, cinema-lib-base - shared
    with the old production system, so that code only adds a "CartTable"
