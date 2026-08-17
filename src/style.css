@@ -369,6 +369,14 @@ a.navbar-item:hover,
   }
 }
 
+.MorePhotoReel-caption {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  background: var(--footer-background);
+}
+
 /* Cart/order line-item tables (server-rendered by
    OrderOrTransaction::x_html_header/item/total, cinema-lib-base - shared
    with the old production system, so that code only adds a "CartTable"
