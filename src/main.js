@@ -245,6 +245,7 @@ setupPrefillFields(
   'volunteer-availability-fields',
   'volunteer-availability-form',
 )
+setupPrefillFields('volunteer-retire-fields', 'volunteer-retire-form')
 setupPrefillFields('snack-buy-fields', 'snack-buy-form')
 setupPrefillFields('donation-buy-fields', 'donation-buy-form')
 setupPrefillFields('ticket-buy-fields', 'ticket-buy-form')
@@ -326,6 +327,12 @@ setupResultForm(
   'volunteer-availability-message',
   undefined,
   'volunteer-availability-next-steps',
+)
+setupResultForm(
+  'volunteer-retire-form',
+  'volunteer-retire-message',
+  undefined,
+  'volunteer-retire-next-steps',
 )
 setupResultForm(
   'order-pay-form',
