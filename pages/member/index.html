@@ -19,7 +19,12 @@
 
     <main class="section">
       <div class="container">
-        <div hx-get="/api/member.html" hx-trigger="load" hx-swap="innerHTML">
+        <div
+          class="PageIntro"
+          hx-get="/api/member.html"
+          hx-trigger="load"
+          hx-swap="innerHTML"
+        >
           <progress class="progress is-small is-link" max="100">
             Loading&hellip;
           </progress>
