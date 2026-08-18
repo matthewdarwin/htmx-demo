@@ -26,6 +26,8 @@
             hx-target="#recover-message"
             hx-disabled-elt="find button[type='submit']"
           >
+            <input type="hidden" id="recover-uri" name="uri" />
+
             <div class="field">
               <label class="label" for="email">E-mail address</label>
               <div class="control">
@@ -90,6 +92,10 @@
 
     <!--#include footer.html -->
 
+    <script>
+      document.getElementById('recover-uri').value =
+        new URLSearchParams(location.search).get('uri') || ''
+    </script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

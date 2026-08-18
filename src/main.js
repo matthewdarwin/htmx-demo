@@ -199,6 +199,74 @@ function setupVolunteerIdLinks(containerId) {
 setupVolunteerIdLinks('volunteer-profile-links')
 setupVolunteerIdLinks('volunteer-scheduling-links')
 
+// Carries the page a logged-out visitor was actually trying to reach
+// through the login/recover/register detour and back again, using the
+// same `uri` param name the old (pre-htmx-demo) site's own login flow
+// already reads (Davin::Middleware::Auth::Form / Content::Login.pm) -
+// not a new, separately-invented name for the same concept.
+//
+// (a) retargets a success "next steps" primary button to `uri` when
+// present in our own URL - covers both /login/ (typed in this tab) and
+// /login-link/ (arrived via the e-mailed link, which already has uri
+// baked in by Object::Account::send_login_link on the backend).
+function setupReturnUriNextSteps(nextStepsId) {
+  const nextSteps = document.getElementById(nextStepsId)
+  if (!nextSteps) return
+
+  const uri = new URLSearchParams(location.search).get('uri')
+  if (!uri) return
+
+  const primary = nextSteps.querySelector('a.is-primary')
+  if (primary) primary.href = uri
+}
+
+// (b) appends uri (this page's own path) onto outbound links to the
+// three entry pages, so account-login-prompt.html - included on real
+// content pages like the cart - sends the user back to wherever they
+// actually were.
+function setupReturnUriLinks(containerId) {
+  const container = document.getElementById(containerId)
+  if (!container) return
+
+  const uri = location.pathname + location.search
+  container
+    .querySelectorAll(
+      'a[href^="/login/"], a[href^="/recover/"], a[href^="/register/"]',
+    )
+    .forEach((a) => {
+      a.href += `?uri=${encodeURIComponent(uri)}`
+    })
+}
+
+// (c) the login/recover/register cross-nav rows bounce between those
+// three pages themselves, so "this page's own path" is never a useful
+// destination - instead forward whatever uri this page already arrived
+// with (if any), unchanged, so hopping from recover to register (say)
+// while trying to reach the cart doesn't lose that destination or nest
+// it inside a pointless "return to the auth page" link.
+function setupCrossNavUriLinks(containerId) {
+  const container = document.getElementById(containerId)
+  if (!container) return
+
+  const uri = new URLSearchParams(location.search).get('uri')
+  if (!uri) return
+
+  container
+    .querySelectorAll(
+      'a[href^="/login/"], a[href^="/recover/"], a[href^="/register/"]',
+    )
+    .forEach((a) => {
+      a.href += `?uri=${encodeURIComponent(uri)}`
+    })
+}
+
+setupReturnUriLinks('account-login-prompt')
+setupCrossNavUriLinks('login-crossnav')
+setupCrossNavUriLinks('recover-crossnav')
+setupCrossNavUriLinks('register-crossnav')
+setupReturnUriNextSteps('login-next-steps')
+setupReturnUriNextSteps('login-link-next-steps')
+
 // Each sub-page's "back up one level" link (top nav) and its post-save
 // "next steps" buttons both need volunteer_id carried forward to the
 // hub page, same reason as the hub's own links above - the hub can't

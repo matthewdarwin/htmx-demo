@@ -49,7 +49,8 @@
     "lastmod",
     "httponly",
     "Davin",
-    "topnav"
+    "topnav",
+    "crossnav"
   ],
   "ignorePaths": ["node_modules/**", "dist/**", "package-lock.json"]
 }

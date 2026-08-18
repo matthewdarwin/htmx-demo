@@ -30,6 +30,8 @@
             hx-target="#register-message"
             hx-disabled-elt="find button[type='submit']"
           >
+            <input type="hidden" id="register-uri" name="uri" />
+
             <div class="field">
               <label class="label" for="login">E-mail address</label>
               <div class="control">
@@ -158,6 +160,10 @@
 
     <!--#include footer.html -->
 
+    <script>
+      document.getElementById('register-uri').value =
+        new URLSearchParams(location.search).get('uri') || ''
+    </script>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
