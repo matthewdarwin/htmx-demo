@@ -219,7 +219,13 @@ function setupReturnUriNextSteps(nextStepsId) {
   if (!uri) return
 
   const primary = nextSteps.querySelector('a.is-primary')
-  if (primary) primary.href = uri
+  if (!primary) return
+  // "Account Overview" would be a misleading label once this button
+  // actually points back at wherever the visitor came from instead -
+  // there's no general way to derive a friendly name for an arbitrary
+  // uri, so relabel to something destination-neutral but still accurate.
+  primary.href = uri
+  primary.textContent = 'Continue…'
 }
 
 // (b) appends uri (this page's own path) onto outbound links to the
