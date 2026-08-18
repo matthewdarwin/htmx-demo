@@ -259,15 +259,39 @@ event. `Davin::Element::List` has several more of these
 `to_list`) — not used by any page here yet, but the next one that uses
 that element type will need the same treatment.
 
-## Login/logout
+## Authentication (login/recover/register/logout)
 
-Three pages handle authentication: `/login/` (password, `hx-post
-/api/account_login.html`), `/login-link/` (consumes the one-time link from
-a recovery e-mail — hidden `username`/`recovery` fields filled from the
-URL query string by a small inline `<script>`, then auto-submitted via
-`hx-trigger="load"` to `/api/account_login_link.html`), and `/logout/`
-(auto-posts to `/api/account_logout.html` on load, same shape). All three
-use `setupResultForm` like every other form here.
+Five pages: `/login/` (password, `hx-post /api/account_login.html`),
+`/recover/` (request a one-time e-mail link, `/api/account_recover.html`),
+`/register/` (new account, `/api/account_new.html`), `/login-link/`
+(consumes the one-time link from a recovery/registration e-mail — hidden
+`username`/`recovery` fields filled from the URL query string by a small
+inline `<script>`, then auto-submitted via `hx-trigger="load"` to
+`/api/account_login_link.html`), and `/logout/` (auto-posts to
+`/api/account_logout.html` on load, same shape). All five use
+`setupResultForm` like every other form here.
+
+**Recover ≠ "forgot password."** Accounts on this site don't require a
+password at all — someone can deliberately never set one and always sign
+in via a one-time e-mailed link instead. `/recover/`'s copy ("Don't Use or
+Forgot Your Password?") and the navbar's "One-Time Login Link" label were
+chosen specifically to cover both that deliberate-no-password case and the
+literal-forgot-it case — don't revert this to "Forgot Password?" wording,
+which only speaks to the latter.
+
+**Cross-navigation between login/recover/register**: all three link to
+each of the other two, via a `.buttons` row placed *below* the form (not
+above, where an old "info box" used to sit) — the actual form is the
+primary task on each page; the other two options are secondary, introduced
+with a neutral "Alternatively:" (never phrasing like "wrong page?" that
+implies the visitor made a mistake). This row shares `setupResultForm`'s
+`infoId` slot, so it hides on success and reappears on failure — once
+you've actually logged in/registered/requested a link there's no reason to
+keep offering the other two paths. `/logout/` gets a `nextStepsId` block
+(Log Back In / Home) instead — every result page on this site ends with a
+"what next" affordance, and logout had been the one dead end.
+
+### Cookies
 
 A successful login sets **two** cookies, not one: `jwt` (httponly — the
 real credential, never readable from JS by design) and `account_hint`
@@ -299,6 +323,72 @@ the account forms had before that pattern existed. `register`/`recover`
 don't need it (success there means "check your e-mail," not "you're
 in"), and `logout` has nowhere useful to send you.
 
+### Return-to-origin (`uri` param)
+
+A logged-out visitor bounced to log in (from `account-login-prompt.html`,
+included on every logged-in-only page) ends up back on the page they were
+actually trying to reach, not a generic account dashboard. This reuses an
+`uri` query param — **not a new, separately-invented `return_to`** — that
+the *current live production site* (a separate, older codebase this one
+will eventually replace) already reads: `Davin::Site::Content::Recover.pm`
++ `Davin::Middleware::Auth::Form::_login` (`davin-lib-cgi`) redirect to
+whatever `uri` carries after a successful login-link verification, and the
+old site's own `Content::Login.pm` form carries a `?return=` param forward
+the same way, as a hidden `uri` field. Introducing a second param name for
+the same concept would mean the e-mailed link might need to carry both —
+so this project deliberately reuses the existing name end-to-end instead.
+
+The mechanism, end to end:
+1. `account-login-prompt.html`'s Login/Recover/Register buttons get
+   `?uri=<this page's own path>` appended client-side
+   (`setupReturnUriLinks` in `main.js`, reading `location.pathname +
+   location.search`).
+2. **`/login/`** (no e-mail hop, same tab): `setupReturnUriNextSteps`
+   reads `uri` back out of `location.search` on load and retargets the
+   success next-steps' primary button — relabeling it "Continue…" too,
+   since leaving the label "Account Overview" while the href points
+   somewhere else entirely is misleading (confirmed by testing: the href
+   was correct but looked broken because the label never changed).
+3. **`/recover/`** and **`/register/`** (an e-mail hop — the link may be
+   opened on a different device/session entirely, so the destination has
+   to be baked into the e-mailed URL itself, not just carried in this
+   tab's query string): each has a hidden `<input name="uri">` populated
+   from `location.search` by an inline `<script>` (same convention as
+   `/login-link/`'s `username`/`recovery` fields), submitted as part of
+   the form POST.
+4. The backend (`AccountRecover.pm`/`AccountNew.pm` in `cinema-lib-web`)
+   reads that posted `uri` and passes it into
+   `Davin::Object::Account::send_login_link($uri)` (`cinema-lib-base`),
+   which embeds it into the e-mailed link's existing `uri=` query slot —
+   the same slot the old site's own login flow already reads, per above.
+   `send_login_link` takes this as a **required** parameter now (no
+   internal default) precisely so old-site callers (still passing the
+   literal `'/my/'` they always did) and this site's callers (passing the
+   real destination, or `''` when none is known) can each supply their
+   own meaningful default, rather than one shared fallback baked into the
+   shared method.
+5. Clicking the e-mailed link lands on `/login-link/?username=...&
+   recovery=...&uri=...` — `setupReturnUriNextSteps` (same function as
+   step 2) picks the `uri` back up from the URL with no further wiring
+   needed on that page.
+
+**Two related bugs already found and fixed here, worth knowing about
+before touching this code again:**
+- `setupReturnUriLinks` (reads *this page's own path* as the destination)
+  is the right choice for `account-login-prompt.html`, which sits on real
+  content pages. It is the **wrong** choice for the login/recover/register
+  cross-nav rows themselves — using it there nested/double-encoded the
+  `uri` every time someone bounced between those three pages while
+  actually trying to reach somewhere else. `setupCrossNavUriLinks`
+  (forwards whatever `uri` *arrived with*, unchanged) is the correct
+  helper for those three specifically — don't swap them.
+- `send_login_link`'s e-mailed-link domain (`account.familycinema.ca`) is
+  the old, currently-live production site, not this one — tracked for a
+  domain switch at go-live by `matthewdarwin/cinema#27`. **Do not change
+  that domain/path** until that issue is resolved; until then, the full
+  cross-device e-mail-link flow can only be verified by reading the raw
+  e-mail body's link text, never by actually clicking it and landing here.
+
 `/login-link/` also uses `infoId` in the opposite way register/recover
 do: `login-link-info` ("Having trouble? Request a new link / log in with
 your password") starts hidden in markup and only appears on failure,
@@ -306,6 +396,19 @@ rather than being visible by default — there's no form here for it to
 sit alongside before the (immediate, on-load) submission resolves, so
 showing it only makes sense once something's actually gone wrong (e.g.
 `account_login_link.html`'s "this login link is invalid or has expired").
+
+### Shared backend element bugs fixed along the way
+
+Two bugs in `davin-lib-base-element`'s `Davin::Element::Int`/`Number`
+base classes (used by *any* numeric field on the site, not just recover's
+human-check field) were found and fixed while working on this area:
+`Int::validate` used to overwrite the raw input with its own coerced
+(and, for non-numeric input, `undef`) value before building the "is not a
+valid integer" error message, so the message always quoted an empty
+string; `Number::validate`'s min/max error message left a stray space
+before the sentence's closing period whenever the field had no `units`
+set. Neither is specific to this site's frontend, but both were only
+noticed via this login flow's own human-check field.
 
 ## Styling (`src/style.css`)
 
@@ -375,6 +478,88 @@ helper left a ~769–1023px gap where the burger showed but the element
 didn't, which also broke that element's `margin-left: auto` (see below)
 since it wasn't there to claim the free space, leaving the burger
 sitting wherever normal flow put it instead of pushed to the right.
+
+### Navigation button icons and emphasis
+
+A full sweep this session found that nearly every navigational `<a>`
+outside the navbar/footer/account hub had no icon at all, despite the
+site otherwise using them consistently — so this is now a checked
+convention, not a loose guideline: **every navigational link (not a form
+submit button) should carry an icon.** When adding one for a concept
+that already exists elsewhere on the site, reuse its icon rather than
+picking a new one; when it's genuinely new, choose one deliberately and
+add it to the table below rather than leaving the link bare.
+
+**Two markup shapes**, depending on where the link lives — match
+whichever the surrounding element already uses, don't invent a third:
+- `.navbar-item` (header.html's dropdown items): inline `<i>` + `&nbsp;`
+  inside the anchor, e.g.
+  `<a class="navbar-item" href="/login/"><i class="fas fa-right-to-bracket"></i>&nbsp;Login</a>`.
+- `.button`-styled `<a>` (next-steps/cross-nav blocks, the account hub,
+  `account-login-prompt.html`): a `<span class="icon">` wrapping the
+  `<i>`, followed by a separate `<span>` for the label, e.g.
+  ```html
+  <a class="button is-light" href="/">
+    <span class="icon"><i class="fas fa-house"></i></span>
+    <span>Home</span>
+  </a>
+  ```
+
+**Established icon vocabulary** (reuse these for the same destination
+everywhere; don't reassign an icon already meaning something else):
+
+| Concept / destination | Icon |
+|---|---|
+| Home (`/`) | `fa-house` |
+| Login (`/login/`) | `fa-right-to-bracket` |
+| Logout (`/logout/`) | `fa-right-from-bracket` |
+| One-Time Login Link / Recover (`/recover/`) | `fa-paper-plane` |
+| Registration / Register (`/register/`) | `fa-user-plus` |
+| Account Overview (`/account/`) | `fa-gauge` |
+| Cart / Order Online (`/account/cart/`) | `fa-cart-shopping` |
+| Memberships / My Membership (`/account/membership/`) | `fa-id-card` |
+| Volunteering / My Volunteering (`/account/volunteer/`) | `fa-hand-holding-heart` |
+| Change Login Name | `fa-pen` |
+| Communication Preferences | `fa-envelope` |
+| Change Password | `fa-key` |
+| Announcements | `fa-bullhorn` |
+| Calendar | `fa-calendar-alt` |
+| RSS Feed | `fa-rss` |
+| More | `fa-star` |
+| Birthday Parties | `fa-cake-candles` |
+| Gift Certificates | `fa-gift` |
+| FAQ | `fa-circle-question` |
+| Theatre Location | `fa-location-dot` |
+| Theatre Tour | `fa-door-open` |
+| Cinema History | `fa-clock-rotate-left` |
+| Contact Us | `fa-comment` |
+
+**Known gap, left deliberately unassigned rather than guessed at:** the
+volunteer profile/scheduling hub's sub-links (Name & Address, Contact
+Details, References, Preferences, Interests, Schedule Availability,
+Schedule, Default Availability) and the "Create Membership"/"Register as
+Volunteer" buttons have no icon and no established precedent to reuse —
+picking icons for those is a real design decision for whoever gets to
+them next, not a mechanical fix.
+
+**Emphasis (`is-primary` vs `is-light`)**: a page's own form submit
+button is the one clear `is-primary` action on that screen. A row of
+*alternative* paths (e.g. login/recover/register's "Alternatively:"
+cross-nav) should be **uniformly** `is-light` — mixing weights within a
+set of equally-valid alternatives (as `account-login-prompt.html` used to,
+with 2 of its 3 buttons `is-primary`) reads as if one option is somehow
+more correct than the others, which isn't true here. A "next steps"
+block after a successful action (e.g. Account Overview + Home) is
+different — there genuinely is one most-likely next action, so
+`is-primary` on that one + `is-light` on the other is fine. When a
+widget has no competing primary content on the page at all (like
+`account-login-prompt.html`, which *is* the entire actionable content of
+that view), style its options uniformly rather than picking an arbitrary
+"more important" one.
+
+**Placement**: secondary/alternative navigation belongs *below* the
+primary form/action, introduced with a neutral lead-in ("Alternatively:")
+— never phrasing that implies the visitor made a mistake ("wrong page?").
 
 ## MapLibre / Mapbox (location page)
 
