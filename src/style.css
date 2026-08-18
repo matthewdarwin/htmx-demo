@@ -265,16 +265,29 @@ a.navbar-item:hover,
    so an 0-20 quantity field stretched edge to edge. Scoped to this one
    fields container rather than touching .input/.field globally, which
    would affect every other form on the site. */
+/* align-items: flex-start (not center) plus the label's own top
+   padding keeps a 1-line and a 2-line label's *first* line lined up
+   with the input, rather than centering the input against whatever
+   height the label happens to end up. Long labels ("Regular Kiddie
+   Combo ($6.00):") used to force flex-wrap to drop the whole input to
+   its own line below, so short and long items ended up 1 line and 2
+   lines tall respectively - a ragged list. Removing flex-wrap and
+   letting the label's own text wrap in place (min-width: 0 is
+   required for a flex child to shrink below its content's natural
+   width at all) keeps every row a single visual line, long labels
+   included. */
 #snack-buy-fields .field {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  flex-wrap: wrap;
   gap: 1rem;
 }
 
 #snack-buy-fields .field .label {
+  flex: 1 1 auto;
+  min-width: 0;
   margin-bottom: 0;
+  padding-top: 0.375em;
 }
 
 #snack-buy-fields .field .control {
@@ -292,14 +305,16 @@ a.navbar-item:hover,
    instead of stretching to fill the row. */
 #birthday-fields .field {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  flex-wrap: wrap;
   gap: 1rem;
 }
 
 #birthday-fields .field .label {
+  flex: 1 1 auto;
+  min-width: 0;
   margin-bottom: 0;
+  padding-top: 0.375em;
 }
 
 #birthday-fields .field .control {
