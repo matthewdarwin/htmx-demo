@@ -124,9 +124,11 @@ document.body.addEventListener('htmx:afterSwap', updateAccountNav)
 // success the form should hide in favor of the message — but on failure
 // stay up so the user can fix the offending field and resubmit, rather
 // than getting stuck with no way back to the form. infoId is an optional
-// page intro box (register/recover's "here's what this form does" notice)
-// that should disappear alongside the form on success, but stay put
-// through any failure. nextStepsId is the opposite: an optional block
+// secondary block (login/recover/register's "Alternatively:" cross-nav
+// row) that should disappear alongside the form on success — once you're
+// logged in there's no reason to still be offered "trouble logging in?"
+// — but stay put through any failure. nextStepsId is the opposite: an
+// optional block
 // (the account forms' "Back to Account"/"Home" buttons) that stays
 // hidden by default and on failure, and only appears on success — so
 // the user isn't left on a page with nothing but a static "done"
@@ -367,9 +369,14 @@ setupPrefillFields('donation-buy-fields', 'donation-buy-form')
 setupPrefillFields('ticket-buy-fields', 'ticket-buy-form')
 
 setupResultForm('feedback-form', 'feedback-message')
-setupResultForm('register-form', 'register-message')
-setupResultForm('recover-form', 'recover-message')
-setupResultForm('login-form', 'login-message', undefined, 'login-next-steps')
+setupResultForm('register-form', 'register-message', 'register-crossnav')
+setupResultForm('recover-form', 'recover-message', 'recover-crossnav')
+setupResultForm(
+  'login-form',
+  'login-message',
+  'login-crossnav',
+  'login-next-steps',
+)
 setupResultForm(
   'login-link-form',
   'login-link-message',
