@@ -17,6 +17,16 @@
 
     <main class="section">
       <div class="container">
+        <div
+          hx-get="/api/announcement_headlines.html"
+          hx-trigger="load"
+          hx-swap="outerHTML"
+        >
+          <progress class="progress is-small is-link" max="100">
+            Loading&hellip;
+          </progress>
+        </div>
+
         <div class="box">
           <form
             novalidate

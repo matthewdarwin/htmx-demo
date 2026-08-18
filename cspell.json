@@ -50,7 +50,8 @@
     "httponly",
     "Davin",
     "topnav",
-    "crossnav"
+    "crossnav",
+    "matthewdarwin"
   ],
   "ignorePaths": ["node_modules/**", "dist/**", "package-lock.json"]
 }
