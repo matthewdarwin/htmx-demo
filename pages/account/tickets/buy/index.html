@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Tickets</title>
+  </head>
+  <body>
+    <!--#include header.html -->
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">Order Tickets</p>
+      </div>
+    </section>
+
+    <main class="section">
+      <div class="container">
+        <div id="account-page-content" class="is-hidden">
+          <p class="mb-4">
+            <a href="/account/cart/"
+              ><i class="fas fa-arrow-left"></i>
+              Back to Cart</a
+            >
+          </p>
+
+          <div class="box">
+            <form
+              id="ticket-buy-form"
+              hx-post="/api/account_ticket_buy.html"
+              hx-swap="innerHTML"
+              hx-target="#ticket-buy-message"
+              hx-disabled-elt="find button[type='submit']"
+            >
+              <input type="hidden" id="ticket-buy-member-id" name="member_id" />
+              <input type="hidden" id="ticket-buy-test" name="test" />
+
+              <div
+                id="ticket-buy-fields"
+                class="hx-content"
+                hx-get="/api/account_ticket_buy.html"
+                hx-trigger="load"
+                hx-include="#ticket-buy-form"
+                hx-swap="innerHTML"
+                hx-target="this"
+                hx-disabled-elt="unset"
+              >
+                <progress class="progress is-small is-link" max="100">
+                  Loading&hellip;
+                </progress>
+              </div>
+            </form>
+            <script>
+              const ticketBuyParams = new URLSearchParams(location.search)
+              document.getElementById('ticket-buy-member-id').value =
+                ticketBuyParams.get('member_id') || ''
+              document.getElementById('ticket-buy-test').value =
+                ticketBuyParams.get('test') || ''
+            </script>
+
+            <div
+              id="ticket-buy-message"
+              class="mt-5 is-hidden"
+              aria-live="polite"
+            ></div>
+
+            <div id="ticket-buy-next-steps" class="mt-5 is-hidden">
+              <div class="buttons">
+                <a class="button is-primary" href="/account/cart/">View Cart</a>
+                <a class="button is-light" href="/account/membership/"
+                  >Back to Membership</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--#include account-login-prompt.html -->
+      </div>
+    </main>
+
+    <!--#include footer.html -->
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

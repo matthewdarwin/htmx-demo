@@ -17,7 +17,49 @@
 
     <main class="section">
       <div class="container">
-        <p class="content">Coming soon.</p>
+        <div
+          id="birthday-intro"
+          class="PageIntro"
+          hx-get="/api/birthdays.html?section=intro"
+          hx-trigger="load"
+          hx-swap="innerHTML"
+        >
+          <progress class="progress is-small is-link" max="100">
+            Loading&hellip;
+          </progress>
+        </div>
+
+        <div class="box">
+          <form id="birthday-form">
+            <div
+              id="birthday-fields"
+              hx-get="/api/birthdays.html"
+              hx-trigger="load"
+              hx-include="#birthday-form"
+              hx-swap="innerHTML"
+              hx-target="this"
+              hx-vals='js:{"test": new URLSearchParams(location.search).get("test") || ""}'
+            >
+              <progress class="progress is-small is-link" max="100">
+                Loading&hellip;
+              </progress>
+            </div>
+          </form>
+
+          <div id="party-plan" class="mt-5"></div>
+        </div>
+
+        <div
+          id="birthday-packages"
+          class="PageIntro"
+          hx-get="/api/birthdays.html?section=packages"
+          hx-trigger="load"
+          hx-swap="innerHTML"
+        >
+          <progress class="progress is-small is-link" max="100">
+            Loading&hellip;
+          </progress>
+        </div>
       </div>
     </main>
 

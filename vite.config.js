@@ -15,6 +15,7 @@ const pageEntries = {
   announcements: resolve(pagesRoot, 'announcements/index.html'),
   feedback: resolve(pagesRoot, 'feedback/index.html'),
   faq: resolve(pagesRoot, 'faq/index.html'),
+  more: resolve(pagesRoot, 'more/index.html'),
   location: resolve(pagesRoot, 'location/index.html'),
   volunteer: resolve(pagesRoot, 'volunteer/index.html'),
   tour: resolve(pagesRoot, 'tour/index.html'),
@@ -24,7 +25,6 @@ const pageEntries = {
   'history-gallery': resolve(pagesRoot, 'history/gallery.html'),
   member: resolve(pagesRoot, 'member/index.html'),
   giftcertificates: resolve(pagesRoot, 'giftcertificates/index.html'),
-  shows: resolve(pagesRoot, 'shows/index.html'),
   birthdays: resolve(pagesRoot, 'birthdays/index.html'),
   register: resolve(pagesRoot, 'register/index.html'),
   recover: resolve(pagesRoot, 'recover/index.html'),
@@ -50,6 +50,72 @@ const pageEntries = {
   'account-membership-share': resolve(
     pagesRoot,
     'account/membership/share/index.html',
+  ),
+  'account-membership-delete': resolve(
+    pagesRoot,
+    'account/membership/delete/index.html',
+  ),
+  'account-membership-buy': resolve(
+    pagesRoot,
+    'account/membership/buy/index.html',
+  ),
+  'account-cart': resolve(pagesRoot, 'account/cart/index.html'),
+  'account-cart-pay': resolve(pagesRoot, 'account/cart/pay/index.html'),
+  'account-snacks-buy': resolve(pagesRoot, 'account/snacks/buy/index.html'),
+  'account-donation-buy': resolve(pagesRoot, 'account/donation/buy/index.html'),
+  'account-tickets-buy': resolve(pagesRoot, 'account/tickets/buy/index.html'),
+  'account-volunteer': resolve(pagesRoot, 'account/volunteer/index.html'),
+  'account-volunteer-profile': resolve(
+    pagesRoot,
+    'account/volunteer/profile/index.html',
+  ),
+  'account-volunteer-scheduling': resolve(
+    pagesRoot,
+    'account/volunteer/scheduling/index.html',
+  ),
+  'account-volunteer-new': resolve(
+    pagesRoot,
+    'account/volunteer/new/index.html',
+  ),
+  'account-volunteer-name-address': resolve(
+    pagesRoot,
+    'account/volunteer/name-address/index.html',
+  ),
+  'account-volunteer-contact': resolve(
+    pagesRoot,
+    'account/volunteer/contact/index.html',
+  ),
+  'account-volunteer-references': resolve(
+    pagesRoot,
+    'account/volunteer/references/index.html',
+  ),
+  'account-volunteer-preferences': resolve(
+    pagesRoot,
+    'account/volunteer/preferences/index.html',
+  ),
+  'account-volunteer-interests': resolve(
+    pagesRoot,
+    'account/volunteer/interests/index.html',
+  ),
+  'account-volunteer-availability': resolve(
+    pagesRoot,
+    'account/volunteer/availability/index.html',
+  ),
+  'account-volunteer-schedule': resolve(
+    pagesRoot,
+    'account/volunteer/schedule/index.html',
+  ),
+  'account-volunteer-default-availability': resolve(
+    pagesRoot,
+    'account/volunteer/default-availability/index.html',
+  ),
+  'account-volunteer-retire': resolve(
+    pagesRoot,
+    'account/volunteer/retire/index.html',
+  ),
+  'account-volunteer-handbook': resolve(
+    pagesRoot,
+    'account/volunteer/handbook/index.html',
   ),
 }
 

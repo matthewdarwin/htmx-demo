@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>More</title>
+  </head>
+  <body>
+    <!--#include header.html -->
+
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">More Than Just Movies</p>
+        <p class="subtitle">
+          What makes Ottawa Family Cinema a community favourite
+        </p>
+      </div>
+    </section>
+
+    <div class="MorePhotoReel">
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <div
+              class="MorePhotoReel-bg"
+              style="background-image: url(/photos/more/more-01.jpg)"
+            ></div>
+            <img src="/photos/more/more-01.jpg" alt="" />
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="MorePhotoReel-bg"
+              style="background-image: url(/photos/more/more-02.jpg)"
+            ></div>
+            <img src="/photos/more/more-02.jpg" alt="" />
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="MorePhotoReel-bg"
+              style="background-image: url(/photos/more/more-03.jpg)"
+            ></div>
+            <img src="/photos/more/more-03.jpg" alt="" />
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="MorePhotoReel-bg"
+              style="background-image: url(/photos/more/more-04.jpg)"
+            ></div>
+            <img src="/photos/more/more-04.jpg" alt="" />
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="MorePhotoReel-bg"
+              style="background-image: url(/photos/more/more-05.jpg)"
+            ></div>
+            <img src="/photos/more/more-05.jpg" alt="" />
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="MorePhotoReel-bg"
+              style="background-image: url(/photos/more/more-06.jpg)"
+            ></div>
+            <img src="/photos/more/more-06.jpg" alt="" />
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="MorePhotoReel-bg"
+              style="background-image: url(/photos/more/more-07.jpg)"
+            ></div>
+            <img src="/photos/more/more-07.jpg" alt="" />
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="MorePhotoReel-bg"
+              style="background-image: url(/photos/more/more-08.jpg)"
+            ></div>
+            <img src="/photos/more/more-08.jpg" alt="" />
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="MorePhotoReel-bg"
+              style="background-image: url(/photos/more/more-09.jpg)"
+            ></div>
+            <img src="/photos/more/more-09.jpg" alt="" />
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="MorePhotoReel-bg"
+              style="background-image: url(/photos/more/more-10.jpg)"
+            ></div>
+            <img src="/photos/more/more-10.jpg" alt="" />
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="MorePhotoReel-bg"
+              style="background-image: url(/photos/more/more-11.jpg)"
+            ></div>
+            <img src="/photos/more/more-11.jpg" alt="" />
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="MorePhotoReel-bg"
+              style="background-image: url(/photos/more/more-12.jpg)"
+            ></div>
+            <img src="/photos/more/more-12.jpg" alt="" />
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="MorePhotoReel-bg"
+              style="background-image: url(/photos/more/more-13.jpg)"
+            ></div>
+            <img src="/photos/more/more-13.jpg" alt="" />
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="MorePhotoReel-bg"
+              style="background-image: url(/photos/more/more-14.jpg)"
+            ></div>
+            <img src="/photos/more/more-14.jpg" alt="" />
+          </div>
+          <div class="swiper-slide">
+            <div
+              class="MorePhotoReel-bg"
+              style="background-image: url(/photos/more/more-15.jpg)"
+            ></div>
+            <img src="/photos/more/more-15.jpg" alt="" />
+          </div>
+        </div>
+      </div>
+      <p class="MorePhotoReel-caption">
+        Snapshots from parties and shows through the years &mdash; some brand
+        new, some decades old.
+      </p>
+    </div>
+
+    <main class="section">
+      <div class="container">
+        <div class="PageIntro">
+          <p class="content">
+            The Ottawa Family Cinema is more than just a place to watch movies.
+            Here's what you can look forward to today.
+          </p>
+        </div>
+
+        <div
+          id="more-list"
+          class="more-list"
+          hx-get="/api/more.html"
+          hx-trigger="load"
+          hx-swap="innerHTML"
+        >
+          <progress class="progress is-small is-link" max="100">
+            Loading&hellip;
+          </progress>
+        </div>
+      </div>
+    </main>
+
+    <!--#include footer.html -->
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

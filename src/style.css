@@ -233,14 +233,81 @@ a.navbar-item:hover,
   color: var(--brand-hover);
 }
 
+/* Mobile cart icon (.navbar-brand, always visible next to the burger —
+   mirrors #theme-toggle-mobile's own icon-only treatment). */
+
+#nav-cart-mobile {
+  color: white;
+}
+
+#nav-cart-mobile:hover {
+  color: var(--brand-hover);
+}
+
 /* Bulma's .navbar-burger has its own margin-left: auto to push itself to
-   the far right of .navbar-brand — if the mobile theme toggle right before
-   it also has margin-left: auto (ml-auto), flexbox splits the free space
-   between both auto margins, leaving a gap between them. Zeroing the
-   burger's here instead lets the toggle's auto margin claim all of it, so
-   the two sit flush together at the right edge. */
+   the far right of .navbar-brand — #nav-cart-mobile carries ml-auto
+   instead (it's now the first of the 3 always-visible-on-mobile items:
+   cart, theme toggle, burger), so zero it here and on the theme toggle
+   right after it, letting cart's single auto margin push all 3 flush
+   together at the right edge instead of splitting the free space across
+   multiple auto margins. */
+.theme-toggle-mobile-item,
 .theme-toggle-mobile-item + .navbar-burger {
   margin-left: 0;
+}
+
+/* Buy Snacks quantity fields */
+
+/* The backend renders these as ordinary form_element output (the same
+   label-above-input .field/.control/.input markup every other account
+   form uses) - fine for text fields, but Bulma's .input is width: 100%
+   by default, ignoring the number input's own small `size` attribute,
+   so an 0-20 quantity field stretched edge to edge. Scoped to this one
+   fields container rather than touching .input/.field globally, which
+   would affect every other form on the site. */
+#snack-buy-fields .field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+#snack-buy-fields .field .label {
+  margin-bottom: 0;
+}
+
+#snack-buy-fields .field .control {
+  flex: 0 0 auto;
+}
+
+#snack-buy-fields .field input.input {
+  width: 5rem;
+}
+
+/* Birthday Calculator fields - same compact side-by-side treatment as
+   Buy Snacks above, reused wholesale: the Package/Show/Member selects
+   get label-beside-control instead of label-above-full-width-control,
+   and the # Children/# Adults number inputs get the same narrow width
+   instead of stretching to fill the row. */
+#birthday-fields .field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+#birthday-fields .field .label {
+  margin-bottom: 0;
+}
+
+#birthday-fields .field .control {
+  flex: 0 0 auto;
+}
+
+#birthday-fields .field input.input {
+  width: 5rem;
 }
 
 /* FAQ page */
@@ -251,6 +318,140 @@ a.navbar-item:hover,
 
 .faq-list summary {
   cursor: pointer;
+}
+
+/* More page */
+
+.more-list details.box {
+  margin-bottom: 1rem;
+}
+
+.more-list summary {
+  cursor: pointer;
+}
+
+/* Photo reel: a mixed, unlabelled rotation of event photos spanning the
+   cinema's history - deliberately not grouped by theme or era, so it
+   reads as "decades of memories" rather than illustrating any one
+   section below it. Full-bleed under the hero, unlike the narrow
+   270px .HomePromo slider. */
+.MorePhotoReel .swiper {
+  width: 100%;
+}
+
+.MorePhotoReel .swiper-slide {
+  position: relative;
+  height: 380px;
+  overflow: hidden;
+}
+
+.MorePhotoReel-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(20px) brightness(0.7);
+  transform: scale(1.15);
+}
+
+.MorePhotoReel .swiper-slide img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .MorePhotoReel .swiper-slide {
+    height: 220px;
+  }
+}
+
+.MorePhotoReel-caption {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  background: var(--footer-background);
+}
+
+/* Cart/order line-item tables (server-rendered by
+   OrderOrTransaction::x_html_header/item/total, cinema-lib-base - shared
+   with the old production system, so that code only adds a "CartTable"
+   class and a data-label per <td>; everything below is CSS-only and only
+   loads on this site). Below Bulma's own tablet breakpoint, each row
+   becomes its own bordered block instead of a cramped multi-column row,
+   with the column name injected via data-label (kept as internal
+   identifiers like "CartItem" rather than literal display text, so
+   wording changes here are CSS-only, no backend edit needed). */
+@media (max-width: 768px) {
+  /* Hides the whole header row, not just its <th> cells - hiding only
+     the cells left an empty bordered box floating above the first item,
+     since the <tr> itself still had the card border/padding applied. */
+  .CartTable tr:has(th) {
+    display: none;
+  }
+
+  .CartTable,
+  .CartTable tr,
+  .CartTable td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .CartTable tr {
+    margin-bottom: 0.75rem;
+    border: 1px solid rgba(128, 128, 128, 0.35);
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .CartTable td {
+    text-align: right;
+    padding: 0.3rem 0 !important;
+    border: none !important;
+  }
+
+  .CartTable td[data-label]::before {
+    float: left;
+    font-weight: bold;
+    text-align: left;
+    padding-right: 0.5rem;
+  }
+
+  .CartTable td[data-label='CartItem']::before {
+    content: 'Item';
+  }
+  .CartTable td[data-label='CartUnitPrice']::before {
+    content: 'Unit Price';
+  }
+  .CartTable td[data-label='CartQuantity']::before {
+    content: 'Quantity';
+  }
+  .CartTable td[data-label='CartTotal']::before {
+    content: 'Total';
+  }
+  .CartTable td[data-label='CartDate']::before {
+    content: 'Date';
+  }
+  .CartTable td[data-label='CartMember']::before {
+    content: 'Member';
+  }
+  .CartTable td[data-label='CartAction']::before {
+    content: '';
+  }
+
+  /* Backend labels a content-less Action cell (fee/redemption rows,
+     the totals row) with this class explicitly, rather than CSS
+     inferring it from DOM structure (e.g. :has(button)) - keeps the
+     underlying table structure (and its other consumers: PDF export,
+     email receipts) completely untouched by this mobile-only rule. */
+  .CartTable .CartActionNull {
+    display: none;
+  }
 }
 
 /* Location page map */

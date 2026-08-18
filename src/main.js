@@ -11,6 +11,7 @@ import {
   isMapboxURL,
   transformMapboxUrl,
 } from './mapbox-request-transformer.js'
+import './square.js'
 
 // The backend renders postal code fields (Davin::Element::PostalCode) with
 // inline onkeyup/onblur="uc_postal_code(this)" attributes, expecting a
@@ -99,7 +100,7 @@ function updateAccountNav() {
     .getElementById('footer-login')
     ?.classList.toggle('is-hidden', !!loggedIn)
   document
-    .getElementById('footer-logout')
+    .getElementById('footer-account')
     ?.classList.toggle('is-hidden', !loggedIn)
   document
     .getElementById('account-page-content')
@@ -178,6 +179,26 @@ function setupResultForm(formId, messageId, infoId, nextStepsId) {
   })
 }
 
+// Static "hub" pages (Edit Profile, Scheduling) just link to existing
+// account pages - each of those pages reads volunteer_id off its own
+// URL (see the inline scripts on their hidden inputs), so the hub's
+// links need that same query param carried forward from whichever
+// volunteer's dashboard the hub was reached from.
+function setupVolunteerIdLinks(containerId) {
+  const container = document.getElementById(containerId)
+  if (!container) return
+
+  const volunteerId = new URLSearchParams(location.search).get('volunteer_id')
+  if (!volunteerId) return
+
+  container.querySelectorAll('a').forEach((a) => {
+    a.href += `?volunteer_id=${encodeURIComponent(volunteerId)}`
+  })
+}
+
+setupVolunteerIdLinks('volunteer-profile-links')
+setupVolunteerIdLinks('volunteer-scheduling-links')
+
 // Wires up the "fields fetched from the server" account forms (Change
 // Password, Change Name, Communication Preferences, and any future
 // "edit my X" page that follows the same shape): the submit button
@@ -187,17 +208,21 @@ function setupResultForm(formId, messageId, infoId, nextStepsId) {
 // showing would post a form with none of its real fields present at
 // all. A failed fetch (network down, unexpected 5xx) replaces the
 // placeholder with an inline message instead of leaving the button
-// disabled forever with no explanation.
+// disabled forever with no explanation. The submit button is looked up
+// fresh on every swap (rather than captured once at setup) since Order
+// Tickets' fields response conditionally omits the button entirely
+// when there's nothing to buy, replacing it with links elsewhere -
+// every other caller always renders a real button, so this is a no-op
+// change for them.
 function setupPrefillFields(fieldsId, formId) {
   const fields = document.getElementById(fieldsId)
   const form = document.getElementById(formId)
   if (!fields || !form) return
 
-  const submit = form.querySelector('button[type="submit"]')
-
   document.body.addEventListener('htmx:afterSwap', (evt) => {
     if (evt.target !== fields) return
-    submit.disabled = false
+    const submit = form.querySelector('button[type="submit"]')
+    if (submit) submit.disabled = false
   })
 
   const showLoadFailure = (text) => {
@@ -231,6 +256,29 @@ setupPrefillFields('communication-fields', 'communication-form')
 setupPrefillFields('membership-new-fields', 'membership-new-form')
 setupPrefillFields('membership-edit-fields', 'membership-edit-form')
 setupPrefillFields('membership-share-fields', 'membership-share-form')
+setupPrefillFields('membership-delete-fields', 'membership-delete-form')
+setupPrefillFields('membership-buy-fields', 'membership-buy-form')
+setupPrefillFields('volunteer-new-fields', 'volunteer-new-form')
+setupPrefillFields(
+  'volunteer-name-address-fields',
+  'volunteer-name-address-form',
+)
+setupPrefillFields('volunteer-contact-fields', 'volunteer-contact-form')
+setupPrefillFields('volunteer-references-fields', 'volunteer-references-form')
+setupPrefillFields('volunteer-preferences-fields', 'volunteer-preferences-form')
+setupPrefillFields('volunteer-interests-fields', 'volunteer-interests-form')
+setupPrefillFields(
+  'volunteer-availability-fields',
+  'volunteer-availability-form',
+)
+setupPrefillFields(
+  'volunteer-default-availability-fields',
+  'volunteer-default-availability-form',
+)
+setupPrefillFields('volunteer-retire-fields', 'volunteer-retire-form')
+setupPrefillFields('snack-buy-fields', 'snack-buy-form')
+setupPrefillFields('donation-buy-fields', 'donation-buy-form')
+setupPrefillFields('ticket-buy-fields', 'ticket-buy-form')
 
 setupResultForm('feedback-form', 'feedback-message')
 setupResultForm('register-form', 'register-message', 'register-info')
@@ -274,6 +322,96 @@ setupResultForm(
   undefined,
   'membership-share-next-steps',
 )
+setupResultForm(
+  'membership-delete-form',
+  'membership-delete-message',
+  undefined,
+  'membership-delete-next-steps',
+)
+setupResultForm(
+  'membership-buy-form',
+  'membership-buy-message',
+  undefined,
+  'membership-buy-next-steps',
+)
+setupResultForm(
+  'volunteer-new-form',
+  'volunteer-new-message',
+  undefined,
+  'volunteer-new-next-steps',
+)
+setupResultForm(
+  'volunteer-name-address-form',
+  'volunteer-name-address-message',
+  undefined,
+  'volunteer-name-address-next-steps',
+)
+setupResultForm(
+  'volunteer-contact-form',
+  'volunteer-contact-message',
+  undefined,
+  'volunteer-contact-next-steps',
+)
+setupResultForm(
+  'volunteer-references-form',
+  'volunteer-references-message',
+  undefined,
+  'volunteer-references-next-steps',
+)
+setupResultForm(
+  'volunteer-preferences-form',
+  'volunteer-preferences-message',
+  undefined,
+  'volunteer-preferences-next-steps',
+)
+setupResultForm(
+  'volunteer-interests-form',
+  'volunteer-interests-message',
+  undefined,
+  'volunteer-interests-next-steps',
+)
+setupResultForm(
+  'volunteer-availability-form',
+  'volunteer-availability-message',
+  undefined,
+  'volunteer-availability-next-steps',
+)
+setupResultForm(
+  'volunteer-default-availability-form',
+  'volunteer-default-availability-message',
+  undefined,
+  'volunteer-default-availability-next-steps',
+)
+setupResultForm(
+  'volunteer-retire-form',
+  'volunteer-retire-message',
+  undefined,
+  'volunteer-retire-next-steps',
+)
+setupResultForm(
+  'order-pay-form',
+  'order-pay-message',
+  undefined,
+  'order-pay-next-steps',
+)
+setupResultForm(
+  'snack-buy-form',
+  'snack-buy-message',
+  undefined,
+  'snack-buy-next-steps',
+)
+setupResultForm(
+  'donation-buy-form',
+  'donation-buy-message',
+  undefined,
+  'donation-buy-next-steps',
+)
+setupResultForm(
+  'ticket-buy-form',
+  'ticket-buy-message',
+  undefined,
+  'ticket-buy-next-steps',
+)
 
 const promoWrapper = document.querySelector('.HomePromo')
 if (promoWrapper) {
@@ -290,6 +428,18 @@ if (promoWrapper) {
       loop: true,
       autoplay: { delay: 3000 },
     })
+  })
+}
+
+const morePhotoReel = document.querySelector('.MorePhotoReel .swiper')
+if (morePhotoReel) {
+  // Static slides baked into the page (unlike .HomePromo, there's no
+  // htmx fetch involved), so Swiper can init immediately on load.
+  new Swiper(morePhotoReel, {
+    modules: [Autoplay],
+    direction: 'horizontal',
+    loop: true,
+    autoplay: { delay: 4000 },
   })
 }
 
