@@ -12,6 +12,7 @@
   --brand-hover: var(--color-lblue);
   --page-background: #f5f7fa;
   --footer-background: var(--color-xlgrey);
+  --is-light-button-border: rgba(0, 0, 0, 0.2);
 
   /* Bulma theme colors */
   /* !important pins these ahead of Bulma's own dark-mode overrides for
@@ -32,6 +33,7 @@
     --brand-accent: hsl(210deg, 70%, 72%);
     --page-background: hsl(220deg, 12%, 10%);
     --footer-background: hsl(220deg, 12%, 16%);
+    --is-light-button-border: rgba(255, 255, 255, 0.3);
 
     --bulma-primary-h: 210deg !important;
     --bulma-primary-s: 55% !important;
@@ -44,6 +46,7 @@
   --brand-accent: hsl(210deg, 70%, 72%);
   --page-background: hsl(220deg, 12%, 10%);
   --footer-background: hsl(220deg, 12%, 16%);
+  --is-light-button-border: rgba(255, 255, 255, 0.3);
 
   --bulma-primary-h: 210deg !important;
   --bulma-primary-s: 55% !important;
@@ -85,6 +88,18 @@ main.section {
 .box {
   max-width: 40rem;
   margin: 0 auto;
+}
+
+/* Bulma's .button.is-light ships with no border (border-width: 0),
+   relying purely on a fill color that's only a few shades off white
+   (or, in dark mode, off Bulma's dark surface) to read as a button at
+   all - right on top of a .box, which is the same near-white (or
+   near-dark) shade, that's not enough separation to see the button
+   exists ("white on white"). An explicit border, independent of
+   whatever exact fill color Bulma computes per theme, guarantees a
+   visible edge in both. */
+.button.is-light {
+  border: 1px solid var(--is-light-button-border);
 }
 
 /* Several pages (volunteer, faq, history, tour) open with a short static
