@@ -230,6 +230,18 @@ a.navbar-item:hover,
 
 /* Theme toggle buttons */
 
+/* #theme-toggle is a .button sitting inside its own .navbar-item
+   wrapper, so on the mobile/collapsed menu it got padded twice
+   (the wrapper's own navbar-item padding, plus the button's own) -
+   every sibling item ("Cart", "My Account") is just a plain
+   .navbar-item link with a single layer of padding, so the toggle's
+   icon/label sat visibly indented past them. Zeroing the wrapper's
+   padding leaves only the button's own, aligning it with its
+   siblings. */
+.theme-toggle-item {
+  padding: 0;
+}
+
 #theme-toggle,
 #theme-toggle-mobile {
   background: transparent;
