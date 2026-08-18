@@ -11,28 +11,12 @@
     <section class="hero is-primary">
       <div class="hero-body">
         <p class="title">One-Time Login Link</p>
-        <p class="subtitle">
-          No password needed &mdash; we&rsquo;ll e-mail you a link to sign in
-        </p>
+        <p class="subtitle">Don&rsquo;t Use or Forgot Your Password?</p>
       </div>
     </section>
 
     <main class="section">
       <div class="container">
-        <article id="recover-info" class="message is-info box">
-          <div class="message-header">
-            <p><strong>How This Works</strong></p>
-          </div>
-          <div class="message-body">
-            <p>
-              Please enter your e-mail address. A link to allow you to login
-              will be e-mailed to you. If you do not have a valid e-mail address
-              on file, please
-              <a href="/register/">register for a new account.</a>
-            </p>
-          </div>
-        </article>
-
         <div class="box">
           <form
             novalidate
@@ -90,6 +74,16 @@
             class="mt-5 is-hidden"
             aria-live="polite"
           ></div>
+        </div>
+
+        <div id="recover-crossnav" class="mt-5 has-text-centered">
+          <p class="mb-2">Alternatively:</p>
+          <div class="buttons is-centered">
+            <a class="button is-light" href="/login/">Log In with a Password</a>
+            <a class="button is-light" href="/register/"
+              >Register for an Account</a
+            >
+          </div>
         </div>
       </div>
     </main>

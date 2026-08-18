@@ -299,16 +299,16 @@ setupPrefillFields('donation-buy-fields', 'donation-buy-form')
 setupPrefillFields('ticket-buy-fields', 'ticket-buy-form')
 
 setupResultForm('feedback-form', 'feedback-message')
-setupResultForm('register-form', 'register-message', 'register-info')
-setupResultForm('recover-form', 'recover-message', 'recover-info')
-setupResultForm('login-form', 'login-message', 'login-info', 'login-next-steps')
+setupResultForm('register-form', 'register-message')
+setupResultForm('recover-form', 'recover-message')
+setupResultForm('login-form', 'login-message', undefined, 'login-next-steps')
 setupResultForm(
   'login-link-form',
   'login-link-message',
   'login-link-info',
   'login-link-next-steps',
 )
-setupResultForm('logout-form', 'logout-message')
+setupResultForm('logout-form', 'logout-message', undefined, 'logout-next-steps')
 setupResultForm(
   'password-form',
   'password-message',
