@@ -191,13 +191,31 @@ function setupVolunteerIdLinks(containerId) {
   const volunteerId = new URLSearchParams(location.search).get('volunteer_id')
   if (!volunteerId) return
 
-  container.querySelectorAll('a').forEach((a) => {
+  container.querySelectorAll('a[href^="/account/volunteer/"]').forEach((a) => {
     a.href += `?volunteer_id=${encodeURIComponent(volunteerId)}`
   })
 }
 
 setupVolunteerIdLinks('volunteer-profile-links')
 setupVolunteerIdLinks('volunteer-scheduling-links')
+
+// Each sub-page's "back up one level" link (top nav) and its post-save
+// "next steps" buttons both need volunteer_id carried forward to the
+// hub page, same reason as the hub's own links above - the hub can't
+// know which volunteer registration you're on otherwise.
+for (const slug of [
+  'name-address',
+  'contact',
+  'references',
+  'preferences',
+  'interests',
+  'availability',
+  'default-availability',
+  'schedule',
+]) {
+  setupVolunteerIdLinks(`volunteer-${slug}-topnav`)
+  setupVolunteerIdLinks(`volunteer-${slug}-next-steps`)
+}
 
 // Wires up the "fields fetched from the server" account forms (Change
 // Password, Change Name, Communication Preferences, and any future

@@ -48,7 +48,8 @@
     "realname",
     "lastmod",
     "httponly",
-    "Davin"
+    "Davin",
+    "topnav"
   ],
   "ignorePaths": ["node_modules/**", "dist/**", "package-lock.json"]
 }
