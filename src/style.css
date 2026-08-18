@@ -236,8 +236,12 @@ a.navbar-item:hover,
    every sibling item ("Cart", "My Account") is just a plain
    .navbar-item link with a single layer of padding, so the toggle's
    icon/label sat visibly indented past them. Zeroing the wrapper's
-   padding leaves only the button's own, aligning it with its
-   siblings. */
+   padding leaves only the button's own - but Bulma's .button padding
+   (7px 15px) is still wider than .navbar-item's (8px 12px), so
+   #theme-toggle also gets navbar-item's exact padding to line up
+   pixel-for-pixel, and font-weight: 400 to match (Bulma buttons
+   default to 500, navbar items to 400 - the toggle read visibly
+   bolder than its siblings otherwise). */
 .theme-toggle-item {
   padding: 0;
 }
@@ -247,6 +251,12 @@ a.navbar-item:hover,
   background: transparent;
   border-color: transparent;
   color: white;
+}
+
+#theme-toggle {
+  padding: 8px 12px;
+  border-width: 0;
+  font-weight: 400;
 }
 
 #theme-toggle-label {
